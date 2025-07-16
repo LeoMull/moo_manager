@@ -1,11 +1,10 @@
 package com.mooManager.MooManager.controller;
 
 import com.mooManager.MooManager.model.Usuario;
+import com.mooManager.MooManager.model.UsuarioId;
 import com.mooManager.MooManager.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -18,29 +17,26 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    //@GetMapping
-    //public List<Usuario> listarTodos() {
-    //    return usuarioService.buscarTodos();
-    //}
-
     @GetMapping("/form")
     public String mostrarFormulario() {
         return "form_user2.html";
     }
 
     @GetMapping("/gerente")
-    public String sougerente(){
+    public String sougerente() {
         return "sou_gerente papae";
     }
 
     @GetMapping("/funcionario")
-    public String soufuncionario(){
+    public String soufuncionario() {
         return "sou_funcionario papae";
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable String email) {
-        Usuario usuario = usuarioService.buscarPorEmail(email);
+
+    @GetMapping("/{cnir}/{email}")
+    public ResponseEntity<Usuario> buscarPorId(@PathVariable String cnir, @PathVariable String email) {
+        UsuarioId usuarioId = new UsuarioId(email, cnir);
+        Usuario usuario = usuarioService.buscarPorId(usuarioId);
         return usuario != null ? ResponseEntity.ok(usuario) : ResponseEntity.notFound().build();
     }
 
@@ -49,16 +45,18 @@ public class UsuarioController {
         return usuarioService.salvarUsuario(novo);
     }
 
-    @PutMapping("/{email}")
-    public ResponseEntity<Usuario> atualizar(@PathVariable String email, @RequestBody Usuario dados) {
-        Usuario usuarioExistente = usuarioService.buscarPorEmail(email);
+    // PUT com chave composta: /api/usuarios/{cnir}/{email}
+    @PutMapping("/{cnir}/{email}")
+    public ResponseEntity<Usuario> atualizar(@PathVariable String cnir, @PathVariable String email, @RequestBody Usuario dados) {
+        UsuarioId usuarioId = new UsuarioId(email, cnir);
+        Usuario usuarioExistente = usuarioService.buscarPorId(usuarioId);
         if (usuarioExistente == null) {
             return ResponseEntity.notFound().build();
         }
 
         usuarioExistente.setNome(dados.getNome());
         usuarioExistente.setCpf(dados.getCpf());
-        usuarioExistente.setSenha(dados.getSenha()); // você pode criptografar aqui também
+        usuarioExistente.setSenha(dados.getSenha());
         usuarioExistente.setNivelDeAcesso(dados.getNivelDeAcesso());
         usuarioExistente.setPropriedade(dados.getPropriedade());
 
@@ -66,13 +64,16 @@ public class UsuarioController {
         return ResponseEntity.ok(atualizado);
     }
 
-    @DeleteMapping("/{email}")
-    public ResponseEntity<Void> deletar(@PathVariable String email) {
-        Usuario usuario = usuarioService.buscarPorEmail(email);
+    // DELETE com chave composta: /api/usuarios/{cnir}/{email}
+    @DeleteMapping("/{cnir}/{email}")
+    public ResponseEntity<Void> deletar(@PathVariable String cnir, @PathVariable String email) {
+        UsuarioId usuarioId = new UsuarioId(email, cnir);
+        Usuario usuario = usuarioService.buscarPorId(usuarioId);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
-        usuarioService.deletarUsuario(email);
+
+        usuarioService.deletarUsuario(usuarioId);
         return ResponseEntity.noContent().build();
     }
 }

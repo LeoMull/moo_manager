@@ -1,10 +1,12 @@
 package com.mooManager.MooManager.service;
 
 import com.mooManager.MooManager.model.Usuario;
+import com.mooManager.MooManager.model.UsuarioId;
 import com.mooManager.MooManager.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class UsuarioService {
@@ -21,7 +23,7 @@ public class UsuarioService {
     }
 
     public Usuario buscarPorEmail(String email) {
-        return usuarioRepo.findByEmail(email);
+        return usuarioRepo.findByUsuarioIdEmail(email).orElse(null);
     }
 
     public boolean verificarSenha(String senhaDigitada, String senhaCriptografada) {
@@ -29,7 +31,14 @@ public class UsuarioService {
     }
 
     public void deletarUsuario(String email) {
-        usuarioRepo.deleteById(email);
+        usuarioRepo.deleteById(new UsuarioId(email, null));
+    }
+    public Usuario buscarPorId(UsuarioId id) {
+        return usuarioRepo.findById(id).orElse(null);
+    }
+
+    public void deletarUsuario(UsuarioId id) {
+        usuarioRepo.deleteById(id);
     }
 
     

@@ -30,10 +30,15 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/api/usuarios/gerente/**").hasRole("GERENTE")
-                .requestMatchers("/api/usuarios/veterinario/**").hasRole("VETERINARIO")
-                .anyRequest().authenticated()
+                    .requestMatchers("/auth/**").permitAll()
+                    .requestMatchers("/api/usuarios").permitAll() // POST de cadastro liberado
+                    .requestMatchers("/api/propriedades").permitAll() // POST de cadastro liberado
+
+                    // Protegidas por autenticação
+                    .requestMatchers("/api/usuarios/**").hasRole("FUNCIONARIO")
+                    .requestMatchers("/api/propriedades/**").hasRole("FUNCIONARIO")
+                    .requestMatchers("/api/producao/**").hasRole("FUNCIONARIO")
+                    .anyRequest().authenticated()
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

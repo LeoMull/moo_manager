@@ -8,10 +8,11 @@ import jakarta.validation.constraints.*;
 @Entity
 public class Vaca {
 
-    @Id
-    private Integer idVaca;
+    @EmbeddedId
+    private VacaId id;
 
     @ManyToOne
+    @MapsId("cnir")
     @JoinColumn(name = "cnir", nullable = false)
     private Propriedade propriedade;
 
@@ -45,15 +46,24 @@ public class Vaca {
 
     private Integer idPai;
 
-    private Integer nomePai;
+    private String nomePai;
 
     public Vaca() {}
 
-    public Integer getIdVaca(){
-        return idVaca;
+    public VacaId getId() {
+        return id;
     }
-    public void setIdVaca(Integer idVaca){
-        this.idVaca = idVaca;
+
+    public void setId(VacaId id) {
+        this.id = id;
+    }
+
+    public Propriedade getPropriedade() {
+        return propriedade;
+    }
+
+    public void setPropriedade(Propriedade propriedade) {
+        this.propriedade = propriedade;
     }
 
     public String getSexo(){
@@ -140,10 +150,10 @@ public class Vaca {
         this.idPai = idPai;
     }
 
-    public Integer getNomePai() {
+    public String getNomePai() {
         return nomePai;
     }
-    public void setNomePai(Integer nomePai) {
+    public void setNomePai(String nomePai) {
         this.nomePai = nomePai;
     }
 

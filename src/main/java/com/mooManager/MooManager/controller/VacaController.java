@@ -1,6 +1,7 @@
 package com.mooManager.MooManager.controller;
 
 import com.mooManager.MooManager.model.Vaca;
+import com.mooManager.MooManager.model.VacaId;
 import com.mooManager.MooManager.repository.VacaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,12 @@ public class VacaController {
         return repo.findAll();
     }
 
-    @GetMapping("/{idVaca}")
-    public ResponseEntity<Vaca> buscarPorId(@PathVariable Integer idVaca) {
-        return repo.findById(idVaca).map(ResponseEntity::ok)
-                   .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/{cnir}/{idVaca}")
+    public ResponseEntity<Vaca> buscarPorId(@PathVariable Integer idVaca, @PathVariable String cnir) {
+        VacaId vacaId = new VacaId(idVaca, cnir);
+        return repo.findById(vacaId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -33,9 +36,10 @@ public class VacaController {
         return repo.save(novo);
     }
 
-    @PutMapping("/{idVaca}")
-    public ResponseEntity<Vaca> atualizar(@PathVariable Integer idVaca, @RequestBody Vaca dados) {
-        return repo.findById(idVaca).map(vaca -> {
+    @PutMapping("/{cnir}/{idVaca}")
+    public ResponseEntity<Vaca> atualizar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Vaca dados) {
+        VacaId vacaId = new VacaId(idVaca, cnir);
+        return repo.findById(vacaId).map(vaca -> {
             vaca.setSexo(dados.getSexo());
             vaca.setRaca(dados.getRaca());
             vaca.setDataNasc(dados.getDataNasc());
@@ -53,9 +57,10 @@ public class VacaController {
         }).orElse(ResponseEntity.notFound().build());
     }
     
-    @DeleteMapping("/{idVaca}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca) {
-        return repo.findById(idVaca).map(e -> {
+    @DeleteMapping("/{cnir}/{idVaca}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @PathVariable String cnir) {
+        VacaId vacaId = new VacaId(idVaca, cnir);
+        return repo.findById(vacaId).map(e -> {
             repo.delete(e);
             return ResponseEntity.noContent().<Void>build();
         }).orElse(ResponseEntity.notFound().build());

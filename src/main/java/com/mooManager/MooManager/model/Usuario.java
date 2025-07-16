@@ -5,10 +5,10 @@ import jakarta.validation.constraints.*;
 
 @Entity
 public class Usuario {
+    @EmbeddedId
+    private UsuarioId usuarioId;
 
-    @Id
-    private String email;
-
+    @MapsId("cnir") // mapeia a chave estrangeira `cnir` presente em UsuarioId
     @ManyToOne
     @JoinColumn(name = "cnir", nullable = false)
     private Propriedade propriedade;
@@ -27,11 +27,22 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private NivelAcesso nivelDeAcesso; 
 
+    public UsuarioId getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(UsuarioId usuarioId) {
+        this.usuarioId = usuarioId;
+    }
+    
     public String getEmail() {
-        return email;
+        return usuarioId.getEmail();
     }
     public void setEmail(String email) {
-        this.email = email;
+        if (usuarioId == null) {
+            usuarioId = new UsuarioId();
+        }
+        usuarioId.setEmail(email);
     }
 
     public Propriedade getPropriedade() {
