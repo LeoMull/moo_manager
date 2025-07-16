@@ -24,7 +24,8 @@ public class Usuario {
     private String nome;
 
     @NotNull
-    private Integer nivelDeAcesso;
+    @Enumerated(EnumType.STRING)
+    private NivelAcesso nivelDeAcesso; 
 
     public String getEmail() {
         return email;
@@ -62,10 +63,10 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public Integer getNivelDeAcesso() {
+    public NivelAcesso getNivelDeAcesso() {
         return nivelDeAcesso;
     }
-    public void setNivelDeAcesso(Integer nivelDeAcesso) {
+    public void setNivelDeAcesso(NivelAcesso nivelDeAcesso) {
         this.nivelDeAcesso = nivelDeAcesso;
     }
 }
