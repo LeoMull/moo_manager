@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Funcionário - MooManager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-page">
+    <header class="dashboard-header">
+        <div class="header-content">
+            <img src="content/images/dashlogo.png" alt="MooManager Logo" class="dashboard-logo">
+            <div class="header-actions">
+                <button class="header-btn"><img src="content/images/icon/user.png" alt="Perfil" class="header-icon"></button>
+                <button class="header-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-box">
+                <label class="sidebar-label">Buscar vacas</label>
+                <div class="divider"></div>
+                <div class="search-input-wrapper">
+                    <input type="text" class="search-input" placeholder="identificador...">
+                    <img src="content/images/icon/search.png" alt="Buscar" class="search-icon">
+                </div>
+            </div>
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-box">
+                <label class="sidebar-label">Incluir Produção</label>
+                <div class="divider"></div>
+                <div class="search-input-wrapper">
+                    <input type="text" class="search-input" placeholder="quantidade...">
+                    <img src="content/images/icon/plus.png" alt="Adicionar" class="search-icon">
+                </div>
+            </div>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-box">
+                <label class="sidebar-label">Menu</label>
+                <div class="divider"></div>
+            
+                <button class="menu-btn" id="list-cows-btn">
+                    <img src="content/images/icon/list.png" alt="Listar" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Listar Vacas</div>
+                        <div class="menu-sublabel">Visualizar animais da propriedade</div>
+                    </div>
+                </button>
+                
+                <button class="menu-btn" id="register-production-btn">
+                    <img src="content/images/icon/plus.png" alt="Produção" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Registrar Produção</div>
+                        <div class="menu-sublabel">Adicionar registro de leite</div>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <section class="dashboard-section">
+            <div class="content-default" id="default-content">
+                <div class="content-placeholder">
+                    <p>Área de conteúdo principal do funcionário</p>
+                </div>
+            </div>
+            
+ <div class="content-production" id="production-content" style="display: none;">
+    <div class="production-header">
+        <h1>Registrar Produção</h1>
+        <p class="subtitle">Incluir produção de leite</p>
+    </div>
+    
+    <div class="production-container">
+        <div class="production-controls">
+            <div class="liters-control">
+                <label>
+                    Litragem
+                    <span class="sublabel">Produção por vaca ou em volumes</span>
+                </label>
+                <div class="controls-buttons">
+                    <button class="control-btn add-btn">+ Adicionar</button>
+                    <button class="control-btn remove-btn">- Remover</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-header">
+            <div class="form-column-title">ID Vaca</div>
+            <div class="form-column-title">Litros</div>
+        </div>
+        
+        <div class="production-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" placeholder="Digite o ID">
+                </div>
+                <div class="form-group">
+                    <input type="number" placeholder="Quantidade">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" placeholder="Digite o ID">
+                </div>
+                <div class="form-group">
+                    <input type="number" placeholder="Quantidade">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" placeholder="Digite o ID">
+                </div>
+                <div class="form-group">
+                    <input type="number" placeholder="Quantidade">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" placeholder="Digite o ID">
+                </div>
+                <div class="form-group">
+                    <input type="number" placeholder="Quantidade">
+                </div>
+            </div>
+        </div>
+        
+        <div class="production-footer">
+            <button class="back-btn" id="back-btn">Voltar</button>
+            <button class="submit-btn">Enviar</button>
+        </div>
+    </div>
+</div>
+        </section>
+    </main>
+
+    <script>
+        const registerProductionBtn = document.getElementById('register-production-btn');
+        const backBtn = document.getElementById('back-btn');
+        const defaultContent = document.getElementById('default-content');
+        const productionContent = document.getElementById('production-content');
+        
+        registerProductionBtn.addEventListener('click', showProductionForm);
+        backBtn.addEventListener('click', showDefaultContent);
+        
+
+        function showProductionForm() {
+            defaultContent.style.display = 'none';
+            productionContent.style.display = 'block';
+        }
+
+        function showDefaultContent() {
+            productionContent.style.display = 'none';
+            defaultContent.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
