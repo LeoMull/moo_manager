@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vacas")
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/vacas")
 public class VacaController {
     private final VacaRepository repo;
 

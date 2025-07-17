@@ -12,10 +12,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @Configuration
 @EnableWebSecurity
+@CrossOrigin(origins = "*")
 //@EnableMethodSecurity // Para usar @PreAuthorize futuramente
 public class SecurityConfig {
 
@@ -30,6 +32,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/").permitAll()
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/api/usuarios").permitAll() // POST de cadastro liberado
                     .requestMatchers("/api/propriedades").permitAll() // POST de cadastro liberado

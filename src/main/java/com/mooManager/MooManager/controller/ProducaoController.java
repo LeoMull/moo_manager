@@ -10,8 +10,8 @@ import java.util.List;
 import java.sql.Date;
 
 @RestController
-@RequestMapping("/api/producao")
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/producao")
 public class ProducaoController {
     private final ProducaoRepository repo;
 

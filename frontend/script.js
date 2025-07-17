@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'http://localhost:8080';
 
 // Elementos do DOM
 const loginForm = document.getElementById('login-form');
@@ -118,15 +118,14 @@ async function handleRegister(e) {
         nome: regName.value,
         nivelDeAcesso: "GERENTE", // Definido diretamente como GERENTE
         propriedade: {
-            cnir: regCnir.value,
-            nome: regPropertyName.value
+            cnir: regCnir.value
         }
     };
 
     try {
         console.log("Criando propriedade...");
         // 1. Criar propriedade
-        const propResponse = await fetch(`${API_URL}/propriedades`, {
+        const propResponse = await fetch(`${API_URL}/api/propriedades`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -149,7 +148,19 @@ async function handleRegister(e) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(userData)
+            body: JSON.stringify({
+                usuarioId: {
+                    email: userData.email
+                },
+                propriedade: {
+                    cnir: userData.propriedade.cnir,
+                    nome: userData.propriedade.nome
+                },
+                cpf: userData.cpf,
+                senha: userData.senha,
+                nome: userData.nome,
+                nivelDeAcesso: userData.nivelDeAcesso
+            })
         });
 
         if (!registerResponse.ok) {

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/propriedades")
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/propriedades")
 public class PropriedadeController {
     private final PropriedadeRepository repo;
 
