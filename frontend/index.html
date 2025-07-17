@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MooManager - Sistema de Gerenciamento</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+    <div class="container">
+        <div id="login-container" class="auth-box">
+            <div class="logo-container">
+                <img src="authlogo.png" alt="MooManager Logo" class="auth-logo">
+            </div>
+            <form id="login-form">
+<div class="form-group">
+    <label for="cpf">Email</label>
+    <input type="email" id="cpf" required placeholder="Digite seu email...">
+</div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required placeholder="Digite sua senha...">
+                </div>
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <button type="button" id="show-register" class="btn btn-secondary">Registrar Propriedade</button>
+                <div class="forgot-password">
+                    <button type="button" id="forgot-password" class="btn btn-link">Esqueci a senha</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="register-container" class="auth-box" style="display:none;">
+            <div class="logo-container">
+                <img src="authlogo.png" alt="MooManager Logo" class="auth-logo">
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg-username">Nome</label>
+                    <input type="text" id="reg-username" required placeholder="Seu nome completo...">
+                </div>
+                <div class="form-group">
+                    <label for="reg-cpf">CPF</label>
+                    <input type="text" id="reg-cpf" required placeholder="Digite seu CPF...">
+                </div>
+                <div class="form-group">
+                    <label for="reg-property-name">Nome da Propriedade</label>
+                    <input type="text" id="reg-property-name" required placeholder="Digite o nome da propriedade...">
+                </div>
+                <div class="form-group">
+                    <label for="reg-cnir">CNIR</label>
+                    <input type="text" id="reg-cnir" required placeholder="Digite o número do CNIR...">
+                </div>
+                <div class="form-group">
+    <label for="reg-email">Email</label>
+    <input type="email" id="reg-email" required placeholder="Digite seu email...">
+</div>
+                <div class="form-group">
+                    <label for="reg-password">Senha</label>
+                    <input type="password" id="reg-password" required placeholder="Crie uma senha...">
+                </div>
+                <div class="form-group">
+                    <label for="reg-confirm-password">Confirmar Senha</label>
+                    <input type="password" id="reg-confirm-password" required placeholder="Repita a senha...">
+                </div>
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+                <button type="button" id="show-login" class="btn btn-link">Voltar para login</button>
+            </form>
+        </div>
+
+        <div id="app-container" style="display:none;">
+            <header>
+                <h2>Bem-vindo, <span id="user-name"></span>!</h2>
+                <button id="logout-btn" class="btn btn-primary">Sair</button>
+            </header>
+            <main>
+                <h3>Suas Propriedades</h3>
+                <div id="properties-list"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
