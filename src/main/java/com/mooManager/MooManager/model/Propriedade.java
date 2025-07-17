@@ -1,6 +1,8 @@
 package com.mooManager.MooManager.model;
 
 import jakarta.persistence.*;
+import java.util.List;
+
 
 @Entity
 public class Propriedade {
@@ -8,6 +10,9 @@ public class Propriedade {
     @Id
     private String cnir;
     private String nome;
+
+    @OneToMany(mappedBy = "propriedade")
+    private List<Usuario> usuarios;
 
     public Propriedade() {}
 
