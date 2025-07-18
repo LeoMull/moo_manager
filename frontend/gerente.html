@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - MooManager</title>
+    <title>Dashboard Gerente - MooManager</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dashboard-page">
@@ -12,7 +12,7 @@
             <img src="content/images/dashlogo.png" alt="MooManager Logo" class="dashboard-logo">
             <div class="header-actions">
                 <button class="header-btn"><img src="content/images/icon/user.png" alt="Perfil" class="header-icon"></button>
-                <button class="header-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
+                <button class="header-btn" id="logout-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
             </div>
         </div>
     </header>
@@ -34,14 +34,14 @@
                 <label class="sidebar-label">Menu</label>
                 <div class="divider"></div>
                 
-                <button class="menu-btn">
+                <button class="menu-btn" id="home-btn">
                     <img src="content/images/icon/home.png" alt="Início" class="menu-icon">
                     <div class="menu-text">
                         <div class="menu-label">Início</div>
                     </div>
                 </button>
                 
-                <button class="menu-btn">
+                <button class="menu-btn" id="add-cow-btn">
                     <img src="content/images/icon/plus.png" alt="Adicionar" class="menu-icon">
                     <div class="menu-text">
                         <div class="menu-label">Incluir Vaca</div>
@@ -49,7 +49,7 @@
                     </div>
                 </button>
                 
-                <button class="menu-btn">
+                <button class="menu-btn" id="list-cows-btn">
                     <img src="content/images/icon/list.png" alt="Listar" class="menu-icon">
                     <div class="menu-text">
                         <div class="menu-label">Listar Vacas</div>
@@ -57,7 +57,7 @@
                     </div>
                 </button>
                 
-                <button class="menu-btn">
+                <button class="menu-btn" id="employees-btn">
                     <img src="content/images/icon/members.png" alt="Colaboradores" class="menu-icon">
                     <div class="menu-text">
                         <div class="menu-label">Colaboradores</div>
@@ -65,7 +65,7 @@
                     </div>
                 </button>
                 
-                <button class="menu-btn">
+                <button class="menu-btn" id="lots-btn">
                     <img src="content/images/icon/settings.png" alt="Configurar" class="menu-icon">
                     <div class="menu-text">
                         <div class="menu-label">Configurar Lotes</div>
@@ -76,10 +76,55 @@
         </aside>
 
         <section class="dashboard-content">
-            <div class="content-placeholder">
-                <p>Área de conteúdo principal</p>
+            <div class="content-placeholder" id="main-content">
+                <div class="welcome-message">
+                    <h1>Bem-vindo, <span id="user-name"></span>!</h1>
+                    
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <h3>Total de Vacas</h3>
+                            <p class="stat-value" id="total-cows">24</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Em Lactação</h3>
+                            <p class="stat-value" id="lactating-cows">18</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Produção Hoje</h3>
+                            <p class="stat-value" id="today-production">320 litros</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-cows" id="cows-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Listar Vacas</h1>
+                    <p class="subtitle">Lista de todos os animais da propriedade</p>
+                </div>
+                
+                <div class="production-container">
+                    <div class="cows-list-container">
+                        <div class="list-header">
+                            <div class="list-column-title">ID Vaca</div>
+                            <div class="list-column-title">Nome</div>
+                            <div class="list-column-title">Raça</div>
+                            <div class="list-column-title">Idade</div>
+                            <div class="list-column-title">Ações</div>
+                        </div>
+                        
+                        <div class="cows-list" id="cows-list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-profile" id="profile-content" style="display: none;">
             </div>
         </section>
     </main>
+
+    <script src="script.js"></script>
+    
 </body>
 </html>
