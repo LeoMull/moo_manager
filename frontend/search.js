@@ -1,4 +1,6 @@
-// Função para buscar vaca pelo ID
+const DROPDOWN_MAX_HEIGHT = '180px';
+const DEBOUNCE_TIME = 300;
+
 async function searchCowById(cowId) {
     if (!cowId) return;
     
@@ -15,13 +17,12 @@ async function searchCowById(cowId) {
     }
 }
 
-// Função para filtrar vacas em tempo real
 async function filterCows(searchTerm) {
     const dropdown = document.getElementById('cow-search-dropdown');
     if (!dropdown) return;
     
     if (!searchTerm || searchTerm.length < 2) {
-        dropdown.style.display = 'none';
+        hideDropdown();
         return;
     }
     
@@ -35,34 +36,91 @@ async function filterCows(searchTerm) {
         if (filteredCows.length > 0) {
             dropdown.innerHTML = filteredCows.map(cow => `
                 <div class="dropdown-item" onclick="selectCowFromDropdown('${cow.id.idAnimal}')">
-                    #${cow.id.idAnimal} - ${cow.nome || 'Sem nome'}
+                    <strong>#${cow.id.idAnimal}</strong> - ${cow.nome || 'Sem nome'}
                 </div>
             `).join('');
-            dropdown.style.display = 'block';
+            showDropdown();
         } else {
             dropdown.innerHTML = '<div class="dropdown-item no-results">Nenhuma vaca encontrada</div>';
-            dropdown.style.display = 'block';
+            showDropdown();
         }
     } catch (error) {
         console.error('Erro ao filtrar vacas:', error);
-        dropdown.style.display = 'none';
+        hideDropdown();
     }
 }
 
-// Função para selecionar vaca do dropdown
-function selectCowFromDropdown(cowId) {
-    const searchInput = document.querySelector('.search-input');
-    if (searchInput) {
-        searchInput.value = cowId;
+function positionDropdown() {
+    const searchBox = document.querySelector('.sidebar-box');
+    const dropdown = document.getElementById('cow-search-dropdown');
+    
+    if (searchBox && dropdown) {
+        const rect = searchBox.getBoundingClientRect();
+        dropdown.style.top = `${rect.bottom - 5}px`;
+        dropdown.style.left = `${rect.left}px`;
+        dropdown.style.width = `${rect.width}px`;
     }
+}
+
+function showDropdown() {
+    positionDropdown();
     const dropdown = document.getElementById('cow-search-dropdown');
     if (dropdown) {
-        dropdown.style.display = 'none';
+        dropdown.classList.add('visible');
     }
+}
+
+function hideDropdown() {
+    const dropdown = document.getElementById('cow-search-dropdown');
+    if (dropdown) {
+        dropdown.classList.remove('visible');
+        dropdown.innerHTML = '';
+    }
+}
+
+window.addEventListener('resize', positionDropdown);
+
+// Inicialização da busca
+document.addEventListener('DOMContentLoaded', function() {
+    const searchBox = document.querySelector('.sidebar-box');
+    const searchInput = searchBox?.querySelector('.search-input');
+    const searchIcon = searchBox?.querySelector('.search-icon');
+    
+    const debouncedFilter = debounce(function() {
+        filterCows(searchInput.value);
+    }, DEBOUNCE_TIME);
+    
+    searchInput?.addEventListener('input', debouncedFilter);
+    
+    searchIcon?.addEventListener('click', () => {
+        searchCowById(searchInput.value);
+        hideDropdown();
+    });
+    
+    searchInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchCowById(searchInput.value);
+            hideDropdown();
+        }
+    });
+    
+    document.addEventListener('click', (e) => {
+        if (!searchBox?.contains(e.target)) {
+            hideDropdown();
+        }
+    });
+});
+
+function selectCowFromDropdown(cowId) {
+    const searchInput = document.querySelector('.sidebar-box .search-input');
+    if (searchInput) {
+        searchInput.value = cowId;
+        searchInput.focus();
+    }
+    hideDropdown();
     searchCowById(cowId);
 }
 
-// Função debounce para melhorar performance
 function debounce(func, wait) {
     let timeout;
     return function(...args) {
@@ -73,36 +131,31 @@ function debounce(func, wait) {
 
 // Inicialização da busca
 document.addEventListener('DOMContentLoaded', function() {
-    const searchBox = document.querySelector('.sidebar-box:first-child .search-input-wrapper');
-    if (searchBox) {
-        searchBox.innerHTML += '<div id="cow-search-dropdown" class="dropdown"></div>';
-        
-        const searchInput = searchBox.querySelector('.search-input');
-        const searchIcon = searchBox.querySelector('.search-icon');
-        
-        // Evento de clique no ícone de busca
-        searchIcon.addEventListener('click', function() {
+    const searchBox = document.querySelector('.sidebar-box');
+    const searchInput = searchBox?.querySelector('.search-input');
+    const searchIcon = searchBox?.querySelector('.search-icon');
+    
+    if (!searchBox || !searchInput || !searchIcon) return;
+    
+    searchIcon.addEventListener('click', function() {
+        searchCowById(searchInput.value);
+        hideDropdown();
+    });
+    
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
             searchCowById(searchInput.value);
-        });
-        
-        // Evento de pressionar Enter
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchCowById(searchInput.value);
-            }
-        });
-        
-        // Evento de digitação para filtro em tempo real com debounce
-        searchInput.addEventListener('input', debounce(function() {
-            filterCows(searchInput.value);
-        }, 300));
-        
-        // Fechar dropdown ao clicar fora
-        document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('cow-search-dropdown');
-            if (dropdown && !searchBox.contains(e.target)) {
-                dropdown.style.display = 'none';
-            }
-        });
-    }
+            hideDropdown();
+        }
+    });
+    
+    searchInput.addEventListener('input', debounce(function() {
+        filterCows(searchInput.value);
+    }, DEBOUNCE_TIME));
+    
+    document.addEventListener('click', function(e) {
+        if (!searchBox.contains(e.target)) {
+            hideDropdown();
+        }
+    });
 });
