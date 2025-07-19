@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Gerente - MooManager</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
 </head>
 <body class="dashboard-page">
     <header class="dashboard-header">
@@ -28,6 +29,8 @@
                 </div>
             </div>
 
+            <div id="cow-search-dropdown" class="search-dropdown"></div>
+
             <div class="sidebar-spacer"></div>
 
             <div class="sidebar-box">
@@ -38,6 +41,7 @@
                     <img src="content/images/icon/home.png" alt="Início" class="menu-icon">
                     <div class="menu-text">
                         <div class="menu-label">Início</div>
+                        <div class="menu-sublabel">Visão geral do sistema</div>
                     </div>
                 </button>
                 
@@ -75,8 +79,8 @@
             </div>
         </aside>
 
-        <section class="dashboard-content">
-            <div class="content-placeholder" id="main-content">
+        <section class="dashboard-section">
+            <div class="content-home" id="home-content">
                 <div class="welcome-message">
                     <h1>Bem-vindo, <span id="user-name"></span>!</h1>
                     
@@ -112,7 +116,6 @@
                             <div class="list-column-title">Idade</div>
                             <div class="list-column-title">Ações</div>
                         </div>
-                        
                         <div class="cows-list" id="cows-list">
                         </div>
                     </div>
@@ -121,10 +124,42 @@
 
             <div class="content-profile" id="profile-content" style="display: none;">
             </div>
+
+            <div class="content-add-cow" id="add-cow-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Incluir Nova Vaca</h1>
+                    <p class="subtitle">Adicionar um novo animal à propriedade</p>
+                </div>
+                
+                <div class="production-container">
+                </div>
+            </div>
+
+            <div class="content-employees" id="employees-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Gerenciar Colaboradores</h1>
+                    <p class="subtitle">Administrar funcionários da propriedade</p>
+                </div>
+                
+                <div class="production-container">
+                </div>
+            </div>
+
+            <div class="content-lots" id="lots-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Configurar Lotes</h1>
+                    <p class="subtitle">Gerenciamento de animais por lotes</p>
+                </div>
+                
+                <div class="production-container">
+                </div>
+            </div>
         </section>
     </main>
 
     <script src="script.js"></script>
-    
+    <script src="search.js"></script>
+    <script src="cow-profile.js"></script>
+    <script src="manager-dashboard-navigation.js"></script>
 </body>
 </html>
