@@ -326,32 +326,6 @@ async function loadCowsData() {
     }
 }
 
-async function loadCowProfile(cowId) {
-    const cow = await fetchCowById(cowId);
-    if (!cow) {
-        alert('Vaca não encontrada');
-        return;
-    }
-    
-    document.getElementById('cow-name').textContent = cow.nome || `Vaca #${cowId}`;
-    document.getElementById('cow-id').textContent = `ID: #${cowId}`;
-    
-    document.getElementById('cow-lot').textContent = cow.lote || 'Não informado';
-    document.getElementById('cow-needs-care').textContent = cow.precisaAtendimento ? 'Sim' : 'Não';
-    document.getElementById('cow-weight').textContent = cow.peso ? `${cow.peso} kg` : 'Não pesada';
-    document.getElementById('cow-last-weighing').textContent = cow.dataUltimaPesagem ? formatDate(cow.dataUltimaPesagem) : 'Nunca';
-    document.getElementById('cow-breed').textContent = cow.raca || 'Não informada';
-    document.getElementById('cow-birth').textContent = cow.dataNasc ? formatDate(cow.dataNasc) : 'Não informada';
-    document.getElementById('cow-category').textContent = cow.categoria || 'Não categorizada';
-    document.getElementById('cow-mother').textContent = cow.nomeMae ? `${cow.nomeMae} (#${cow.idMae})` : 'Não informada';
-    document.getElementById('cow-father').textContent = cow.nomePai ? `${cow.nomePai} (#${cow.idPai})` : 'Não informado';
-    
-    const obsElement = document.getElementById('cow-observations');
-    if (obsElement) {
-        obsElement.textContent = cow.observacao || 'Nenhuma observação registrada';
-    }
-}
-
 // Funções de API para Vacas
 async function fetchAllCows() {
     try {
@@ -393,17 +367,6 @@ function formatDate(dateString) {
     return date.toLocaleDateString('pt-BR');
 }
 
-window.showCowProfile = async function(cowId) {
-    document.getElementById('cows-content').style.display = 'none';
-    document.getElementById('profile-content').style.display = 'block';
-    document.getElementById('production-content').style.display = 'none';
-    
-    await loadCowProfile(cowId);
-    
-    document.querySelector('.tab-btn[data-tab="general"]').classList.add('active');
-    document.getElementById('general-tab').classList.add('active');
-};
-
 // Funções para os botões de produção
 function addCowRow() {
     const newRow = document.createElement('div');
@@ -426,22 +389,6 @@ function removeCowRow() {
         form.removeChild(rows[rows.length - 1]);
     }
 }
-
-// Inicialização dos botões de produção quando a página carrega
-document.addEventListener('DOMContentLoaded', function() {
-    // Adiciona a primeira linha ao carregar
-    const cowsForm = document.getElementById('cows-form');
-    if (cowsForm && cowsForm.children.length === 0) {
-        addCowRow();
-    }
-    
-    // Configura os listeners dos botões
-    const addBtn = document.getElementById('add-cow-btn');
-    const removeBtn = document.getElementById('remove-cow-btn');
-    
-    if (addBtn) addBtn.addEventListener('click', addCowRow);
-    if (removeBtn) removeBtn.addEventListener('click', removeCowRow);
-});
 
 // Funções de propriedades
 async function loadProperties() {
