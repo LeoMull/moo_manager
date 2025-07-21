@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Funcionário</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+</head>
+<body class="dashboard-page">
+    <header class="dashboard-header">
+        <div class="header-content">
+            <img src="content/images/dashlogo.png" alt="MooManager Logo" class="dashboard-logo">
+            <div class="header-actions">
+                <button class="header-btn"><img src="content/images/icon/user.png" alt="Perfil" class="header-icon"></button>
+                <button class="header-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+    <aside class="dashboard-sidebar">
+        <div class="sidebar-box">
+            <label class="sidebar-label">Buscar vacas</label>
+            <div class="divider"></div>
+            <div class="search-input-wrapper">
+                <input type="text" class="search-input" placeholder="identificador...">
+                <img src="content/images/icon/search.png" alt="Buscar" class="search-icon">
+            </div>
+        </div>
+        
+        <div id="cow-search-dropdown" class="search-dropdown"></div>
+
+        <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-box">
+                <label class="sidebar-label">Incluir Produção</label>
+                <div class="divider"></div>
+                <div class="search-input-wrapper">
+                    <input type="text" class="search-input" placeholder="quantidade...">
+                    <img src="content/images/icon/plus.png" alt="Adicionar" class="search-icon">
+                </div>
+            </div>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-box">
+                <label class="sidebar-label">Menu</label>
+                <div class="divider"></div>
+            
+                <button class="menu-btn" id="list-cows-btn">
+                    <img src="content/images/icon/list.png" alt="Listar" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Listar Vacas</div>
+                        <div class="menu-sublabel">Visualizar animais da propriedade</div>
+                    </div>
+                </button>
+                
+                <button class="menu-btn" id="register-production-btn">
+                    <img src="content/images/icon/plus.png" alt="Produção" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Registrar Produção</div>
+                        <div class="menu-sublabel">Adicionar registro de leite</div>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <section class="dashboard-section">
+            <!-- Conteúdo de Listar Vacas -->
+            <div class="content-cows" id="cows-content">
+                <div class="production-header">
+                    <h1>Listar Vacas</h1>
+                    <p class="subtitle">Lista de todos os animais da propriedade</p>
+                </div>
+                
+                <div class="production-container">
+                    <div class="cows-list-container">
+                        <div class="list-header">
+                            <div class="list-column-title">ID Vaca</div>
+                            <div class="list-column-title">Nome</div>
+                            <div class="list-column-title">Raça</div>
+                            <div class="list-column-title">Idade</div>
+                            <div class="list-column-title">Ações</div>
+                        </div>
+                        <div class="cows-list" id="cows-list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!-- Conteúdo do Perfil da Vaca -->
+<div class="content-profile" id="profile-content" style="display: none;">
+    <div class="production-header">
+        <h1>Perfil da Vaca</h1>
+        <p class="subtitle">Informações detalhadas do animal</p>
+    </div>
+    
+    <div class="production-container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-info-left">
+                    <h2 id="cow-name">Mimosa</h2>
+                    <p class="cow-id" id="cow-id">ID: #001</p>
+                </div>
+                
+                <div class="profile-tabs">
+                    <button class="tab-btn active" data-tab="general">Dados Gerais</button>
+                    <button class="tab-btn" data-tab="reproduction">Reprodução</button>
+                    <button class="tab-btn" data-tab="production">Produção</button>
+                </div>
+            </div>
+            
+            <div class="tab-content active" id="general-tab">
+                <div class="detail-group">
+                    <h3>Informações</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Lote:</span>
+                        <span class="detail-value" id="cow-lot">A</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Precisa de atendimento:</span>
+                        <span class="detail-value" id="cow-needs-care">Não</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Peso:</span>
+                        <span class="detail-value" id="cow-weight">550 kg</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Data da última pesagem:</span>
+                        <span class="detail-value" id="cow-last-weighing">15/05/2024</span>
+                    </div>
+                </div>
+                
+                <div class="detail-group">
+                    <h3>Informações Básicas</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Raça:</span>
+                        <span class="detail-value" id="cow-breed">Holandesa</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Data de Nascimento:</span>
+                        <span class="detail-value" id="cow-birth">15/03/2020</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Categoria:</span>
+                        <span class="detail-value" id="cow-category">Vaca em lactação</span>
+                    </div>
+                </div>
+                
+                <div class="detail-group">
+                    <h3>Dados dos Pais</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Mãe:</span>
+                        <span class="detail-value" id="cow-mother">Branquinha (#012)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Pai:</span>
+                        <span class="detail-value" id="cow-father">Touro Forte (#045)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="reproduction-tab">
+                <div class="detail-group">
+                    <h3>Dados Gerais</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Situação:</span>
+                        <span class="detail-value" id="cow-repro-status">Prenha</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Tipo parto:</span>
+                        <span class="detail-value" id="cow-birth-type">Normal</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Dias após último parto:</span>
+                        <span class="detail-value" id="cow-days-last-birth">120</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Número de partos:</span>
+                        <span class="detail-value" id="cow-birth-count">3</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Previsão de parto:</span>
+                        <span class="detail-value" id="cow-next-birth">15/08/2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Último IED:</span>
+                        <span class="detail-value" id="cow-last-ied">15/11/2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Data último parto:</span>
+                        <span class="detail-value" id="cow-last-birth-date">12/05/2023</span>
+                    </div>
+                </div>
+                
+                <div class="detail-group">
+                    <h3>Ciclo atual</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Número de tentativas:</span>
+                        <span class="detail-value" id="cow-attempts">1</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Dias após última tentativa:</span>
+                        <span class="detail-value" id="cow-days-last-attempt">15</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Primeiro cio do ciclo:</span>
+                        <span class="detail-value" id="cow-first-heat">01/11/2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Último cio do ciclo:</span>
+                        <span class="detail-value" id="cow-last-heat">15/11/2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Primeira tentativa do ciclo:</span>
+                        <span class="detail-value" id="cow-first-attempt">15/11/2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Última tentativa do ciclo:</span>
+                        <span class="detail-value" id="cow-last-attempt">15/11/2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Pai da última tentativa:</span>
+                        <span class="detail-value" id="cow-last-attempt-father">Touro Forte (#045)</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Mãe última tentativa:</span>
+                        <span class="detail-value" id="cow-last-attempt-mother">Branquinha (#012)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="production-tab">
+                <div class="detail-group">
+                    <h3>Dados Gerais</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Previsão secagem:</span>
+                        <span class="detail-value" id="cow-drying-forecast">15/07/2024</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Última secagem:</span>
+                        <span class="detail-value" id="cow-last-drying">15/05/2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Quantidade de lactações:</span>
+                        <span class="detail-value" id="cow-lactation-count">3</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Última contagem de leite:</span>
+                        <span class="detail-value" id="cow-last-milk-count">22 litros</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Data última contagem:</span>
+                        <span class="detail-value" id="cow-last-milk-date">15/06/2024</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-footer">
+                <button class="back-btn" id="back-profile-btn">Voltar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+<!-- Conteúdo de Registrar Produção -->
+<div class="content-production" id="production-content" style="display: none;">
+    <div class="production-header">
+        <h1>Registrar Produção</h1>
+        <p class="subtitle">Incluir produção de leite</p>
+    </div>
+    
+    <div class="production-container">
+        <div class="production-controls">
+            <div class="liters-control">
+                <label>
+                    Litragem
+                    <span class="sublabel">Produção por vaca ou em volumes</span>
+                </label>
+                <div class="controls-buttons">
+<button type="button" class="control-btn add-btn" id="add-cow-btn">+ Adicionar</button>
+<button type="button" class="control-btn remove-btn" id="remove-cow-btn">- Remover</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-header">
+            <div class="form-column-title">ID Vaca</div>
+            <div class="form-column-title">Litros</div>
+        </div>
+        
+<div class="production-form" id="cows-form">
+</div>
+        
+        <div class="production-footer">
+            <button type="button" class="back-btn" id="back-production-btn">Voltar</button>
+            <button type="button" class="submit-btn" id="submit-production-btn">Enviar</button>
+        </div>
+    </div>
+</div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="search.js"></script>
+    <script src="cow-profile.js"></script>
+    <script src="dashboard-navigation.js"></script>
+    <script src="production-form.js"></script>
+</body>
+</html>

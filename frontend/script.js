@@ -1,6 +1,6 @@
 const API_URL = 'http://localhost:8080';
 
-// Elementos do DOM
+// Elementos do DOM - Autenticação
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const showRegister = document.getElementById('show-register');
@@ -13,6 +13,14 @@ const userNameSpan = document.getElementById('user-name');
 const propertiesList = document.getElementById('properties-list');
 const container = document.querySelector('.container');
 const forgotPassword = document.getElementById('forgot-password');
+
+// Elementos do DOM - Dashboard
+const mainContent = document.getElementById('main-content');
+const cowsContent = document.getElementById('cows-content');
+const profileContent = document.getElementById('profile-content');
+const homeBtn = document.getElementById('home-btn');
+const listCowsBtn = document.getElementById('list-cows-btn');
+const backProfileBtn = document.getElementById('back-profile-btn');
 
 // Campos de formulário
 const loginEmail = document.getElementById('cpf');
@@ -27,7 +35,7 @@ const regConfirmPassword = document.getElementById('reg-confirm-password');
 
 let currentUser = null;
 
-// Event Listeners
+// Event Listeners - Autenticação
 loginForm.addEventListener('submit', handleLogin);
 registerForm.addEventListener('submit', handleRegister);
 showRegister.addEventListener('click', prepareRegistration);
@@ -35,7 +43,12 @@ showLogin.addEventListener('click', () => toggleAuthForms('login', true));
 logoutBtn.addEventListener('click', handleLogout);
 forgotPassword.addEventListener('click', handleForgotPassword);
 
-// Funções principais
+// Event Listeners - Dashboard
+if (homeBtn) homeBtn.addEventListener('click', showMainContent);
+if (listCowsBtn) listCowsBtn.addEventListener('click', showCowsList);
+if (backProfileBtn) backProfileBtn.addEventListener('click', showCowsList);
+
+// Funções de Autenticação
 function prepareRegistration() {
     if (loginEmail.value) {
         regEmail.value = loginEmail.value;
@@ -105,7 +118,6 @@ async function handleRegister(e) {
     e.preventDefault();
     console.log("Iniciando processo de cadastro...");
 
-    // Validação básica
     if (regPassword.value !== regConfirmPassword.value) {
         alert('As senhas não coincidem!');
         return;
@@ -116,7 +128,7 @@ async function handleRegister(e) {
         cpf: regCpf.value.replace(/\D/g, ''),
         senha: regPassword.value,
         nome: regName.value,
-        nivelDeAcesso: "GERENTE", // Definido diretamente como GERENTE
+        nivelDeAcesso: "GERENTE",
         propriedade: {
             cnir: regCnir.value
         }
@@ -142,7 +154,6 @@ async function handleRegister(e) {
         }
 
         console.log("Registrando usuário como GERENTE...");
-        // 2. Registrar usuário
         const registerResponse = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: {
@@ -169,7 +180,6 @@ async function handleRegister(e) {
         }
 
         console.log("Realizando login automático...");
-        // 3. Login automático
         const loginResponse = await fetch(`${API_URL}/auth/login`, {
             method: 'POST',
             headers: {
@@ -228,12 +238,159 @@ function showAppInterface() {
         
         const storedEmail = localStorage.getItem('userEmail');
         const storedRole = localStorage.getItem('userRole');
-        userNameSpan.textContent = `${storedEmail} (${storedRole})`;
+        if (document.getElementById('user-name')) {
+            document.getElementById('user-name').textContent = storedEmail.split('@')[0];
+        }
         
-        loadProperties();
+        if (document.getElementById('main-content')) {
+            setupDashboard();
+        } else {
+            showCowsList();
+        }
     }, 500);
 }
 
+// Funções do Dashboard
+function setupDashboard() {
+    console.log("Configurando dashboard...");
+    
+    if (listCowsBtn) {
+        listCowsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showCowsList();
+        });
+    }
+    
+    if (homeBtn) {
+        homeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showMainContent();
+        });
+    }
+    
+    showMainContent();
+}
+
+function showMainContent() {
+    const mainContent = document.getElementById('main-content');
+    const cowsContent = document.getElementById('cows-content');
+    const profileContent = document.getElementById('profile-content');
+    
+    if (mainContent) mainContent.style.display = 'block';
+    if (cowsContent) cowsContent.style.display = 'none';
+    if (profileContent) profileContent.style.display = 'none';
+}
+
+function showCowsList() {
+    const mainContent = document.getElementById('main-content');
+    const cowsContent = document.getElementById('cows-content');
+    const profileContent = document.getElementById('profile-content');
+    
+    if (mainContent) mainContent.style.display = 'none';
+    if (cowsContent) cowsContent.style.display = 'block';
+    if (profileContent) profileContent.style.display = 'none';
+    
+    loadCowsData();
+}
+
+async function loadCowsData() {
+    const cowsList = document.getElementById('cows-list');
+    if (!cowsList) return;
+    
+    cowsList.innerHTML = '<p>Carregando vacas...</p>';
+    
+    try {
+        const vacas = await fetchAllCows();
+        
+        if (vacas.length === 0) {
+            cowsList.innerHTML = '<p>Nenhuma vaca cadastrada</p>';
+            return;
+        }
+        
+        cowsList.innerHTML = vacas.map(vaca => `
+            <div class="list-row" data-cow-id="${vaca.id.idAnimal}">
+                <div class="list-item">#${vaca.id.idAnimal}</div>
+                <div class="list-item">${vaca.nome || 'Sem nome'}</div>
+                <div class="list-item">${vaca.raca}</div>
+                <div class="list-item">${formatDate(vaca.dataNasc)}</div>
+                <div class="list-item">
+                    <img src="content/images/icon/eye.png" alt="Visualizar" 
+                         class="action-icon view-cow" onclick="showCowProfile('${vaca.id.idAnimal}')">
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        cowsList.innerHTML = '<p>Erro ao carregar vacas</p>';
+        console.error(error);
+    }
+}
+
+// Funções de API para Vacas
+async function fetchAllCows() {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/vacas`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Erro ao buscar vacas');
+        return await response.json();
+    } catch (error) {
+        console.error('Erro:', error);
+        return [];
+    }
+}
+
+async function fetchCowById(cowId) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/vacas/${cowId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Erro ao buscar vaca');
+        return await response.json();
+    } catch (error) {
+        console.error('Erro:', error);
+        return null;
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
+}
+
+// Funções para os botões de produção
+function addCowRow() {
+    const newRow = document.createElement('div');
+    newRow.className = 'form-row';
+    newRow.innerHTML = `
+        <div class="form-group">
+            <input type="text" placeholder="Digite o ID">
+        </div>
+        <div class="form-group cow-liters">
+            <input type="number" placeholder="Quantidade">
+        </div>
+    `;
+    document.getElementById('cows-form').appendChild(newRow);
+}
+
+function removeCowRow() {
+    const form = document.getElementById('cows-form');
+    const rows = form.querySelectorAll('.form-row');
+    if (rows.length > 1) {
+        form.removeChild(rows[rows.length - 1]);
+    }
+}
+
+// Funções de propriedades
 async function loadProperties() {
     try {
         const token = localStorage.getItem('token');
@@ -313,11 +470,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Função para debug (remova em produção)
+// Função de debug
 window.debugRegister = async () => {
     console.log("Preenchendo formulário automaticamente...");
     
-    // Preenche os campos com valores de teste
     regEmail.value = "gerente" + Math.floor(Math.random() * 1000) + "@email.com";
     regCpf.value = "12345678901";
     regName.value = "Gerente Teste";
@@ -326,6 +482,5 @@ window.debugRegister = async () => {
     regPassword.value = "senha123";
     regConfirmPassword.value = "senha123";
     
-    // Dispara o registro
     await handleRegister({ preventDefault: () => {} });
 };

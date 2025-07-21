@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Gerente - MooManager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="search.css">
+</head>
+<body class="dashboard-page">
+    <header class="dashboard-header">
+        <div class="header-content">
+            <img src="content/images/dashlogo.png" alt="MooManager Logo" class="dashboard-logo">
+            <div class="header-actions">
+                <button class="header-btn"><img src="content/images/icon/user.png" alt="Perfil" class="header-icon"></button>
+                <button class="header-btn" id="logout-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-box">
+                <label class="sidebar-label">Buscar vacas</label>
+                <div class="divider"></div>
+                <div class="search-input-wrapper">
+                    <input type="text" class="search-input" placeholder="identificador...">
+                    <img src="content/images/icon/search.png" alt="Buscar" class="search-icon">
+                </div>
+            </div>
+
+            <div id="cow-search-dropdown" class="search-dropdown"></div>
+
+            <div class="sidebar-spacer"></div>
+
+            <div class="sidebar-box">
+                <label class="sidebar-label">Menu</label>
+                <div class="divider"></div>
+                
+                <button class="menu-btn" id="home-btn">
+                    <img src="content/images/icon/home.png" alt="Início" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Início</div>
+                        <div class="menu-sublabel">Visão geral do sistema</div>
+                    </div>
+                </button>
+                
+                <button class="menu-btn" id="add-cow-btn">
+                    <img src="content/images/icon/plus.png" alt="Adicionar" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Incluir Vaca</div>
+                        <div class="menu-sublabel">Adicionar animal à propriedade</div>
+                    </div>
+                </button>
+                
+                <button class="menu-btn" id="list-cows-btn">
+                    <img src="content/images/icon/list.png" alt="Listar" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Listar Vacas</div>
+                        <div class="menu-sublabel">Mostrar animais da propriedade</div>
+                    </div>
+                </button>
+                
+                <button class="menu-btn" id="employees-btn">
+                    <img src="content/images/icon/members.png" alt="Colaboradores" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Colaboradores</div>
+                        <div class="menu-sublabel">Administrar funcionários</div>
+                    </div>
+                </button>
+                
+                <button class="menu-btn" id="lots-btn">
+                    <img src="content/images/icon/settings.png" alt="Configurar" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Configurar Lotes</div>
+                        <div class="menu-sublabel">Gerenciamento em lotes</div>
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <section class="dashboard-section">
+            <div class="content-home" id="home-content">
+                <div class="welcome-message">
+                    <h1>Bem-vindo, <span id="user-name"></span>!</h1>
+                    
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <h3>Total de Vacas</h3>
+                            <p class="stat-value" id="total-cows">24</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Em Lactação</h3>
+                            <p class="stat-value" id="lactating-cows">18</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Produção Hoje</h3>
+                            <p class="stat-value" id="today-production">320 litros</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-cows" id="cows-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Listar Vacas</h1>
+                    <p class="subtitle">Lista de todos os animais da propriedade</p>
+                </div>
+                
+                <div class="production-container">
+                    <div class="cows-list-container">
+                        <div class="list-header">
+                            <div class="list-column-title">ID Vaca</div>
+                            <div class="list-column-title">Nome</div>
+                            <div class="list-column-title">Raça</div>
+                            <div class="list-column-title">Idade</div>
+                            <div class="list-column-title">Ações</div>
+                        </div>
+                        <div class="cows-list" id="cows-list">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-profile" id="profile-content" style="display: none;">
+            </div>
+
+            <div class="content-add-cow" id="add-cow-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Incluir Nova Vaca</h1>
+                    <p class="subtitle">Adicionar um novo animal à propriedade</p>
+                </div>
+                
+                <div class="production-container">
+                </div>
+            </div>
+
+            <div class="content-employees" id="employees-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Gerenciar Colaboradores</h1>
+                    <p class="subtitle">Administrar funcionários da propriedade</p>
+                </div>
+                
+                <div class="production-container">
+                </div>
+            </div>
+
+            <div class="content-lots" id="lots-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Configurar Lotes</h1>
+                    <p class="subtitle">Gerenciamento de animais por lotes</p>
+                </div>
+                
+                <div class="production-container">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="search.js"></script>
+    <script src="cow-profile.js"></script>
+    <script src="manager-dashboard-navigation.js"></script>
+</body>
+</html>
