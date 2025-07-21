@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'http://localhost:8080';
 
 // Elementos do DOM - Autenticação
 const loginForm = document.getElementById('login-form');
@@ -130,14 +130,14 @@ async function handleRegister(e) {
         nome: regName.value,
         nivelDeAcesso: "GERENTE",
         propriedade: {
-            cnir: regCnir.value,
-            nome: regPropertyName.value
+            cnir: regCnir.value
         }
     };
 
     try {
         console.log("Criando propriedade...");
-        const propResponse = await fetch(`${API_URL}/propriedades`, {
+        // 1. Criar propriedade
+        const propResponse = await fetch(`${API_URL}/api/propriedades`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
