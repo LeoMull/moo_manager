@@ -5,10 +5,15 @@ import java.util.Objects;
 
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 
 @Embeddable
 public class VacaId implements Serializable {
+    @Column(name = "cnir")
     private String cnir;
+
+    @Column(name = "id_vaca")
     private Integer idVaca;
 
     public VacaId() {}
