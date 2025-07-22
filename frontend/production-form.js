@@ -73,29 +73,31 @@ async function handleProductionSubmit() {
         return;
     }
 
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/producao/registrar`, {
-            method: 'POST',
+try {
+    const token = localStorage.getItem('token');
+
+    for (const prod of productions) {
+        const response = await fetch(`${API_URL}/api/producao/${prod.idVaca}/contagem-leite`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify(productions)
+            body: JSON.stringify(prod)
         });
 
         if (response.ok) {
             alert('Produção registrada com sucesso!');
-            // Limpa o formulário
             document.getElementById('cows-form').innerHTML = '';
-            // Adiciona uma nova linha vazia
-            addCowRow();
+            addCowRow(); // adiciona uma nova linha
         } else {
             const error = await response.json();
             alert(`Erro ao registrar produção: ${error.message}`);
         }
-    } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao conectar com o servidor');
     }
+} catch (error) {
+    console.error('Erro:', error);
+    alert('Erro ao conectar com o servidor');
+}
+
 }

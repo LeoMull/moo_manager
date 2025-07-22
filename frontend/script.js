@@ -33,6 +33,9 @@ const regCnir = document.getElementById('reg-cnir');
 const regPassword = document.getElementById('reg-password');
 const regConfirmPassword = document.getElementById('reg-confirm-password');
 
+const addProductionBox = document.getElementById('add-production-box');
+addProductionBox.addEventListener('click', () => {});
+
 let currentUser = null;
 
 // Event Listeners - Autenticação
@@ -130,7 +133,8 @@ async function handleRegister(e) {
         nome: regName.value,
         nivelDeAcesso: "GERENTE",
         propriedade: {
-            cnir: regCnir.value
+            cnir: regCnir.value,
+            nome: regPropertyName.value
         }
     };
 
@@ -308,14 +312,15 @@ async function loadCowsData() {
         }
         
         cowsList.innerHTML = vacas.map(vaca => `
-            <div class="list-row" data-cow-id="${vaca.id.idAnimal}">
-                <div class="list-item">#${vaca.id.idAnimal}</div>
-                <div class="list-item">${vaca.nome || 'Sem nome'}</div>
+            <div class="list-row" data-cow-id="${vaca.id.idVaca}">
+                <div class="list-item">#${vaca.id.idVaca}</div>
                 <div class="list-item">${vaca.raca}</div>
+                <div class="list-item">${vaca.categoria}</div>
                 <div class="list-item">${formatDate(vaca.dataNasc)}</div>
                 <div class="list-item">
                     <img src="content/images/icon/eye.png" alt="Visualizar" 
-                         class="action-icon view-cow" onclick="showCowProfile('${vaca.id.idAnimal}')">
+                         class="action-icon view-cow" 
+                         onclick="showCowProfile(${vaca.id.idVaca})">
                 </div>
             </div>
         `).join('');
@@ -330,7 +335,7 @@ async function loadCowsData() {
 async function fetchAllCows() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/vacas`, {
+        const response = await fetch(`${API_URL}/api/vacas`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -347,7 +352,7 @@ async function fetchAllCows() {
 async function fetchCowById(cowId) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/vacas/${cowId}`, {
+        const response = await fetch(`${API_URL}/api/vacas/${cowId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

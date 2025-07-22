@@ -6,9 +6,8 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class VacaId implements Serializable {
-
-    private Integer idVaca;
     private String cnir;
+    private Integer idVaca;
 
     public VacaId() {}
 
