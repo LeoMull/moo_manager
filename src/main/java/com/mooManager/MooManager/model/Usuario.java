@@ -27,6 +27,16 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private NivelAcesso nivelDeAcesso; 
 
+    public String getCnir(){
+        return usuarioId.getCnir();
+    }
+    public void setCnir(String cnir) {
+        if (usuarioId == null) {
+            usuarioId = new UsuarioId();
+        }
+        usuarioId.setCnir(cnir);
+    }
+
     public UsuarioId getUsuarioId() {
         return usuarioId;
     }
