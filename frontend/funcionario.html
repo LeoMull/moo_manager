@@ -13,7 +13,7 @@
             <img src="content/images/dashlogo.png" alt="MooManager Logo" class="dashboard-logo">
             <div class="header-actions">
                 <button class="header-btn"><img src="content/images/icon/user.png" alt="Perfil" class="header-icon"></button>
-                <button class="header-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
+                <button class="header-btn" id="logout-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
             </div>
         </div>
     </header>
@@ -33,14 +33,14 @@
 
         <div class="sidebar-spacer"></div>
 
-            <div class="sidebar-box">
-                <label class="sidebar-label">Incluir Produção</label>
-                <div class="divider"></div>
-                <div class="search-input-wrapper">
-                    <input type="text" class="search-input" placeholder="quantidade...">
-                    <img src="content/images/icon/plus.png" alt="Adicionar" class="search-icon">
-                </div>
-            </div>
+<div class="sidebar-box">
+    <label class="sidebar-label">Incluir Produção</label>
+    <div class="divider"></div>
+<div class="search-input-wrapper" id="daily-production-container">
+    <input type="text" class="search-input" id="daily-production-input" placeholder="quantidade...">
+    <img src="content/images/icon/plus.png" alt="Adicionar" class="search-icon" id="daily-production-plus">
+</div>
+</div>
 
             <div class="sidebar-spacer"></div>
 
@@ -302,10 +302,26 @@
         </section>
     </main>
 
+<div class="modal-overlay" id="production-modal">
+    <div class="confirmation-modal">
+        <div class="modal-header">
+            <h3>Confirmar Produção Diária</h3>
+        </div>
+        <div class="modal-body">
+            <p>Você tem certeza que deseja adicionar <span id="modal-liters">X</span> litros à produção diária de <span id="modal-date">DD/MM/AAAA</span>?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn modal-btn-cancel" id="cancel-production-btn">Cancelar</button>
+            <button class="modal-btn modal-btn-confirm" id="confirm-production-btn">Confirmar</button>
+        </div>
+    </div>
+</div>
+
     <script src="script.js"></script>
     <script src="search.js"></script>
     <script src="cow-profile.js"></script>
     <script src="dashboard-navigation.js"></script>
     <script src="production-form.js"></script>
+    <script src="daily-production.js"></script>
 </body>
 </html>
