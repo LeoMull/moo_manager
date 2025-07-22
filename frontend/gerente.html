@@ -111,7 +111,6 @@
                     <div class="cows-list-container">
                         <div class="list-header">
                             <div class="list-column-title">ID Vaca</div>
-                            <div class="list-column-title">Nome</div>
                             <div class="list-column-title">Raça</div>
                             <div class="list-column-title">Idade</div>
                             <div class="list-column-title">Ações</div>
@@ -132,6 +131,39 @@
                 </div>
                 
                 <div class="production-container">
+                    <form id="add-cow-form">
+                        <input type="number" id="cow-id" placeholder="Id da Vaca" required>
+                        <select id="cow-sex" required>
+                            <option value="" disabled selected>Sexo</option>
+                            <option value="F">Feminino</option>
+                            <option value="M">Masculino</option>
+                        </select>
+                        <input type="text" id="cow-breed" placeholder="Raça" required>
+                        <input type="date" id="cow-birthdate" placeholder="Data de Nascimento" required>
+                        <select id="cow-category" required>
+                                    <option value="" disabled selected>Categoria</option>
+                                    <option value="Lactante">Lactante</option>
+                                    <option value="Seca">Seca</option>
+                                    <option value="Novilha">Novilha</option>
+                                    <option value="Bezerra">Bezerra</option>
+                                    <option value="Touro">Touro</option>
+                                    <option value="Descarte">Descarte</option>
+                        </select>
+                        <input type="text" id="cow-lot" placeholder="Lote (Opcional)">
+                        <label>
+                            <input type="checkbox" id="cow-needs-care">
+                            Precisa de atendimento?
+                        </label>
+                        <input type="text" id="cow-obs" placeholder="Observações (Opcional)">
+                        <input type="number" id="cow-weight" placeholder="Peso (Opcional)">
+                        <input type="date" id="cow-last-weight-date" placeholder="Data da última pesagem (Opcional)">
+                        <input type="number" id="cow-mother-id" placeholder="Id da Mãe (Opcional)">
+                        <input type="text" id="cow-mother-name" placeholder="Nome da Mãe (Opcional)">
+                        <input type="number" id="cow-father-id" placeholder="Id da Pai (Opcional)">
+                        <input type="text" id="cow-father-name" placeholder="Nome do Pai (Opcional)">
+                        <button type="submit" class="submit-btn">Adicionar Vaca</button>
+                    </form>
+                    <div id="add-cow-message"></div>
                 </div>
             </div>
 
@@ -158,8 +190,10 @@
     </main>
 
     <script src="script.js"></script>
-    <script src="search.js"></script>
-    <script src="cow-profile.js"></script>
+    <!---
+        <script src="search.js"></script>
+        <script src="cow-profile.js"></script>
+    --->
     <script src="manager-dashboard-navigation.js"></script>
 </body>
 </html>

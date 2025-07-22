@@ -931,7 +931,68 @@ margin-bottom: 5px;
 .content-home,
 .content-cows,
 .content-profile,
-.content-add-cow,
+
+.content-add-cow {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 400px;
+    background: transparent;
+    padding: 40px 0;
+}
+
+#add-cow-form {
+    background: #fff;
+    max-width: 400px;
+    width: 100%;
+    padding: 28px 24px 20px 24px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px #0001;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+#add-cow-form input,
+#add-cow-form select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    margin-bottom: 0;
+}
+
+#add-cow-form label {
+    font-size: 1em;
+    color: #222;
+    margin-bottom: 2px;
+    font-weight: 500;
+}
+
+#add-cow-form .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 0 0;
+}
+
+#add-cow-form .submit-btn {
+    background: #009951;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+#add-cow-form .submit-btn:hover {
+    background: #007a43;
+}
+
 .content-employees,
 .content-lots {
     width: 100%;
