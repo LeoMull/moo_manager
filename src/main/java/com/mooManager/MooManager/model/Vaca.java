@@ -17,6 +17,10 @@ public class Vaca {
     })
     private VacaId id;
 
+    @ManyToOne
+    @JoinColumn(name = "cnir", referencedColumnName = "cnir", insertable = false, updatable = false)
+    private Propriedade propriedade;
+
     @NotNull
     @Size(max = 1)
     private String sexo;
