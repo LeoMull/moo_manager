@@ -238,6 +238,7 @@ function handleLogout() {
     loginForm.reset();
     toggleAuthForms('login', true);
     appContainer.style.display = 'none';
+    window.location.href = 'index.html';
 }
 
 function handleForgotPassword() {
