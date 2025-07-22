@@ -7,14 +7,10 @@ import java.sql.Date;
 @Entity
 public class ProducaoVaca {
     @EmbeddedId
-    private VacaId id;
+    private ProducaoVacaId producaoVacaId;
 
-    @MapsId  // maps the whole embedded id (not just part)
+    @MapsId("cnir")
     @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "id_vaca", referencedColumnName = "idVaca"),
-        @JoinColumn(name = "propriedade_cnir", referencedColumnName = "cnir")
-    })
     private Vaca vaca;
 
     private Date dataSecagem;
