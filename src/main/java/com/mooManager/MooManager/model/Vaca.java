@@ -1,20 +1,29 @@
 package com.mooManager.MooManager.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
 public class Vaca {
+    @ManyToOne
+    @MapsId("cnir")  // Mapeia o campo "cnir" do VacaId
+    @JoinColumn(
+        name = "propriedade_cnir", 
+        referencedColumnName = "cnir",
+        nullable = false,
+        insertable = false,  // Importante para evitar duplicação
+        updatable = false
+    )
+    private Propriedade propriedade;
 
     @EmbeddedId
     private VacaId id;
-
-    @ManyToOne
-    @MapsId("cnir")
-    @JoinColumn(name = "cnir", nullable = false)
-    private Propriedade propriedade;
+    // ... (outros campos)
 
     @NotNull
     @Size(max = 1)

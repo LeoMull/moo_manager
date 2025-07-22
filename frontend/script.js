@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'http://localhost:8080';
 
 // Elementos do DOM - Autenticação
 const loginForm = document.getElementById('login-form');
@@ -36,12 +36,12 @@ const regConfirmPassword = document.getElementById('reg-confirm-password');
 let currentUser = null;
 
 // Event Listeners - Autenticação
-loginForm.addEventListener('submit', handleLogin);
-registerForm.addEventListener('submit', handleRegister);
-showRegister.addEventListener('click', prepareRegistration);
-showLogin.addEventListener('click', () => toggleAuthForms('login', true));
-logoutBtn.addEventListener('click', handleLogout);
-forgotPassword.addEventListener('click', handleForgotPassword);
+if (loginForm) loginForm.addEventListener('submit', handleLogin);
+if (registerForm) registerForm.addEventListener('submit', handleRegister);
+if (showRegister) showRegister.addEventListener('click', prepareRegistration);
+if (showLogin) showLogin.addEventListener('click', () => toggleAuthForms('login', true));
+if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+if (forgotPassword) forgotPassword.addEventListener('click', handleForgotPassword);
 
 // Event Listeners - Dashboard
 if (homeBtn) homeBtn.addEventListener('click', showMainContent);
@@ -103,7 +103,15 @@ async function handleLogin(e) {
                 localStorage.setItem('userRole', data.nivelDeAcesso);
             }
             
-            showAppInterface();
+            if (data.nivelDeAcesso == 'GERENTE') {
+                window.location.href = 'gerente.html';
+                return;
+            }
+
+            if (data.nivelDeAcesso == 'FUNCIONARIO') {
+                window.location.href = 'funcionario.html';
+                return;
+            }
         } else {
             const errorData = await response.json();
             alert(errorData.message || 'Credenciais inválidas');
@@ -137,7 +145,8 @@ async function handleRegister(e) {
 
     try {
         console.log("Criando propriedade...");
-        const propResponse = await fetch(`${API_URL}/propriedades`, {
+        // 1. Criar propriedade
+        const propResponse = await fetch(`${API_URL}/api/propriedades`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -193,11 +202,22 @@ async function handleRegister(e) {
 
         if (loginResponse.ok) {
             const loginData = await loginResponse.json();
+            currentUser = loginData.email;
+
             localStorage.setItem('token', loginData.token);
             localStorage.setItem('userEmail', loginData.email);
             localStorage.setItem('userRole', 'GERENTE');
+
+            if (loginData.nivelDeAcesso == 'GERENTE') {
+                window.location.href = 'gerente.html';
+                return;
+            }
+
+            if (loginData.nivelDeAcesso == 'FUNCIONARIO') {
+                window.location.href = 'funcionario.html';
+                return;
+            }
             
-            currentUser = loginData.email;
             alert("Cadastro realizado com sucesso!");
             showAppInterface();
         } else {
@@ -210,13 +230,14 @@ async function handleRegister(e) {
     }
 }
 
-function handleLogout() {
+async function handleLogout() {
     currentUser = null;
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userRole');
-    loginForm.reset();
+    window.location.href = 'index.html';
     toggleAuthForms('login', true);
+    loginForm.reset();
     appContainer.style.display = 'none';
 }
 
@@ -308,14 +329,15 @@ async function loadCowsData() {
         }
         
         cowsList.innerHTML = vacas.map(vaca => `
-            <div class="list-row" data-cow-id="${vaca.id.idAnimal}">
-                <div class="list-item">#${vaca.id.idAnimal}</div>
-                <div class="list-item">${vaca.nome || 'Sem nome'}</div>
+            <div class="list-row" data-cow-id="${vaca.id.idVaca}">
+                <div class="list-item">#${vaca.id.idVaca}</div>
                 <div class="list-item">${vaca.raca}</div>
+                <div class="list-item">${vaca.categoria}</div>
                 <div class="list-item">${formatDate(vaca.dataNasc)}</div>
                 <div class="list-item">
                     <img src="content/images/icon/eye.png" alt="Visualizar" 
-                         class="action-icon view-cow" onclick="showCowProfile('${vaca.id.idAnimal}')">
+                         class="action-icon view-cow" 
+                         onclick="showCowProfile(${vaca.id.idVaca})">
                 </div>
             </div>
         `).join('');
@@ -330,7 +352,7 @@ async function loadCowsData() {
 async function fetchAllCows() {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/vacas`, {
+        const response = await fetch(`${API_URL}/api/vacas`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -347,7 +369,7 @@ async function fetchAllCows() {
 async function fetchCowById(cowId) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/vacas/${cowId}`, {
+        const response = await fetch(`${API_URL}/api/vacas/${cowId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -438,37 +460,6 @@ function renderProperties(properties) {
 function viewPropertyDetails(cnir) {
     alert(`Detalhes da propriedade CNIR: ${cnir}\n\nEsta funcionalidade pode ser expandida para mostrar mais informações.`);
 }
-
-// Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("Página carregada, verificando autenticação...");
-    
-    const token = localStorage.getItem('token');
-    const userEmail = localStorage.getItem('userEmail');
-    
-    if (token && userEmail) {
-        console.log("Token encontrado, validando...");
-        fetch(`${API_URL}/auth/validate`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log("Token válido, mostrando interface...");
-                currentUser = userEmail;
-                showAppInterface();
-            } else {
-                console.log("Token inválido, fazendo logout...");
-                handleLogout();
-            }
-        })
-        .catch(error => {
-            console.error("Erro na validação:", error);
-            handleLogout();
-        });
-    }
-});
 
 // Função de debug
 window.debugRegister = async () => {
