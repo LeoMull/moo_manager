@@ -35,6 +35,10 @@ public class ProducaoVacaController {
         VacaId vacaId = new VacaId(idVaca, cnir);
         return repo.findById(vacaId).map(producao_vaca -> {
             producao_vaca.setDataSecagem(dados.getDataSecagem());
+            producao_vaca.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
+            producao_vaca.setDataUltimaSecagem(dados.getDataUltimaSecagem());
+            producao_vaca.setQtdLactacoes(dados.getQtdLactacoes());
+            producao_vaca.setUltimaCtgLeite(producao_vaca.getUltimaCtgLeite());
             return ResponseEntity.ok(repo.save(producao_vaca));
         }).orElse(ResponseEntity.notFound().build());
     }
