@@ -2,6 +2,9 @@ package com.mooManager.MooManager.controller;
 
 import com.mooManager.MooManager.model.Propriedade;
 import com.mooManager.MooManager.repository.PropriedadeRepository;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +32,7 @@ public class PropriedadeController {
     }
 
     @PostMapping
-    public Propriedade criar(@RequestBody Propriedade novo) {
+    public Propriedade criar(@Valid @RequestBody Propriedade novo) {
         return repo.save(novo);
     }
 
