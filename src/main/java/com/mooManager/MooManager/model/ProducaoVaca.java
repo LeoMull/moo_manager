@@ -67,5 +67,9 @@ public class ProducaoVaca {
         this.ultimaCtgLeite = ultimaCtgLeite;
     }
 
+    public void setVaca(Vaca nova){
+        this.vaca = nova;
+    }
+
 
 }
