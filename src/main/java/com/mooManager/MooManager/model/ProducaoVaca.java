@@ -4,19 +4,18 @@ import jakarta.persistence.*;
 
 import java.sql.Date;
 
+@Entity
 public class ProducaoVaca {
     @EmbeddedId
     private VacaId id;
 
-    @MapsId("idVaca")  
+    @MapsId  // maps the whole embedded id (not just part)
     @ManyToOne
-    @JoinColumn(name = "idVaca", nullable = false)
-    private Vaca vaca;  // ta certo isso?
-
-    @MapsId("cnir")
-    @ManyToOne
-    @JoinColumn(name = "cnir", nullable = false)
-    private Propriedade propriedade;
+    @JoinColumns({
+        @JoinColumn(name = "id_vaca", referencedColumnName = "idVaca"),
+        @JoinColumn(name = "propriedade_cnir", referencedColumnName = "cnir")
+    })
+    private Vaca vaca;
 
     private Date dataSecagem;
 

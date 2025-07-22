@@ -21,6 +21,9 @@ public class Vaca {
     )
     private Propriedade propriedade;
 
+    @OneToOne(mappedBy = "vaca")
+    private ProducaoVaca producao;
+
     @EmbeddedId
     private VacaId id;
     // ... (outros campos)
