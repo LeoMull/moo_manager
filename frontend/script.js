@@ -36,12 +36,12 @@ const regConfirmPassword = document.getElementById('reg-confirm-password');
 let currentUser = null;
 
 // Event Listeners - Autenticação
-loginForm.addEventListener('submit', handleLogin);
-registerForm.addEventListener('submit', handleRegister);
-showRegister.addEventListener('click', prepareRegistration);
-showLogin.addEventListener('click', () => toggleAuthForms('login', true));
-logoutBtn.addEventListener('click', handleLogout);
-forgotPassword.addEventListener('click', handleForgotPassword);
+if (loginForm) loginForm.addEventListener('submit', handleLogin);
+if (registerForm) registerForm.addEventListener('submit', handleRegister);
+if (showRegister) showRegister.addEventListener('click', prepareRegistration);
+if (showLogin) showLogin.addEventListener('click', () => toggleAuthForms('login', true));
+if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+if (forgotPassword) forgotPassword.addEventListener('click', handleForgotPassword);
 
 // Event Listeners - Dashboard
 if (homeBtn) homeBtn.addEventListener('click', showMainContent);
@@ -230,13 +230,14 @@ async function handleRegister(e) {
     }
 }
 
-function handleLogout() {
+async function handleLogout() {
     currentUser = null;
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userRole');
-    loginForm.reset();
+    window.location.href = 'index.html';
     toggleAuthForms('login', true);
+    loginForm.reset();
     appContainer.style.display = 'none';
 }
 
