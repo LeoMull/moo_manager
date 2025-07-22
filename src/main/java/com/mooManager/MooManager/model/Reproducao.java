@@ -36,7 +36,7 @@ public class Reproducao {
 
     // SETTERS E GETTERS
 
-    // Situacao reproducao
+    // Situação reprodução
     public String getSituacaoRepo() {
         return situacaoRepo;
     }
@@ -63,7 +63,7 @@ public class Reproducao {
         this.numPartos = numPartos;
     }
 
-    // Previsao de parto
+    // Previsão de parto
     public Date getPrevParto() {
         return prevParto;
     }
@@ -81,7 +81,7 @@ public class Reproducao {
         this.numTentativas = numTentativas;
     }
 
-    // Data ultimo parto
+    // Data último parto
     public Date getDataUltParto() {
         return dataUltParto;
     }
@@ -90,7 +90,7 @@ public class Reproducao {
         this.dataUltParto = dataUltParto;
     }
 
-    // TODO: Logicas desses aqui
+    // TODO: Lógicas desses aqui
     public Integer getUltIEP() {
         if (this.dataUltParto == null || this.numPartos == null || this.numPartos < 2) {
             return null;

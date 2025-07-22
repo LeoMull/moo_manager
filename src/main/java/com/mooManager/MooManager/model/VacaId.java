@@ -2,11 +2,16 @@ package com.mooManager.MooManager.model;
 
 import java.io.Serializable;
 import java.util.Objects;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class VacaId implements Serializable {
+    @Column(name = "cnir")
     private String cnir;
+
+    @Column(name = "id_vaca")
     private Integer idVaca;
 
     public VacaId() {}

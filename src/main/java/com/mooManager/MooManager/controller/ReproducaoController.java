@@ -14,28 +14,28 @@ import java.sql.Date;
 @CrossOrigin(origins = "*")
 public class ReproducaoController {
 
-    // Para usar os métodos do repository para SQL
+    // Para usar os mÃ©todos do repository para SQL
     private final ReproducaoRepository repo; 
 
     public ReproducaoController(ReproducaoRepository repo) {
         this.repo = repo;
     }
 
-    // Métodos HTTP
+    // MÃ©todos HTTP
 
     @GetMapping // Root
     public List<Reproducao> listarTodos() {
         return repo.findAll();
     }
 
-    @GetMapping("/{cnir}/{idVaca}") // Busca a reproducação de uma vaca pela chave composta de cnir + idVaca
+    @GetMapping("/{cnir}/{idVaca}") // Busca a reproducaÃ§Ã£o de uma vaca pela chave composta de cnir + idVaca
     public ResponseEntity<Reproducao> buscarPorId(@PathVariable String cnir, @PathVariable Integer idVaca) {
         VacaId reproducaoId = new VacaId(idVaca, cnir);
         return repo.findById(reproducaoId).map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping // coloca uma nova reproducação
+    @PostMapping // coloca uma nova reproducaÃ§Ã£o
     public Reproducao criar(@RequestBody Reproducao novo) {
         return repo.save(novo);
     }

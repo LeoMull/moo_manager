@@ -10,20 +10,16 @@ import jakarta.validation.constraints.*;
 
 @Entity
 public class Vaca {
-    @ManyToOne
-    @MapsId("cnir")  // Mapeia o campo "cnir" do VacaId
-    @JoinColumn(
-        name = "propriedade_cnir", 
-        referencedColumnName = "cnir",
-        nullable = false,
-        insertable = false,  // Importante para evitar duplicação
-        updatable = false
-    )
-    private Propriedade propriedade;
-
     @EmbeddedId
+    @AttributeOverrides({
+        @AttributeOverride(name = "idVaca", column = @Column(name = "id_vaca")),
+        @AttributeOverride(name = "cnir", column = @Column(name = "cnir"))
+    })
     private VacaId id;
-    // ... (outros campos)
+
+    @ManyToOne
+    @JoinColumn(name = "cnir", referencedColumnName = "cnir", insertable = false, updatable = false)
+    private Propriedade propriedade;
 
     @NotNull
     @Size(max = 1)
@@ -167,4 +163,3 @@ public class Vaca {
     }
 
 }
-
