@@ -9,6 +9,7 @@ public class Propriedade {
 
     @Id
     private String cnir;
+    
     private String nome;
 
     @OneToMany(mappedBy = "propriedade")

@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addCowContent = document.getElementById('add-cow-content');
     const employeesContent = document.getElementById('employees-content');
     const lotsContent = document.getElementById('lots-content');
-    
+
     // Botões do menu
     const homeBtn = document.getElementById('home-btn');
     const listCowsBtn = document.getElementById('list-cows-btn');

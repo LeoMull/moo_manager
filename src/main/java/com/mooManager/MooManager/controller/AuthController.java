@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
@@ -30,7 +31,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais inválidas");
         }
 
-        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getNivelDeAcesso().name());
+        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getNivelDeAcesso().name(), usuario.getUsuarioId().getCnir());
 
         Map<String, String> response = new HashMap<>();
         response.put("token", token);

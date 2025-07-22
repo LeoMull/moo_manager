@@ -13,10 +13,11 @@ public class JwtUtil {
     private static final long EXPIRATION_MS = 86400000; // 1 dia
     private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String generateToken(String email, String role) {
+    public String generateToken(String email, String role, String cnir) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("role", role)
+                .claim("cnir", cnir)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(key)
@@ -29,6 +30,10 @@ public class JwtUtil {
 
     public String getRoleFromToken(String token) {
         return (String) parseToken(token).getBody().get("role");
+    }
+
+    public String getCnirFromToken(String token) {
+        return (String) parseToken(token).getBody().get("cnir");
     }
 
     public boolean isTokenValid(String token) {

@@ -97,6 +97,7 @@ try {
         if (response.ok) {
             alert('Produção registrada com sucesso!');
             document.getElementById('cows-form').innerHTML = '';
+
             addCowRow();
         } else {
             const error = await response.json();
@@ -106,6 +107,4 @@ try {
 } catch (error) {
     console.error('Erro:', error);
     alert('Erro ao conectar com o servidor');
-}
-
 }

@@ -1,4 +1,3 @@
-// Função para carregar perfil da vaca
 async function loadCowProfile(cowId) {
     const cow = await fetchCowById(cowId);
 
@@ -32,3 +31,4 @@ window.showCowProfile = async function(cowId) {
     document.querySelector('.tab-btn[data-tab="general"]').classList.add('active');
     document.getElementById('general-tab').classList.add('active');
 };
+
