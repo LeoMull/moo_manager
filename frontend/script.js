@@ -33,9 +33,6 @@ const regCnir = document.getElementById('reg-cnir');
 const regPassword = document.getElementById('reg-password');
 const regConfirmPassword = document.getElementById('reg-confirm-password');
 
-const addProductionBox = document.getElementById('add-production-box');
-addProductionBox.addEventListener('click', () => {});
-
 let currentUser = null;
 
 // Event Listeners - Autenticação
@@ -106,7 +103,15 @@ async function handleLogin(e) {
                 localStorage.setItem('userRole', data.nivelDeAcesso);
             }
             
-            showAppInterface();
+            if (data.nivelDeAcesso == 'GERENTE') {
+                window.location.href = 'gerente.html';
+                return;
+            }
+
+            if (data.nivelDeAcesso == 'FUNCIONARIO') {
+                window.location.href = 'funcionario.html';
+                return;
+            }
         } else {
             const errorData = await response.json();
             alert(errorData.message || 'Credenciais inválidas');
@@ -197,11 +202,22 @@ async function handleRegister(e) {
 
         if (loginResponse.ok) {
             const loginData = await loginResponse.json();
+            currentUser = loginData.email;
+
             localStorage.setItem('token', loginData.token);
             localStorage.setItem('userEmail', loginData.email);
             localStorage.setItem('userRole', 'GERENTE');
+
+            if (loginData.nivelDeAcesso == 'GERENTE') {
+                window.location.href = 'gerente.html';
+                return;
+            }
+
+            if (loginData.nivelDeAcesso == 'FUNCIONARIO') {
+                window.location.href = 'funcionario.html';
+                return;
+            }
             
-            currentUser = loginData.email;
             alert("Cadastro realizado com sucesso!");
             showAppInterface();
         } else {
@@ -443,37 +459,6 @@ function renderProperties(properties) {
 function viewPropertyDetails(cnir) {
     alert(`Detalhes da propriedade CNIR: ${cnir}\n\nEsta funcionalidade pode ser expandida para mostrar mais informações.`);
 }
-
-// Inicialização
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("Página carregada, verificando autenticação...");
-    
-    const token = localStorage.getItem('token');
-    const userEmail = localStorage.getItem('userEmail');
-    
-    if (token && userEmail) {
-        console.log("Token encontrado, validando...");
-        fetch(`${API_URL}/auth/validate`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log("Token válido, mostrando interface...");
-                currentUser = userEmail;
-                showAppInterface();
-            } else {
-                console.log("Token inválido, fazendo logout...");
-                handleLogout();
-            }
-        })
-        .catch(error => {
-            console.error("Erro na validação:", error);
-            handleLogout();
-        });
-    }
-});
 
 // Função de debug
 window.debugRegister = async () => {
