@@ -1,5 +1,3 @@
-// production-form.js
-
 document.addEventListener('DOMContentLoaded', function() {
     initializeProductionForm();
 });
@@ -10,18 +8,24 @@ function initializeProductionForm() {
     const removeBtn = document.getElementById('remove-cow-btn');
     const submitBtn = document.getElementById('submit-production-btn');
 
-    // Adiciona a primeira linha ao carregar
     if (cowsForm && cowsForm.children.length === 0) {
         addCowRow();
     }
 
-    // Configura os listeners dos botões
     if (addBtn) addBtn.addEventListener('click', addCowRow);
     if (removeBtn) removeBtn.addEventListener('click', removeCowRow);
     if (submitBtn) submitBtn.addEventListener('click', handleProductionSubmit);
 }
 
 function addCowRow() {
+    const form = document.getElementById('cows-form');
+    const rows = form.querySelectorAll('.form-row');
+    
+    if (rows.length >= 5) {
+        alert('Você pode adicionar no máximo 5 vacas por vez');
+        return;
+    }
+    
     const newRow = document.createElement('div');
     newRow.className = 'form-row';
     newRow.innerHTML = `
@@ -32,14 +36,18 @@ function addCowRow() {
             <input type="number" class="cow-liters-input" placeholder="Quantidade (litros)" min="0" step="0.1" required>
         </div>
     `;
-    document.getElementById('cows-form').appendChild(newRow);
+    form.appendChild(newRow);
 }
 
 function removeCowRow() {
     const form = document.getElementById('cows-form');
     const rows = form.querySelectorAll('.form-row');
-    if (rows.length > 0) {  // Permite remover todas as linhas
+    
+    if (rows.length > 1) {
         form.removeChild(rows[rows.length - 1]);
+        updateAddButtonState();
+    } else {
+        alert('Você deve manter pelo menos 1 vaca no formulário');
     }
 }
 
@@ -89,7 +97,8 @@ try {
         if (response.ok) {
             alert('Produção registrada com sucesso!');
             document.getElementById('cows-form').innerHTML = '';
-            addCowRow(); // adiciona uma nova linha
+
+            addCowRow();
         } else {
             const error = await response.json();
             alert(`Erro ao registrar produção: ${error.message}`);
@@ -98,6 +107,4 @@ try {
 } catch (error) {
     console.error('Erro:', error);
     alert('Erro ao conectar com o servidor');
-}
-
 }

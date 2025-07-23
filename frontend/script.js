@@ -101,6 +101,7 @@ async function handleLogin(e) {
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userEmail', data.email);
                 localStorage.setItem('userRole', data.nivelDeAcesso);
+                localStorage.setItem('userCnir', data.cnir);
             }
             
             if (data.nivelDeAcesso == 'GERENTE') {
@@ -207,6 +208,9 @@ async function handleRegister(e) {
             localStorage.setItem('token', loginData.token);
             localStorage.setItem('userEmail', loginData.email);
             localStorage.setItem('userRole', 'GERENTE');
+            if (loginData.propriedade && loginData.propriedade.cnir) {
+                localStorage.setItem('userCnir', loginData.propriedade.cnir);
+            }
 
             if (loginData.nivelDeAcesso == 'GERENTE') {
                 window.location.href = 'gerente.html';
