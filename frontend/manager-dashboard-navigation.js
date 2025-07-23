@@ -233,7 +233,7 @@ async function loadEmployeesData() {
                         <button class="action-btn" onclick="editEmployee('${f.cpf}')">
                             <img src="content/images/icon/edit.png" alt="Editar" class="action-icon">
                         </button>
-                        <button class="action-btn" onclick="deleteEmployee('${f.cpf}')">
+                        <button class="action-btn" onclick="deleteEmployee('${f.email}')">
                             <img src="content/images/icon/delete.png" alt="Excluir" class="action-icon">
                         </button>
                     </div>
@@ -251,8 +251,29 @@ function editEmployee(cpf) {
     console.log("Editar funcionário com CPF:", cpf);
 }
 
-function deleteEmployee(cpf) {
-    console.log("Excluir funcionário com CPF:", cpf);
+async function deleteEmployee(email) {
+    const cnir = localStorage.getItem('userCnir');
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_URL}/api/usuarios/${cnir}/${email}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            document.getElementById('add-employee-message').textContent = "Funcionário deletado com sucesso!";
+            document.getElementById('add-employee-form').reset();
+            showEmployees();
+        } else {
+            const error = await response.text();
+            document.getElementById('add-employee-message').textContent = `Erro ao deletar o funcionário: ${error}`;
+        }
+    } catch (error) {
+        document.getElementById('add-employee-message').textContent = "Erro de conexão com o servidor.";
+        console.log(error)
+    }
 }
 
 // Função para voltar para a lista de vacas (usada no botão voltar do perfil)
