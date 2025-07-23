@@ -120,8 +120,271 @@
                     </div>
                 </div>
             </div>
+                                          <!-- Conteúdo do Perfil da Vaca -->
+                <div class="content-profile" id="profile-content" style="display: none;">
+                    <div class="production-header">
+                        <h1>Perfil da Vaca</h1>
+                        <p class="subtitle">Informações detalhadas do animal</p>
+                    </div>
 
-            <div class="content-profile" id="profile-content" style="display: none;">
+                    <div class="production-container">
+                        <div class="profile-container">
+                            <div class="profile-header">
+                                <div class="profile-info-left">
+                                    <h2 id="cow-name">Mimosa</h2>
+                                    <p class="cow-id" id="cow-id">ID: #</p>
+                                </div>
+
+                                <div class="profile-tabs">
+                                    <button class="tab-btn active" data-tab="general">Dados Gerais</button>
+                                    <button class="tab-btn" data-tab="reproduction">Reprodução</button>
+                                    <button class="tab-btn" data-tab="production">Produção</button>
+                                </div>
+                            </div>
+
+
+<!-- Aba: Dados Gerais -->
+<div class="tab-content active" id="general-tab">
+    <div class="detail-group">
+        <h3>Informações</h3>
+
+        <div class="detail-item">
+            <span class="detail-label">Sexo:</span>
+            <span class="detail-value" id="cow-sexo">F</span>
+            <input id="input-cow-sexo" type="text" maxlength="1" value="F" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Raça:</span>
+            <span class="detail-value" id="cow-breed">Holandesa</span>
+            <input id="input-cow-breed" type="text" value="Holandesa" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Data de Nascimento:</span>
+            <span class="detail-value" id="cow-birth">2020-03-15</span>
+            <input id="input-cow-birth" type="date" value="2020-03-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Categoria:</span>
+            <span class="detail-value" id="cow-category">Vaca em lactação</span>
+            <input id="input-cow-category" type="text" value="Vaca em lactação" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Lote:</span>
+            <span class="detail-value" id="cow-lot">A</span>
+            <input id="input-cow-lot" type="text" value="A" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Precisa de atendimento:</span>
+            <span class="detail-value" id="cow-needs-care">Não</span>
+            <select id="input-cow-needs-care" style="display:none;">
+                <option value="true">Sim</option>
+                <option value="false" selected>Não</option>
+            </select>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Observação:</span>
+            <span class="detail-value" id="cow-observation">Nenhuma</span>
+            <input id="input-cow-observation" type="text" value="Nenhuma" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Peso (kg):</span>
+            <span class="detail-value" id="cow-weight">550.00</span>
+            <input id="input-cow-weight" type="number" step="0.01" value="550.00" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Data da última pesagem:</span>
+            <span class="detail-value" id="cow-last-weighing">2024-05-15</span>
+            <input id="input-cow-last-weighing" type="date" value="2024-05-15" style="display:none;">
+        </div>
+    </div>
+
+    <div class="detail-group">
+        <h3>Dados dos Pais</h3>
+
+        <div class="detail-item">
+            <span class="detail-label">ID da Mãe:</span>
+            <span class="detail-value" id="cow-id-mother">12</span>
+            <input id="input-cow-id-mother" type="number" value="12" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Nome da Mãe:</span>
+            <span class="detail-value" id="cow-mother">Branquinha</span>
+            <input id="input-cow-mother" type="text" value="Branquinha" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">ID do Pai:</span>
+            <span class="detail-value" id="cow-id-father">45</span>
+            <input id="input-cow-id-father" type="number" value="45" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Nome do Pai:</span>
+            <span class="detail-value" id="cow-father">Touro Forte</span>
+            <input id="input-cow-father" type="text" value="Touro Forte" style="display:none;">
+        </div>
+    </div>
+</div>
+
+<!-- Aba: Reprodução -->
+<div class="tab-content" id="reproduction-tab">
+    <div class="detail-group">
+        <h3>Dados Gerais</h3>
+
+        <div class="detail-item">
+            <span class="detail-label">Situação:</span>
+            <span class="detail-value" id="cow-repro-status">Prenha</span>
+            <input id="input-cow-repro-status" type="text" value="Prenha" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Tipo parto:</span>
+            <span class="detail-value" id="cow-birth-type">Normal</span>
+            <select id="input-cow-birth-type" style="display:none;">
+                <option value="Normal" selected>Normal</option>
+                <option value="Cesárea">Cesárea</option>
+                <!-- Adicione mais opções se tiver -->
+            </select>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Dias após último parto:</span>
+            <span class="detail-value" id="cow-days-last-birth">120</span>
+            <input id="input-cow-days-last-birth" type="number" value="120" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Número de partos:</span>
+            <span class="detail-value" id="cow-birth-count">3</span>
+            <input id="input-cow-birth-count" type="number" value="3" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Previsão de parto:</span>
+            <span class="detail-value" id="cow-next-birth">2024-08-15</span>
+            <input id="input-cow-next-birth" type="date" value="2024-08-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Último IED:</span>
+            <span class="detail-value" id="cow-last-ied">2023-11-15</span>
+            <input id="input-cow-last-ied" type="date" value="2023-11-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Data último parto:</span>
+            <span class="detail-value" id="cow-last-birth-date">2023-05-12</span>
+            <input id="input-cow-last-birth-date" type="date" value="2023-05-12" style="display:none;">
+        </div>
+    </div>
+
+    <div class="detail-group">
+        <h3>Ciclo atual</h3>
+
+        <div class="detail-item">
+            <span class="detail-label">Número de tentativas:</span>
+            <span class="detail-value" id="cow-attempts">1</span>
+            <input id="input-cow-attempts" type="number" value="1" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Dias após última tentativa:</span>
+            <span class="detail-value" id="cow-days-last-attempt">15</span>
+            <input id="input-cow-days-last-attempt" type="number" value="15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Primeiro cio do ciclo:</span>
+            <span class="detail-value" id="cow-first-heat">2023-11-01</span>
+            <input id="input-cow-first-heat" type="date" value="2023-11-01" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Último cio do ciclo:</span>
+            <span class="detail-value" id="cow-last-heat">2023-11-15</span>
+            <input id="input-cow-last-heat" type="date" value="2023-11-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Primeira tentativa do ciclo:</span>
+            <span class="detail-value" id="cow-first-attempt">2023-11-15</span>
+            <input id="input-cow-first-attempt" type="date" value="2023-11-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Última tentativa do ciclo:</span>
+            <span class="detail-value" id="cow-last-attempt">2023-11-15</span>
+            <input id="input-cow-last-attempt" type="date" value="2023-11-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Pai da última tentativa:</span>
+            <span class="detail-value" id="cow-last-attempt-father">Touro Forte (#045)</span>
+            <input id="input-cow-last-attempt-father" type="text" value="Touro Forte (#045)" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Mãe última tentativa:</span>
+            <span class="detail-value" id="cow-last-attempt-mother">Branquinha (#012)</span>
+            <input id="input-cow-last-attempt-mother" type="text" value="Branquinha (#012)" style="display:none;">
+        </div>
+    </div>
+</div>
+
+<!-- Aba: Produção -->
+<div class="tab-content" id="production-tab">
+    <div class="detail-group">
+        <h3>Dados Gerais</h3>
+
+        <div class="detail-item">
+            <span class="detail-label">Previsão secagem:</span>
+            <span class="detail-value" id="cow-drying-forecast">2024-07-15</span>
+            <input id="input-cow-drying-forecast" type="date" value="2024-07-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Última secagem:</span>
+            <span class="detail-value" id="cow-last-drying">2023-05-15</span>
+            <input id="input-cow-last-drying" type="date" value="2023-05-15" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Quantidade de lactações:</span>
+            <span class="detail-value" id="cow-lactation-count">3</span>
+            <input id="input-cow-lactation-count" type="number" value="3" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Última contagem de leite (litros):</span>
+            <span class="detail-value" id="cow-last-milk-count">22.00</span>
+            <input id="input-cow-last-milk-count" type="number" step="0.01" value="22.00" style="display:none;">
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Data última contagem:</span>
+            <span class="detail-value" id="cow-last-milk-date">2024-06-15</span>
+            <input id="input-cow-last-milk-date" type="date" value="2024-06-15" style="display:none;">
+        </div>
+    </div>
+</div>
+                            <div class="profile-footer">
+                                <button class="back-btn" id="back-profile-btn">Voltar</button>
+                                <button class="back-btn" id="edit-btn">Editar</button>
+                                <button class="back-btn" id="save-btn" style="display:none;">Salvar</button>
+                                <button class="back-btn" id="cancel-btn" style="display:none;">Cancelar</button>
+                                <button class="back-btn" id="delete-btn" style="display:none;">Excluir</button>
+                            </div>
+                                    </div>
+                    </div>
             </div>
 
             <div class="content-add-cow" id="add-cow-content" style="display: none;">
@@ -234,10 +497,163 @@
     </main>
 
     <script src="script.js"></script>
-    <!---
-        <script src="search.js"></script>
-        <script src="cow-profile.js"></script>
-    --->
+    <script src="search.js"></script>
+    <script src="cow-profile.js"></script>
     <script src="manager-dashboard-navigation.js"></script>
+<script>
+    const editBtn = document.getElementById('edit-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    const deleteBtn = document.getElementById('delete-btn');
+
+    // Todos os campos que têm span e input correspondentes, IDs consistentes
+    const fields = [
+        // Dados Gerais
+        { span: 'cow-sexo', input: 'input-cow-sexo' },
+        { span: 'cow-breed', input: 'input-cow-breed' },
+        { span: 'cow-birth', input: 'input-cow-birth' },
+        { span: 'cow-category', input: 'input-cow-category' },
+        { span: 'cow-lot', input: 'input-cow-lot' },
+        { span: 'cow-needs-care', input: 'input-cow-needs-care' },
+        { span: 'cow-observation', input: 'input-cow-observation' },
+        { span: 'cow-weight', input: 'input-cow-weight' },
+        { span: 'cow-last-weighing', input: 'input-cow-last-weighing' },
+
+        { span: 'cow-id-mother', input: 'input-cow-id-mother' },
+        { span: 'cow-mother', input: 'input-cow-mother' },
+        { span: 'cow-id-father', input: 'input-cow-id-father' },
+        { span: 'cow-father', input: 'input-cow-father' },
+
+        // Reprodução
+        { span: 'cow-repro-status', input: 'input-cow-repro-status' },
+        { span: 'cow-birth-type', input: 'input-cow-birth-type' },
+        { span: 'cow-days-last-birth', input: 'input-cow-days-last-birth' },
+        { span: 'cow-birth-count', input: 'input-cow-birth-count' },
+        { span: 'cow-next-birth', input: 'input-cow-next-birth' },
+        { span: 'cow-last-ied', input: 'input-cow-last-ied' },
+        { span: 'cow-last-birth-date', input: 'input-cow-last-birth-date' },
+
+        { span: 'cow-attempts', input: 'input-cow-attempts' },
+        { span: 'cow-days-last-attempt', input: 'input-cow-days-last-attempt' },
+        { span: 'cow-first-heat', input: 'input-cow-first-heat' },
+        { span: 'cow-last-heat', input: 'input-cow-last-heat' },
+        { span: 'cow-first-attempt', input: 'input-cow-first-attempt' },
+        { span: 'cow-last-attempt', input: 'input-cow-last-attempt' },
+        { span: 'cow-last-attempt-father', input: 'input-cow-last-attempt-father' },
+        { span: 'cow-last-attempt-mother', input: 'input-cow-last-attempt-mother' },
+
+        // Produção
+        { span: 'cow-drying-forecast', input: 'input-cow-drying-forecast' },
+        { span: 'cow-last-drying', input: 'input-cow-last-drying' },
+        { span: 'cow-lactation-count', input: 'input-cow-lactation-count' },
+        { span: 'cow-last-milk-count', input: 'input-cow-last-milk-count' },
+        { span: 'cow-last-milk-date', input: 'input-cow-last-milk-date' },
+    ];
+
+    editBtn.addEventListener('click', () => {
+        editBtn.style.display = 'none';
+        saveBtn.style.display = 'inline-block';
+        cancelBtn.style.display = 'inline-block';
+
+        fields.forEach(({ span, input }) => {
+            const spanEl = document.getElementById(span);
+            const inputEl = document.getElementById(input);
+
+            if (spanEl && inputEl) {
+                inputEl.style.display = 'inline-block';
+                if(inputEl.tagName.toLowerCase() === 'select') {
+                    inputEl.value = spanEl.textContent.trim().toLowerCase() === 'sim' || spanEl.textContent.trim().toLowerCase() === 'true' ? 'true' : 'false';
+                } else {
+                    inputEl.value = spanEl.textContent.trim();
+                }
+                spanEl.style.display = 'none';
+            }
+        });
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        saveBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        editBtn.style.display = 'inline-block';
+
+        fields.forEach(({ span, input }) => {
+            const spanEl = document.getElementById(span);
+            const inputEl = document.getElementById(input);
+
+            if (spanEl && inputEl) {
+                inputEl.style.display = 'none';
+                spanEl.style.display = 'inline-block';
+            }
+        });
+    });
+
+saveBtn.addEventListener('click', () => {
+    // Construir objeto com dados atualizados
+    let token = localStorage.getItem('token');
+    let idVaca = document.getElementById('cow-id').textContent.replace('ID: #', '').trim();
+
+    console.log(idVaca)
+    const dadosAtualizados = {
+        sexo: document.getElementById('input-cow-sexo').value.trim(),
+        raca: document.getElementById('input-cow-breed').value.trim(),
+        dataNasc: document.getElementById('input-cow-birth').value,
+        categoria: document.getElementById('input-cow-category').value.trim(),
+        lote: document.getElementById('input-cow-lot').value.trim(),
+        precisaAtendimento: document.getElementById('input-cow-needs-care').value === 'true',
+        observacao: document.getElementById('input-cow-observation').value.trim(),
+        peso: parseFloat(document.getElementById('input-cow-weight').value),
+        dataUltimaPesagem: document.getElementById('input-cow-last-weighing').value,
+        idMae: parseInt(document.getElementById('input-cow-id-mother').value),
+        nomeMae: document.getElementById('input-cow-mother').value.trim(),
+        idPai: parseInt(document.getElementById('input-cow-id-father').value),
+        nomePai: document.getElementById('input-cow-father').value.trim()
+    };
+
+    fetch(`http://localhost:8080/api/vacas/${idVaca}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(dadosAtualizados)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erro ao salvar dados: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Atualiza os spans com os dados retornados do backend
+        fields.forEach(({ span, input }) => {
+            const spanEl = document.getElementById(span);
+            const inputEl = document.getElementById(input);
+
+            if (spanEl && inputEl) {
+                let val = inputEl.value.trim();
+
+                // Ajusta booleano para "Sim"/"Não"
+                if (inputEl.tagName.toLowerCase() === 'select') {
+                    val = val === 'true' ? 'Sim' : 'Não';
+                }
+
+                spanEl.textContent = val;
+                inputEl.style.display = 'none';
+                spanEl.style.display = 'inline-block';
+            }
+        });
+
+        saveBtn.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        editBtn.style.display = 'inline-block';
+
+        alert('Dados salvos com sucesso!');
+    })
+    .catch(error => {
+        alert('Erro: ' + error.message);
+    });
+});
+</script>
+
 </body>
 </html>
