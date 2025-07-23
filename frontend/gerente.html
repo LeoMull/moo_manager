@@ -169,13 +169,57 @@
 
             <div class="content-employees" id="employees-content" style="display: none;">
                 <div class="production-header">
-                    <h1>Gerenciar Colaboradores</h1>
-                    <p class="subtitle">Administrar funcionários da propriedade</p>
+                    <h1>Colaboradores</h1>
+                    <p class="subtitle">Gerenciamento de contas dos funcionários</p>
+                </div>
+                <div class="production-container employee-management">
+                    <h2>Cadastrar funcionário</h2>
+                    <form id="add-employee-form" class="employee-form">
+<div class="form-row">
+                    <div class="form-group">
+                        <label for="employee-name">Nome</label>
+                        <input type="text" id="employee-name" placeholder="Nome do funcionário..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-cpf">CPF</label>
+                        <input type="text" id="employee-cpf" placeholder="CPF do funcionário..." required>
+                    </div>
                 </div>
                 
-                <div class="production-container">
+                <div class="form-group">
+                    <label for="employee-email">E-mail</label>
+                    <input type="text" id="employee-email" placeholder="E-mail do funcionário..." required>
                 </div>
+                
+                <div class="password-row">
+                    <div class="form-group">
+                        <label for="employee-password">Senha</label>
+                        <input type="password" id="employee-password" placeholder="Senha do funcionário..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-role">Nível de acesso</label>
+                        <select id="employee-role" required>
+                            <option value="" disabled selected>Selecione o papel</option>
+                            <option value="FUNCIONARIO">Funcionário</option>
+                            <option value="VETERINARIO">Veterinário</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Cadastrar Colaborador</button>
+            </form>
+            <div id="add-employee-message"></div>
+        </div>
+        
+        <div class="employee-list-container">
+            <div class="employee-list-header">
+                <h2>Lista de funcionários</h2>
             </div>
+    
+            <div class="simple-employee-list" id="employee-list">
+            </div>
+        </div>
+    </div>
 
             <div class="content-lots" id="lots-content" style="display: none;">
                 <div class="production-header">

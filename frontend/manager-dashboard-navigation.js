@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const employeesContent = document.getElementById('employees-content');
     const lotsContent = document.getElementById('lots-content');
     const addCowForm = document.getElementById('add-cow-form');
+    const addEmployeeForm = document.getElementById('add-employee-form');
 
     // Botões do menu
     const homeBtn = document.getElementById('home-btn');
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (employeesBtn) employeesBtn.addEventListener('click', showEmployees);
     if (lotsBtn) lotsBtn.addEventListener('click', showLots);
     if (addCowForm) addCowForm.addEventListener('submit', addCow);
+    if (addEmployeeForm) addEmployeeForm.addEventListener('submit', addEmployee);
     
     // Sistema de abas (reutilizado do perfil da vaca)
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -155,6 +157,114 @@ async function addCow(event) {
     } catch (error) {
         document.getElementById('add-cow-message').textContent = "Erro de conexão com o servidor.";
     }
+}
+
+async function addEmployee(event) {
+    event.preventDefault();
+
+    const employeeName = document.getElementById('employee-name').value;
+    const employeeCpf = document.getElementById('employee-cpf').value;
+    const employeeEmail = document.getElementById('employee-email').value;
+    const employeePassword = document.getElementById('employee-password').value;
+    const employeeRole = document.getElementById('employee-role').value;
+    const cnir = localStorage.getItem('userCnir');
+    const token = localStorage.getItem('token');
+
+    try {
+        const response = await fetch(`${API_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                usuarioId: {
+                    email: employeeEmail,
+                    cnir: cnir
+                },
+                propriedade: {
+                    cnir: cnir,
+                    nomePropriedade: null
+                },
+                nome: employeeName,
+                cpf: employeeCpf,
+                senha: employeePassword,
+                nivelDeAcesso: employeeRole,
+            })
+        });
+
+        if (response.ok) {
+            document.getElementById('add-employee-message').textContent = "Colaborador cadastrado com sucesso!";
+            document.getElementById('add-employee-form').reset();
+            showEmployees();
+        } else {
+            const error = await response.text();
+            document.getElementById('add-employee-message').textContent = `Erro ao adicionar o funcionário: ${error}`;
+        }
+    } catch (error) {
+        document.getElementById('add-employee-message').textContent = "Erro de conexão com o servidor.";
+    }
+}
+
+async function loadEmployeesData() {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await fetch(`${API_URL}/api/usuarios/listar`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+            const funcionarios = await response.json();
+            const list = document.getElementById('employee-list');
+            list.innerHTML = '';
+            
+            funcionarios.forEach(f => {
+                const item = document.createElement('div');
+                item.className = 'employee-item';
+                
+                item.innerHTML = `
+                    <div class="employee-info">
+                        <div class="employee-field">
+                            <strong>Nome</strong>
+                            <span>${f.nome}</span>
+                        </div>
+                        <div class="employee-field">
+                            <strong>CPF</strong>
+                            <span>${f.cpf}</span>
+                        </div>
+                        <div class="employee-field">
+                            <strong>E-mail</strong>
+                            <span>${f.usuarioId.email}</span>
+                        </div>
+                        <div class="employee-field">
+                            <strong>Função</strong>
+                            <span>${f.nivelDeAcesso === 'FUNCIONARIO' ? 'Funcionário' : 
+                                    f.nivelDeAcesso === 'VETERINARIO' ? 'Veterinário' : 'Proprietário'}</span>
+                        </div>
+                    </div>
+                    <div class="employee-actions">
+                        <button class="action-btn" onclick="editEmployee('${f.cpf}')">
+                            <img src="content/images/icon/edit.png" alt="Editar" class="action-icon">
+                        </button>
+                        <button class="action-btn" onclick="deleteEmployee('${f.cpf}')">
+                            <img src="content/images/icon/delete.png" alt="Excluir" class="action-icon">
+                        </button>
+                    </div>
+                `;
+                
+                list.appendChild(item);
+            });
+        }
+    } catch (error) {
+        console.error("Erro ao carregar dados dos funcionários:", error);
+    }
+}
+
+function editEmployee(cpf) {
+    console.log("Editar funcionário com CPF:", cpf);
+}
+
+function deleteEmployee(cpf) {
+    console.log("Excluir funcionário com CPF:", cpf);
 }
 
 // Função para voltar para a lista de vacas (usada no botão voltar do perfil)
