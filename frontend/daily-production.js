@@ -56,5 +56,41 @@ document.addEventListener('DOMContentLoaded', function() {
         alert(`Produção de ${liters} litros registrada!`);
         productionInput.value = '';
         modal.classList.remove('active');
+
+        const cnir = localStorage.getItem('userCnir');
+        
+        console.log('CNIR:', cnir);
+
+        addDailyProduction({
+            cnir: cnir,
+            data: new Date().toISOString().split('T')[0], // Data atual no formato YYYY-MM-DD
+            litros: parseFloat(liters)
+        });
+
+
     });
+
 });
+
+async function addDailyProduction(params) {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`http://localhost:8080/api/producao/${params.cnir}/${params.data}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ litros: params.litros })
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao adicionar produção diária');
+        }
+
+        const data = await response.json();
+        console.log('Produção diária adicionada:', data);
+    } catch (error) {
+        console.error('Erro:', error);
+    }
+}
