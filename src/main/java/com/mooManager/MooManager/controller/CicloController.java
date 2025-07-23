@@ -48,20 +48,31 @@ public class CicloController {
   }
 
 
-    @PutMapping("/{cnir}/{idVaca}") 
-    public ResponseEntity<Ciclo> atualizar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Ciclo dados) {
-        VacaId vacaId = new VacaId(idVaca, cnir);
-        return repo.findById(vacaId).map(repro -> {
-            repro.setDiaAposUltTent(dados.getDiaAposUltTent());
-            repro.setPrimeiroCioCiclo(dados.getPrimeiroCioCiclo());
-            repro.setUltCioCiclo(dados.getUltCioCiclo());
-            repro.setPrimeiraTentaCiclo(dados.getPrimeiraTentaCiclo());
-            repro.setUltTentativa(dados.getUltTentativa());
-            repro.setPaiUltTentativa(dados.getPaiUltTentativa());
-            repro.setDoadoraUltTentativa(dados.getDoadoraUltTentativa());
-            return ResponseEntity.ok(repo.save(repro));
-        }).orElse(ResponseEntity.notFound().build());
-    }
+  @PutMapping("/{cnir}/{idVaca}")
+  public ResponseEntity<Ciclo> atualizar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Ciclo dados) {
+      VacaId vacaId = new VacaId(idVaca, cnir);
+
+      return repo.findById(vacaId).map(cicloExistente -> {
+          // Atualiza os dados do ciclo existente
+          cicloExistente.setDiaAposUltTent(dados.getDiaAposUltTent());
+          cicloExistente.setPrimeiroCioCiclo(dados.getPrimeiroCioCiclo());
+          cicloExistente.setUltCioCiclo(dados.getUltCioCiclo());
+          cicloExistente.setPrimeiraTentaCiclo(dados.getPrimeiraTentaCiclo());
+          cicloExistente.setUltTentativa(dados.getUltTentativa());
+          cicloExistente.setPaiUltTentativa(dados.getPaiUltTentativa());
+          cicloExistente.setDoadoraUltTentativa(dados.getDoadoraUltTentativa());
+          return ResponseEntity.ok(repo.save(cicloExistente));
+      }).orElseGet(() -> {
+          // Cria novo ciclo se não existir
+          Vaca vaca = vacaRepo.findById(vacaId)
+              .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vaca não encontrada"));
+
+          dados.setId(vacaId);
+          dados.setVaca(vaca); // associa a vaca corretamente
+          return ResponseEntity.ok(repo.save(dados));
+      });
+  }
+
 
     @DeleteMapping("/{cnir}/{idVaca}")
     public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @PathVariable String cnir) {

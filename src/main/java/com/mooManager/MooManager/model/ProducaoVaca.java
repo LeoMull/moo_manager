@@ -71,5 +71,12 @@ public class ProducaoVaca {
         this.vaca = nova;
     }
 
+    public VacaId getId() {
+        return id;
+    }
+    public void setId(VacaId id) {
+        this.id = id;
+    }
+
 
 }

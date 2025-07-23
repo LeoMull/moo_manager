@@ -32,6 +32,13 @@ public class Reproducao {
 
     // SETTERS E GETTERS
 
+    public VacaId getId() {
+        return id;
+    }
+    public void setId(VacaId id) {
+        this.id = id;
+    }
+    
     // Situação reprodução
     public String getSituacaoRepo() {
         return situacaoRepo;
