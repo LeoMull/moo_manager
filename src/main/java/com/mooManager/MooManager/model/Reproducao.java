@@ -30,10 +30,6 @@ public class Reproducao {
 
     private Date dataUltParto;
 
-    private Integer ultIEP;
-
-    private Integer diaAposParto;
-
     // SETTERS E GETTERS
 
     // Situação reprodução
@@ -90,14 +86,11 @@ public class Reproducao {
         this.dataUltParto = dataUltParto;
     }
 
-    // TODO: Lógicas desses aqui
-    public Integer getUltIEP() {
-        if (this.dataUltParto == null || this.numPartos == null || this.numPartos < 2) {
-            return null;
-        }
-        long diffMillis = System.currentTimeMillis() - this.dataUltParto.getTime();
-        return (int) (diffMillis / (1000 * 60 * 60 * 24));
+    public void setVaca(Vaca vaca) {
+        this.vaca = vaca;
     }
+
+    // TODO: Lógicas desses aqui
 
     public Integer getDiaAposParto() {
         if (this.dataUltParto == null) {

@@ -1,10 +1,16 @@
 package com.mooManager.MooManager.controller;
 
 import com.mooManager.MooManager.model.Reproducao;
+import com.mooManager.MooManager.model.Vaca;
 import com.mooManager.MooManager.model.VacaId;
 import com.mooManager.MooManager.repository.ReproducaoRepository;
+import com.mooManager.MooManager.repository.VacaRepository;
+import com.mooManager.MooManager.security.JwtUtil;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.sql.Date;
@@ -16,9 +22,13 @@ public class ReproducaoController {
 
     // Para usar os métodos do repository para SQL
     private final ReproducaoRepository repo; 
+    private final VacaRepository vacaRepo;
+    private final JwtUtil jwtUtil;
 
-    public ReproducaoController(ReproducaoRepository repo) {
+    public ReproducaoController(ReproducaoRepository repo, VacaRepository vacaRepo, JwtUtil jwtUtil) {
         this.repo = repo;
+        this.vacaRepo = vacaRepo;
+        this.jwtUtil = jwtUtil;
     }
 
     // Métodos HTTP
@@ -35,8 +45,12 @@ public class ReproducaoController {
                    .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping // coloca uma nova reproducação
-    public Reproducao criar(@RequestBody Reproducao novo) {
+    @PostMapping("/{cnir}/{idVaca}")
+    public Reproducao criar(@RequestBody Reproducao novo, @PathVariable String cnir, @PathVariable int idVaca) {
+        VacaId vacaId = new VacaId(idVaca, cnir);
+        Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        System.out.println("Vaca encontrada: " + vaca);
+        novo.setVaca(vaca);
         return repo.save(novo);
     }
 
