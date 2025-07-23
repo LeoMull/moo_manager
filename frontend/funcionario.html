@@ -265,6 +265,7 @@
             </div>
             
 <!-- Conteúdo de Registrar Produção -->
+<!-- Substitua esta parte no seu HTML -->
 <div class="content-production" id="production-content" style="display: none;">
     <div class="production-header">
         <h1>Registrar Produção</h1>
@@ -279,8 +280,8 @@
                     <span class="sublabel">Produção por vaca ou em volumes</span>
                 </label>
                 <div class="controls-buttons">
-<button type="button" class="control-btn add-btn" id="add-cow-btn">+ Adicionar</button>
-<button type="button" class="control-btn remove-btn" id="remove-cow-btn">- Remover</button>
+                    <button type="button" class="control-btn add-btn" id="add-cow-btn">+ Adicionar</button>
+                    <button type="button" class="control-btn remove-btn" id="remove-cow-btn">- Remover</button>
                 </div>
             </div>
         </div>
@@ -288,10 +289,12 @@
         <div class="form-header">
             <div class="form-column-title">ID Vaca</div>
             <div class="form-column-title">Litros</div>
+            <div class="form-column-title">Data</div>
         </div>
         
-<div class="production-form" id="cows-form">
-</div>
+        <div class="production-form" id="cows-form">
+            <!-- Linhas serão adicionadas dinamicamente aqui -->
+        </div>
         
         <div class="production-footer">
             <button type="button" class="back-btn" id="back-production-btn">Voltar</button>
@@ -323,5 +326,6 @@
     <script src="dashboard-navigation.js"></script>
     <script src="production-form.js"></script>
     <script src="daily-production.js"></script>
+    <script src="group-production.js"></script>
 </body>
 </html>
