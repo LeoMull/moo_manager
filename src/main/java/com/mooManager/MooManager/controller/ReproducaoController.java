@@ -45,6 +45,15 @@ public class ReproducaoController {
                    .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{cnir}/{idVaca}/dias-apos-parto") // Usa o getDiaAposParto do model da reprodução
+    public ResponseEntity<Integer> getDiaAposParto(@PathVariable String cnir, @PathVariable Integer idVaca) {
+        VacaId reproducaoId = new VacaId(idVaca, cnir);
+        return repo.findById(reproducaoId).map(reproducao -> {
+            Integer dias = reproducao.getDiaAposParto();
+            return ResponseEntity.ok(dias);
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping("/{cnir}/{idVaca}")
     public Reproducao criar(@RequestBody Reproducao novo, @PathVariable String cnir, @PathVariable int idVaca) {
         VacaId vacaId = new VacaId(idVaca, cnir);
