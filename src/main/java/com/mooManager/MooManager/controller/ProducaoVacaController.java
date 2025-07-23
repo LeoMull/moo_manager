@@ -6,6 +6,8 @@ import com.mooManager.MooManager.repository.ProducaoVacaRepository;
 import com.mooManager.MooManager.repository.VacaRepository;
 import com.mooManager.MooManager.security.JwtUtil;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,11 @@ public class ProducaoVacaController {
         this.repo = repo;
         this.vacaRepo = vacaRepo;
         this.jwtUtil = jwtUtil;
+    }
+
+    @GetMapping
+    public List<ProducaoVaca> listarTodos() {
+        return repo.findAll();
     }
 
     @GetMapping("/{cnir}/{idVaca}")
