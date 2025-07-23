@@ -48,17 +48,27 @@ public class CicloController {
   }
 
 
-    // @PutMapping("/{cnir}/{idVaca}") 
-    // public ResponseEntity<Ciclo> atualizar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Ciclo dados) {
-    //     VacaId vacaId = new VacaId(idVaca, cnir);
-    //     return repo.findById(vacaId).map(repro -> {
-    //         repro.setSituacaoRepo(dados.getSituacaoRepo());
-    //         repro.setTipoUltParto(dados.getTipoUltParto());
-    //         repro.setNumPartos(dados.getNumPartos());
-    //         repro.setPrevParto(dados.getPrevParto());
-    //         repro.setNumTentativas(dados.getNumTentativas());
-    //         repro.setDataUltParto(dados.getDataUltParto());
-    //         return ResponseEntity.ok(repo.save(repro));
-    //     }).orElse(ResponseEntity.notFound().build());
-    // }
+    @PutMapping("/{cnir}/{idVaca}") 
+    public ResponseEntity<Ciclo> atualizar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Ciclo dados) {
+        VacaId vacaId = new VacaId(idVaca, cnir);
+        return repo.findById(vacaId).map(repro -> {
+            repro.setDiaAposUltTent(dados.getDiaAposUltTent());
+            repro.setPrimeiroCioCiclo(dados.getPrimeiroCioCiclo());
+            repro.setUltCioCiclo(dados.getUltCioCiclo());
+            repro.setPrimeiraTentaCiclo(dados.getPrimeiraTentaCiclo());
+            repro.setUltTentativa(dados.getUltTentativa());
+            repro.setPaiUltTentativa(dados.getPaiUltTentativa());
+            repro.setDoadoraUltTentativa(dados.getDoadoraUltTentativa());
+            return ResponseEntity.ok(repo.save(repro));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{cnir}/{idVaca}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @PathVariable String cnir) {
+      VacaId vacaId = new VacaId(idVaca, cnir);
+      return repo.findById(vacaId).map(e -> {
+        repo.delete(e);
+        return ResponseEntity.noContent().<Void>build();
+      }).orElse(ResponseEntity.notFound().build());
+    }
 }
