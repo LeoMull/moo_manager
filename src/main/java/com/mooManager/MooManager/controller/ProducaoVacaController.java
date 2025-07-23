@@ -59,15 +59,17 @@ public class ProducaoVacaController {
 
         return repo.findById(vacaId).map(producaoExistente -> {
             producaoExistente.setDataSecagem(dados.getDataSecagem());
-            producaoExistente.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
             producaoExistente.setDataUltimaSecagem(dados.getDataUltimaSecagem());
             producaoExistente.setQtdLactacoes(dados.getQtdLactacoes());
             producaoExistente.setUltimaCtgLeite(dados.getUltimaCtgLeite());
+            producaoExistente.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
             return ResponseEntity.ok(repo.save(producaoExistente));
-        }).orElseGet(() -> {
-            dados.setId(new VacaId(idVaca, cnir)); // necessário para criar novo
-            return ResponseEntity.ok(repo.save(dados));
-        });
+            }).orElseGet(() -> {
+                Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                dados.setId(new VacaId(idVaca, cnir)); 
+                dados.setVaca(vaca); // <<< Faltava associar a vaca!
+                return ResponseEntity.ok(repo.save(dados));
+            });
     }
 
     @PutMapping("/{idVaca}/contagem-leite")

@@ -328,14 +328,14 @@
 
         <div class="detail-item">
             <span class="detail-label">Pai da última tentativa:</span>
-            <span class="detail-value" id="cow-last-attempt-father">Touro Forte (#045)</span>
-            <input id="input-cow-last-attempt-father" type="text" value="Touro Forte (#045)" style="display:none;">
+            <span class="detail-value" id="cow-last-attempt-father"></span>
+            <input id="input-cow-last-attempt-father" type="text" value="" style="display:none;">
         </div>
 
         <div class="detail-item">
             <span class="detail-label">Mãe última tentativa:</span>
-            <span class="detail-value" id="cow-last-attempt-mother">Branquinha (#012)</span>
-            <input id="input-cow-last-attempt-mother" type="text" value="Branquinha (#012)" style="display:none;">
+            <span class="detail-value" id="cow-last-attempt-mother"></span>
+            <input id="input-cow-last-attempt-mother" type="text" value="" style="display:none;">
         </div>
     </div>
 </div>
@@ -685,93 +685,162 @@
     });
 
     saveBtnRepro.addEventListener('click', () => {
-        const token = localStorage.getItem('token');
-        const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
-        const cnir = localStorage.getItem('userCnir');
+    const token = localStorage.getItem('token');
+    const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+    const cnir = localStorage.getItem('userCnir');
 
-        // Objeto para atualização da entidade Reproducao
-        const dadosReproducao = {
-            situacaoRepo: document.getElementById('input-cow-repro-status').value.trim(),
-            tipoUltParto: document.getElementById('input-cow-birth-type').value.trim(),
-            numPartos: parseInt(document.getElementById('input-cow-birth-count').value),
-            prevParto: document.getElementById('input-cow-next-birth').value,
-            dataUltParto: document.getElementById('input-cow-last-birth-date').value,
-            numTentativas: parseInt(document.getElementById('input-cow-attempts').value)    
-        };
+    // Objeto para atualização da entidade Reproducao
+    const dadosReproducao = {
+        situacaoRepo: document.getElementById('input-cow-repro-status').value.trim(),
+        tipoUltParto: document.getElementById('input-cow-birth-type').value.trim(),
+        numPartos: parseInt(document.getElementById('input-cow-birth-count').value),
+        prevParto: document.getElementById('input-cow-next-birth').value,
+        dataUltParto: document.getElementById('input-cow-last-birth-date').value,
+        numTentativas: parseInt(document.getElementById('input-cow-attempts').value)    
+    };
 
-        // Objeto para atualização da entidade Ciclo
-        const dadosCiclo = {
-            diasDesdeUltimoParto: parseInt(document.getElementById('input-cow-days-last-birth').value),
-            diasDesdeUltimaTentativa: parseInt(document.getElementById('input-cow-days-last-attempt').value),
-            dataUltimoCio: document.getElementById('input-cow-last-heat').value,
-            dataUltimaTentativa: document.getElementById('input-cow-last-attempt').value,
-            dataPrimeiraTentativa: document.getElementById('input-cow-first-attempt').value,
-            dataPrimeiroCio: document.getElementById('input-cow-first-heat').value,
-            idPaiUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-father').value),
-            idMaeUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-mother').value),
-            iedUltimoParto: parseInt(document.getElementById('input-cow-last-ied').value)
-        };
+    // Objeto para atualização da entidade Ciclo
+    const dadosCiclo = {
+        diasDesdeUltimoParto: parseInt(document.getElementById('input-cow-days-last-birth').value),
+        diasDesdeUltimaTentativa: parseInt(document.getElementById('input-cow-days-last-attempt').value),
+        dataUltimoCio: document.getElementById('input-cow-last-heat').value,
+        dataUltimaTentativa: document.getElementById('input-cow-last-attempt').value,
+        dataPrimeiraTentativa: document.getElementById('input-cow-first-attempt').value,
+        dataPrimeiroCio: document.getElementById('input-cow-first-heat').value,
+        idPaiUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-father').value),
+        idMaeUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-mother').value),
+        iedUltimoParto: parseInt(document.getElementById('input-cow-last-ied').value)
+    };
 
-        // Requisição para atualizar reprodução
-        fetch(`http://localhost:8080/api/reproducao/${cnir}/${idVaca}`, {
+    // Requisição para atualizar reprodução
+    fetch(`http://localhost:8080/api/reproducao/${cnir}/${idVaca}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(dadosReproducao)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erro ao salvar reprodução");
+        return res.json();
+    })
+    .then(() => {
+        // Requisição para atualizar ciclo
+        return fetch(`http://localhost:8080/api/ciclo/${cnir}/${idVaca}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
             },
-            body: JSON.stringify(dadosReproducao)
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao salvar reprodução");
-            return res.json();
-        })
-        .then(() => {
-            // Requisição para atualizar ciclo
-            return fetch(`http://localhost:8080/api/ciclo/${cnir}/${idVaca}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                body: JSON.stringify(dadosCiclo)
-            });
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao salvar ciclo");
-            return res.json();
-        })
-        .then(() => alert("Reprodução e ciclo atualizados!"))
-        .catch(err => alert(err.message));
-    });
+            body: JSON.stringify(dadosCiclo)
+        });
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erro ao salvar ciclo");
+        return res.json();
+    })
+    .then(() => {
+        // ATUALIZA OS VALORES NOS SPANS DA ABA REPRODUÇÃO
+        document.getElementById('cow-repro-status').textContent = dadosReproducao.situacaoRepo;
+        document.getElementById('cow-birth-type').textContent = dadosReproducao.tipoUltParto;
+        document.getElementById('cow-days-last-birth').textContent = dadosCiclo.diasDesdeUltimoParto;
+        document.getElementById('cow-birth-count').textContent = dadosReproducao.numPartos;
+        document.getElementById('cow-next-birth').textContent = dadosReproducao.prevParto;
+        document.getElementById('cow-last-ied').textContent = dadosCiclo.iedUltimoParto;
+        document.getElementById('cow-last-birth-date').textContent = dadosReproducao.dataUltParto;
+        
+        document.getElementById('cow-attempts').textContent = dadosReproducao.numTentativas;
+        document.getElementById('cow-days-last-attempt').textContent = dadosCiclo.diasDesdeUltimaTentativa;
+        document.getElementById('cow-first-heat').textContent = dadosCiclo.dataPrimeiroCio;
+        document.getElementById('cow-last-heat').textContent = dadosCiclo.dataUltimoCio;
+        document.getElementById('cow-first-attempt').textContent = dadosCiclo.dataPrimeiraTentativa;
+        document.getElementById('cow-last-attempt').textContent = dadosCiclo.dataUltimaTentativa;
+        document.getElementById('cow-last-attempt-father').textContent = dadosCiclo.idPaiUltimaTentativa;
+        document.getElementById('cow-last-attempt-mother').textContent = dadosCiclo.idMaeUltimaTentativa;
+
+        // SAIR DO MODO DE EDIÇÃO
+        fields.forEach(({ span, input }) => {
+            const spanEl = document.getElementById(span);
+            const inputEl = document.getElementById(input);
+
+            if (spanEl && inputEl) {
+                inputEl.style.display = 'none';
+                spanEl.style.display = 'inline-block';
+            }
+        });
+
+        // ESCOLHER OS BOTÕES VISÍVEIS
+        saveBtnVaca.style.display = 'none';
+        saveBtnRepro.style.display = 'none';
+        saveBtnProducao.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        deleteBtn.style.display = 'none';
+        editBtn.style.display = 'inline-block';
+
+        alert("Reprodução e ciclo atualizados!");
+    })
+    .catch(err => alert(err.message));
+});
 
 
-    saveBtnProducao.addEventListener('click', () => {
-        const token = localStorage.getItem('token');
-        const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+saveBtnProducao.addEventListener('click', () => {
+    const token = localStorage.getItem('token');
+    const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+    const cnir = localStorage.getItem('userCnir');
 
-        const dadosProducao = {
-            previsaoSecagem: document.getElementById('input-cow-drying-forecast').value,
-            dataUltimaSecagem: document.getElementById('input-cow-last-drying').value,
-            quantidadeLactacoes: parseInt(document.getElementById('input-cow-lactation-count').value),
-            producaoUltimaOrdenha: parseFloat(document.getElementById('input-cow-last-milk-count').value),
-            dataUltimaOrdenha: document.getElementById('input-cow-last-milk-date').value
-        };
+    const dadosProducao = {
+        dataSecagem: document.getElementById('input-cow-drying-forecast').value || null,
+        dataUltimaSecagem: document.getElementById('input-cow-last-drying').value || null,
+        qtdLactacoes: parseInt(document.getElementById('input-cow-lactation-count').value) || 0,
+        ultimaCtgLeite: parseFloat(document.getElementById('input-cow-last-milk-count').value) || 0,
+        dataUltimaCtgLeite: document.getElementById('input-cow-last-milk-date').value || null
+    };
 
-        fetch(`http://localhost:8080/api/producao_vaca/${idVaca}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify(dadosProducao)
-        })
-        .then(res => {
-            if (!res.ok) throw new Error("Erro ao salvar produção");
-            return res.json();
-        })
-        .then(() => alert("Produção atualizada!"))
-        .catch(err => alert(err.message));
-    });
+    fetch(`http://localhost:8080/api/producao_vaca/${cnir}/${idVaca}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify(dadosProducao)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Erro ao salvar produção");
+        return res.json();
+    })
+    .then(() => {
+        // Atualiza os spans com os novos valores
+        document.getElementById('cow-drying-forecast').textContent = dadosProducao.dataSecagem;
+        document.getElementById('cow-last-drying').textContent = dadosProducao.dataUltimaSecagem;
+        document.getElementById('cow-lactation-count').textContent = dadosProducao.qtdLactacoes;
+        document.getElementById('cow-last-milk-count').textContent = dadosProducao.ultimaCtgLeite;
+        document.getElementById('cow-last-milk-date').textContent = dadosProducao.dataUltimaCtgLeite;
+
+        // Sai do modo de edição (mesma lógica do saveBtnRepro)
+        fields.forEach(({ span, input }) => {
+            const spanEl = document.getElementById(span);
+            const inputEl = document.getElementById(input);
+            if (spanEl && inputEl) {
+                inputEl.style.display = 'none';
+                spanEl.style.display = 'inline-block';
+            }
+        });
+
+        // Ajusta os botões visíveis
+        saveBtnVaca.style.display = 'none';
+        saveBtnRepro.style.display = 'none';
+        saveBtnProducao.style.display = 'none';
+        cancelBtn.style.display = 'none';
+        deleteBtn.style.display = 'none';
+        editBtn.style.display = 'inline-block';
+
+        alert("Produção atualizada!");
+    })
+    .catch(err => alert(err.message));
+});
+
+
 
 
     deleteBtn.addEventListener('click', () => {
@@ -827,6 +896,29 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         }
     });
 });
+
+function exitEditMode() {
+    // Esconde todos os inputs e mostra os spans
+    fields.forEach(({ span, input }) => {
+        const spanEl = document.getElementById(span);
+        const inputEl = document.getElementById(input);
+
+        if (spanEl && inputEl) {
+            inputEl.style.display = 'none';
+            spanEl.style.display = 'inline-block';
+        }
+    });
+
+    // Esconde botões de salvar e cancelar
+    saveBtnVaca.style.display = 'none';
+    saveBtnRepro.style.display = 'none';
+    saveBtnProducao.style.display = 'none';
+    cancelBtn.style.display = 'none';
+    deleteBtn.style.display = 'none';
+    
+    // Mostra botão de editar
+    editBtn.style.display = 'inline-block';
+}
 
 </script>
 
