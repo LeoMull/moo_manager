@@ -45,7 +45,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/ciclo/**").permitAll()
                     .requestMatchers("/api/usuarios/**").permitAll()
                     .requestMatchers("/api/propriedades/**").permitAll()
-                    .requestMatchers("/api/producao/**").hasRole("FUNCIONARIO")
+                    .requestMatchers("/api/producao/**").permitAll()
                     .requestMatchers("/api/vacas/**").permitAll()
                     .anyRequest().authenticated()
             )

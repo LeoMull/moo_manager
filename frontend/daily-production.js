@@ -75,13 +75,23 @@ document.addEventListener('DOMContentLoaded', function() {
 async function addDailyProduction(params) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:8080/api/producao/${params.cnir}/${params.data}`, {
-            method: 'PUT',
+        const cnir = localStorage.getItem('userCnir');
+        const response = await fetch(`http://localhost:8080/api/producao`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ litros: params.litros })
+            body: JSON.stringify({
+                producaoId: {
+                    cnir: localStorage.getItem('userCnir'),
+                    data: params.data
+                },
+                propriedade: {
+                    cnir: cnir
+                },
+                volume: params.litros
+            })
         });
 
         if (!response.ok) {
