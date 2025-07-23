@@ -36,7 +36,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/").permitAll()
                     .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/api/usuarios").permitAll() // POST de cadastro liberado
                     .requestMatchers("/api/propriedades").permitAll() // POST de cadastro liberado
                     .requestMatchers("/api/producao_vaca/**").permitAll() // temporario?
 
