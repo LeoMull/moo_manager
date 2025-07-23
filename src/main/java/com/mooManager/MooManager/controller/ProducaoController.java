@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -37,7 +38,8 @@ public class ProducaoController {
     }
 
     @PutMapping("/{cnir}/{data}")
-    public ResponseEntity<Producao> atualizar(@PathVariable String cnir, @PathVariable Date data, @RequestBody Producao dados) {
+    public ResponseEntity<Producao> atualizar(@PathVariable String cnir, @PathVariable LocalDate localDate, @RequestBody Producao dados) {
+        Date data = Date.valueOf(localDate);
         ProducaoId producaoId = new ProducaoId(cnir, data);
         return repo.findById(producaoId).map(Producao -> {
             Producao.setVolume(dados.getVolume());
