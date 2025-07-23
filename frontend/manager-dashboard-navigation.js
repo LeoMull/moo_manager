@@ -111,6 +111,7 @@ async function addCow(event) {
     const cowFatherId = document.getElementById('cow-father-id').value;
     const cowFatherName = document.getElementById('cow-father-name').value;
     const token = localStorage.getItem('token');
+    const cnir = localStorage.getItem('userCnir');
 
     try {
         const response = await fetch(`${API_URL}/api/vacas`, {
@@ -120,7 +121,14 @@ async function addCow(event) {
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
-                id: cowId,
+                id: {
+                     idVaca: Number(cowId),
+                     cnir: cnir
+                },
+                propriedade: {
+                    cnir: cnir,
+                    nomePropriedade: null
+                },
                 sexo: cowSex,
                 raca: cowBreed,
                 dataNasc: cowBirthdate,
@@ -129,7 +137,7 @@ async function addCow(event) {
                 precisaAtendimento: cowNeedsCare,
                 observacao: cowObs,
                 peso: cowWeight,
-                dataUltimoPesagem: cowLastWeightDate,
+                dataUltimaPesagem: cowLastWeightDate,
                 idMae: cowMotherId,
                 nomeMae: cowMotherName,
                 idPai: cowFatherId,
