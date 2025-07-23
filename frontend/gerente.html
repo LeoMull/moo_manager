@@ -132,7 +132,7 @@
                             <div class="profile-header">
                                 <div class="profile-info-left">
                                     <h2 id="cow-name">Mimosa</h2>
-                                    <p class="cow-id" id="cow-id">ID: #</p>
+                                    <p class="cow-id" id="cow-id-modal">ID: #</p>
                                 </div>
 
                                 <div class="profile-tabs">
@@ -250,8 +250,8 @@
             <span class="detail-label">Tipo parto:</span>
             <span class="detail-value" id="cow-birth-type">Normal</span>
             <select id="input-cow-birth-type" style="display:none;">
-                <option value="Normal" selected>Normal</option>
-                <option value="Cesárea">Cesárea</option>
+                <option value="NORMAL" selected>Normal</option>
+                <option value="CESARIANA">Cesárea</option>
                 <!-- Adicione mais opções se tiver -->
             </select>
         </div>
@@ -379,9 +379,15 @@
                             <div class="profile-footer">
                                 <button class="back-btn" id="back-profile-btn">Voltar</button>
                                 <button class="back-btn" id="edit-btn">Editar</button>
-                                <button class="back-btn" id="save-btn" style="display:none;">Salvar</button>
+
+                                <!-- Botões de ação separados -->
+                                <button class="back-btn" id="save-btn-vaca" style="display:none;">Salvar Vaca</button>
+                                <button class="back-btn" id="save-btn-repro" style="display:none;">Salvar Reprodução</button>
+                                <button class="back-btn" id="save-btn-producao" style="display:none;">Salvar Produção</button>
+
+                                <button class="back-btn" id="delete-btn" style="display:none;">Excluir Vaca</button>
+
                                 <button class="back-btn" id="cancel-btn" style="display:none;">Cancelar</button>
-                                <button class="back-btn" id="delete-btn" style="display:none;">Excluir</button>
                             </div>
                                     </div>
                     </div>
@@ -401,7 +407,7 @@
                             <option value="F">Feminino</option>
                             <option value="M">Masculino</option>
                         </select>
-                        <input type="text" id="cow-breed" placeholder="Raça" required>
+                        <input type="text" id="cow-breed-ipt" placeholder="Raça" required>
                         <input type="date" id="cow-birthdate" placeholder="Data de Nascimento" required>
                         <select id="cow-category" required>
                                     <option value="" disabled selected>Categoria</option>
@@ -500,9 +506,12 @@
     <script src="search.js"></script>
     <script src="cow-profile.js"></script>
     <script src="manager-dashboard-navigation.js"></script>
+
 <script>
     const editBtn = document.getElementById('edit-btn');
-    const saveBtn = document.getElementById('save-btn');
+    const saveBtnVaca = document.getElementById('save-btn-vaca');
+    const saveBtnRepro = document.getElementById('save-btn-repro');
+    const saveBtnProducao = document.getElementById('save-btn-producao');
     const cancelBtn = document.getElementById('cancel-btn');
     const deleteBtn = document.getElementById('delete-btn');
 
@@ -552,27 +561,27 @@
 
     editBtn.addEventListener('click', () => {
         editBtn.style.display = 'none';
-        saveBtn.style.display = 'inline-block';
         cancelBtn.style.display = 'inline-block';
+        deleteBtn.style.display = 'inline-block';
+
+        // Mostrar todos os botões de salvar
+        saveBtnVaca.style.display = 'inline-block';
+        saveBtnRepro.style.display = 'inline-block';
+        saveBtnProducao.style.display = 'inline-block';
 
         fields.forEach(({ span, input }) => {
             const spanEl = document.getElementById(span);
             const inputEl = document.getElementById(input);
-
             if (spanEl && inputEl) {
                 inputEl.style.display = 'inline-block';
-                if(inputEl.tagName.toLowerCase() === 'select') {
-                    inputEl.value = spanEl.textContent.trim().toLowerCase() === 'sim' || spanEl.textContent.trim().toLowerCase() === 'true' ? 'true' : 'false';
-                } else {
-                    inputEl.value = spanEl.textContent.trim();
-                }
+                inputEl.value = spanEl.textContent.trim();
                 spanEl.style.display = 'none';
             }
         });
     });
 
     cancelBtn.addEventListener('click', () => {
-        saveBtn.style.display = 'none';
+        saveBtnVaca.style.display = 'none';
         cancelBtn.style.display = 'none';
         editBtn.style.display = 'inline-block';
 
@@ -587,72 +596,238 @@
         });
     });
 
-saveBtn.addEventListener('click', () => {
-    // Construir objeto com dados atualizados
-    let token = localStorage.getItem('token');
-    let idVaca = document.getElementById('cow-id').textContent.replace('ID: #', '').trim();
+    saveBtnVaca.addEventListener('click', () => {
+        // Construir objeto com dados atualizados
+        let token = localStorage.getItem('token');
+        let idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
 
-    console.log(idVaca)
-    const dadosAtualizados = {
-        sexo: document.getElementById('input-cow-sexo').value.trim(),
-        raca: document.getElementById('input-cow-breed').value.trim(),
-        dataNasc: document.getElementById('input-cow-birth').value,
-        categoria: document.getElementById('input-cow-category').value.trim(),
-        lote: document.getElementById('input-cow-lot').value.trim(),
-        precisaAtendimento: document.getElementById('input-cow-needs-care').value === 'true',
-        observacao: document.getElementById('input-cow-observation').value.trim(),
-        peso: parseFloat(document.getElementById('input-cow-weight').value),
-        dataUltimaPesagem: document.getElementById('input-cow-last-weighing').value,
-        idMae: parseInt(document.getElementById('input-cow-id-mother').value),
-        nomeMae: document.getElementById('input-cow-mother').value.trim(),
-        idPai: parseInt(document.getElementById('input-cow-id-father').value),
-        nomePai: document.getElementById('input-cow-father').value.trim()
-    };
+        const parseOrNull = (value) => {
+            const trimmed = value.trim();
+            return trimmed === '' ? null : trimmed;
+        };
 
-    fetch(`http://localhost:8080/api/vacas/${idVaca}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify(dadosAtualizados)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Erro ao salvar dados: ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-        // Atualiza os spans com os dados retornados do backend
-        fields.forEach(({ span, input }) => {
-            const spanEl = document.getElementById(span);
-            const inputEl = document.getElementById(input);
+        const parseFloatOrNull = (value) => {
+            const n = parseFloat(value);
+            return isNaN(n) ? null : n;
+        };
 
-            if (spanEl && inputEl) {
-                let val = inputEl.value.trim();
+        const parseIntOrNull = (value) => {
+            const n = parseInt(value);
+            return isNaN(n) ? null : n;
+        };
 
-                // Ajusta booleano para "Sim"/"Não"
-                if (inputEl.tagName.toLowerCase() === 'select') {
-                    val = val === 'true' ? 'Sim' : 'Não';
-                }
+        const dadosAtualizados = {
+            sexo: parseOrNull(document.getElementById('input-cow-sexo').value),
+            raca: parseOrNull(document.getElementById('input-cow-breed').value),
+            dataNasc: parseOrNull(document.getElementById('input-cow-birth').value), // formato "yyyy-MM-dd"
+            categoria: parseOrNull(document.getElementById('input-cow-category').value),
+            lote: parseOrNull(document.getElementById('input-cow-lot').value),
+            precisaAtendimento: document.getElementById('input-cow-needs-care').value === 'true',
+            observacao: parseOrNull(document.getElementById('input-cow-observation').value),
+            peso: parseFloatOrNull(document.getElementById('input-cow-weight').value),
+            dataUltimaPesagem: parseOrNull(document.getElementById('input-cow-last-weighing').value),
+            idMae: parseIntOrNull(document.getElementById('input-cow-id-mother').value),
+            nomeMae: parseOrNull(document.getElementById('input-cow-mother').value),
+            idPai: parseIntOrNull(document.getElementById('input-cow-id-father').value),
+            nomePai: parseOrNull(document.getElementById('input-cow-father').value)
+        };
 
-                spanEl.textContent = val;
-                inputEl.style.display = 'none';
-                spanEl.style.display = 'inline-block';
+
+        console.log(dadosAtualizados);
+
+        fetch(`http://localhost:8080/api/vacas/${idVaca}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(dadosAtualizados)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao salvar dados: ' + response.statusText);
             }
+            return response.json();
+        })
+        .then(data => {
+            // Atualiza os spans com os dados retornados do backend
+            fields.forEach(({ span, input }) => {
+                const spanEl = document.getElementById(span);
+                const inputEl = document.getElementById(input);
+
+                if (spanEl && inputEl) {
+                    let val = inputEl.value.trim();
+
+                    // Ajusta booleano para "Sim"/"Não"
+                    if (inputEl.tagName.toLowerCase() === 'select') {
+                        val = val === 'true' ? 'Sim' : 'Não';
+                    }
+
+                    spanEl.textContent = val;
+                    inputEl.style.display = 'none';
+                    spanEl.style.display = 'inline-block';
+                }
+            });
+
+            saveBtnVaca.style.display = 'none';
+            saveBtnProducao.style.display = 'none';
+            saveBtnRepro.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            editBtn.style.display = 'inline-block';
+
+        
+
+            alert('Dados salvos com sucesso!');
+        })
+        .catch(error => {
+            alert('Erro: ' + error.message);
+        });
+    });
+
+    saveBtnRepro.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+        const cnir = localStorage.getItem('userCnir');
+
+        // Objeto para atualização da entidade Reproducao
+        const dadosReproducao = {
+            situacaoRepo: document.getElementById('input-cow-repro-status').value.trim(),
+            tipoUltParto: document.getElementById('input-cow-birth-type').value.trim(),
+            numPartos: parseInt(document.getElementById('input-cow-birth-count').value),
+            prevParto: document.getElementById('input-cow-next-birth').value,
+            dataUltParto: document.getElementById('input-cow-last-birth-date').value,
+            numTentativas: parseInt(document.getElementById('input-cow-attempts').value)    
+        };
+
+        // Objeto para atualização da entidade Ciclo
+        const dadosCiclo = {
+            diasDesdeUltimoParto: parseInt(document.getElementById('input-cow-days-last-birth').value),
+            diasDesdeUltimaTentativa: parseInt(document.getElementById('input-cow-days-last-attempt').value),
+            dataUltimoCio: document.getElementById('input-cow-last-heat').value,
+            dataUltimaTentativa: document.getElementById('input-cow-last-attempt').value,
+            dataPrimeiraTentativa: document.getElementById('input-cow-first-attempt').value,
+            dataPrimeiroCio: document.getElementById('input-cow-first-heat').value,
+            idPaiUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-father').value),
+            idMaeUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-mother').value),
+            iedUltimoParto: parseInt(document.getElementById('input-cow-last-ied').value)
+        };
+
+        // Requisição para atualizar reprodução
+        fetch(`http://localhost:8080/api/reproducao/${cnir}/${idVaca}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(dadosReproducao)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao salvar reprodução");
+            return res.json();
+        })
+        .then(() => {
+            // Requisição para atualizar ciclo
+            return fetch(`http://localhost:8080/api/ciclo/${cnir}/${idVaca}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(dadosCiclo)
+            });
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao salvar ciclo");
+            return res.json();
+        })
+        .then(() => alert("Reprodução e ciclo atualizados!"))
+        .catch(err => alert(err.message));
+    });
+
+
+    saveBtnProducao.addEventListener('click', () => {
+        const token = localStorage.getItem('token');
+        const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+
+        const dadosProducao = {
+            previsaoSecagem: document.getElementById('input-cow-drying-forecast').value,
+            dataUltimaSecagem: document.getElementById('input-cow-last-drying').value,
+            quantidadeLactacoes: parseInt(document.getElementById('input-cow-lactation-count').value),
+            producaoUltimaOrdenha: parseFloat(document.getElementById('input-cow-last-milk-count').value),
+            dataUltimaOrdenha: document.getElementById('input-cow-last-milk-date').value
+        };
+
+        fetch(`http://localhost:8080/api/producao_vaca/${idVaca}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(dadosProducao)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error("Erro ao salvar produção");
+            return res.json();
+        })
+        .then(() => alert("Produção atualizada!"))
+        .catch(err => alert(err.message));
+    });
+
+
+    deleteBtn.addEventListener('click', () => {
+        const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+        const token = localStorage.getItem('token');
+
+        if (confirm('Tem certeza que deseja excluir esta vaca?')) {
+            fetch(`http://localhost:8080/api/vacas/${idVaca}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao excluir vaca: ' + response.statusText);
+                }
+                alert('Vaca excluída com sucesso!');
+                window.location.reload();
+            })
+            .catch(error => {
+                alert('Erro: ' + error.message);
+            });
+        }
+    });
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const selectedTab = btn.dataset.tab;
+        const cowId = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+
+        // Esconde todas as abas
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+            tab.classList.remove('active');
         });
 
-        saveBtn.style.display = 'none';
-        cancelBtn.style.display = 'none';
-        editBtn.style.display = 'inline-block';
+        // Remove classe ativa de todos os botões
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-        alert('Dados salvos com sucesso!');
-    })
-    .catch(error => {
-        alert('Erro: ' + error.message);
+        // Mostra a aba selecionada e ativa o botão correspondente
+        btn.classList.add('active');
+        document.getElementById(`${selectedTab}-tab`).style.display = 'block';
+        document.getElementById(`${selectedTab}-tab`).classList.add('active');
+
+        // Carrega os dados se necessário
+        if (selectedTab === 'general') {
+            await loadCowProfile(cowId);
+        } else if (selectedTab === 'reproduction') {
+            await loadReproductionTab(cowId);
+        } else if (selectedTab === 'production') {
+            await loadProductionTab(cowId);
+        }
     });
 });
+
 </script>
 
 </body>

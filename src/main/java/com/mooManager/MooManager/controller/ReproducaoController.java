@@ -23,12 +23,11 @@ public class ReproducaoController {
     // Para usar os métodos do repository para SQL
     private final ReproducaoRepository repo; 
     private final VacaRepository vacaRepo;
-    private final JwtUtil jwtUtil;
+    //private final JwtUtil jwtUtil;
 
-    public ReproducaoController(ReproducaoRepository repo, VacaRepository vacaRepo, JwtUtil jwtUtil) {
+    public ReproducaoController(ReproducaoRepository repo, VacaRepository vacaRepo) {
         this.repo = repo;
         this.vacaRepo = vacaRepo;
-        this.jwtUtil = jwtUtil;
     }
 
     // Métodos HTTP
@@ -55,7 +54,7 @@ public class ReproducaoController {
     }
 
     @PostMapping("/{cnir}/{idVaca}")
-    public Reproducao criar(@RequestBody Reproducao novo, @PathVariable String cnir, @PathVariable int idVaca) {
+    public Reproducao criar(@RequestBody Reproducao novo, @PathVariable String cnir, @PathVariable Integer idVaca) {
         VacaId vacaId = new VacaId(idVaca, cnir);
         Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
         System.out.println("Vaca encontrada: " + vaca);
@@ -64,9 +63,10 @@ public class ReproducaoController {
     }
 
     @PutMapping("/{cnir}/{idVaca}") 
-    public ResponseEntity<Reproducao> atualizar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Reproducao dados) {
-        VacaId reproducaoId = new VacaId(idVaca, cnir);
-        return repo.findById(reproducaoId).map(repro -> {
+    public ResponseEntity<Reproducao> atualizarOuCriar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Reproducao dados) {
+        VacaId vacaId = new VacaId(idVaca, cnir);
+
+        return repo.findById(vacaId).map(repro -> {
             repro.setSituacaoRepo(dados.getSituacaoRepo());
             repro.setTipoUltParto(dados.getTipoUltParto());
             repro.setNumPartos(dados.getNumPartos());
@@ -74,8 +74,19 @@ public class ReproducaoController {
             repro.setNumTentativas(dados.getNumTentativas());
             repro.setDataUltParto(dados.getDataUltParto());
             return ResponseEntity.ok(repo.save(repro));
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElseGet(() -> {
+            // Cria uma referência à vaca associada
+            Vaca vaca = vacaRepo.findById(vacaId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vaca não encontrada"));
+
+            dados.setId(vacaId);
+            dados.setVaca(vaca); // IMPORTANTE: associar a vaca
+
+            return ResponseEntity.ok(repo.save(dados));
+        });
     }
+
+
     
     @DeleteMapping("/{cnir}/{idVaca}")
     public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @PathVariable String cnir) {

@@ -98,53 +98,41 @@ function hideAllContents() {
 async function addCow(event) {
     event.preventDefault();
 
-    const cowId = document.getElementById('cow-id').value;
-    const cowSex = document.getElementById('cow-sex').value;
-    const cowBreed = document.getElementById('cow-breed').value;
-    const cowBirthdate = document.getElementById('cow-birthdate').value;
-    const cowCategory = document.getElementById('cow-category').value;
-    const cowLot = document.getElementById('cow-lot').value;
-    const cowNeedsCare = document.getElementById('cow-needs-care').checked;
-    const cowObs = document.getElementById('cow-obs').value;
-    const cowWeight = document.getElementById('cow-weight').value;
-    const cowLastWeightDate = document.getElementById('cow-last-weight-date').value;
-    const cowMotherId = document.getElementById('cow-mother-id').value;
-    const cowMotherName = document.getElementById('cow-mother-name').value;
-    const cowFatherId = document.getElementById('cow-father-id').value;
-    const cowFatherName = document.getElementById('cow-father-name').value;
     const token = localStorage.getItem('token');
     const cnir = localStorage.getItem('userCnir');
 
+    const vaca = {
+        id: {
+          idVaca: parseInt(document.getElementById("cow-id").value),
+          cnir: cnir
+        },
+        sexo: document.getElementById("cow-sex").value,
+        raca: document.getElementById("cow-breed-ipt").value,
+        dataNasc: document.getElementById("cow-birthdate").value,
+        categoria: document.getElementById("cow-category").value,
+        lote: document.getElementById("cow-lot").value || null,
+        precisaAtendimento: document.getElementById("cow-needs-care").checked,
+        observacao: document.getElementById("cow-obs").value || null,
+        peso: parseFloat(document.getElementById("cow-weight").value) || null,
+        dataUltimaPesagem: document.getElementById("cow-last-weight-date").value || null,
+        idMae: document.getElementById("cow-mother-id").value ? parseInt(document.getElementById("cow-mother-id").value) : null,
+        nomeMae: document.getElementById("cow-mother-name").value || null,
+        idPai: document.getElementById("cow-father-id").value ? parseInt(document.getElementById("cow-father-id").value) : null,
+        nomePai: document.getElementById("cow-father-name").value || null
+    };
+
+    console.log(JSON.stringify(vaca));
+
     try {
-        const response = await fetch(`${API_URL}/api/vacas`, {
+        console.log(cnir);
+        const response = await fetch("http://localhost:8080/api/vacas", {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
             },
-            body: JSON.stringify({
-                id: {
-                     idVaca: Number(cowId),
-                     cnir: cnir
-                },
-                propriedade: {
-                    cnir: cnir,
-                    nomePropriedade: null
-                },
-                sexo: cowSex,
-                raca: cowBreed,
-                dataNasc: cowBirthdate,
-                categoria: cowCategory,
-                lote: cowLot,
-                precisaAtendimento: cowNeedsCare,
-                observacao: cowObs,
-                peso: cowWeight,
-                dataUltimaPesagem: cowLastWeightDate,
-                idMae: cowMotherId,
-                nomeMae: cowMotherName,
-                idPai: cowFatherId,
-                nomePai: cowFatherName
-        })});
+            body: JSON.stringify(vaca)
+            });
 
             if (response.ok) {
                 document.getElementById('add-cow-message').textContent = "Vaca cadastrada com sucesso!";

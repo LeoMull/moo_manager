@@ -13,7 +13,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import java.util.List;
 
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -30,18 +34,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors()
+            .cors() // Ativa o CORS com base na configuração abaixo
             .and()
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/").permitAll()
                     .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/api/propriedades").permitAll() // POST de cadastro liberado
-                    .requestMatchers("/api/reproducao/**").permitAll() // POST de cadastro liberado
-                    .requestMatchers("/api/producao_vaca/**").permitAll() // POST de producao liberado (temporario)
+                    .requestMatchers("/api/reproducao/**").permitAll()
+                    .requestMatchers("/api/producao_vaca/**").permitAll()
                     .requestMatchers("/api/ciclo/**").permitAll()
-
-                    // Protegidas por autenticação
                     .requestMatchers("/api/usuarios/**").permitAll()
                     .requestMatchers("/api/propriedades/**").permitAll()
                     .requestMatchers("/api/producao/**").hasRole("FUNCIONARIO")
@@ -52,7 +53,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
 
-        // Adiciona o filtro JWT ANTES do UsernamePasswordAuthenticationFilter
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -67,5 +67,18 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("*")); // aceita qualquer origem
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true); // use false se não precisa enviar cookies/autenticação via navegador
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

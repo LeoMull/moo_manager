@@ -37,14 +37,14 @@ public class ProducaoVacaController {
     }
 
     @GetMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<ProducaoVaca> buscarPorChave(@PathVariable String cnir, @PathVariable int idVaca) {
+    public ResponseEntity<ProducaoVaca> buscarPorChave(@PathVariable String cnir, @PathVariable Integer idVaca) {
         VacaId vacaId = new VacaId(idVaca, cnir);
         return repo.findById(vacaId).map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/{cnir}/{idVaca}")
-    public ProducaoVaca criar(@RequestBody ProducaoVaca novo, @PathVariable String cnir, @PathVariable int idVaca) {
+    public ProducaoVaca criar(@RequestBody ProducaoVaca novo, @PathVariable String cnir, @PathVariable Integer idVaca) {
         VacaId vacaId = new VacaId(idVaca, cnir);
         Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
         novo.setVaca(vaca);
@@ -52,20 +52,30 @@ public class ProducaoVacaController {
     }
 
     @PutMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<ProducaoVaca> atualizar(@PathVariable String cnir, @PathVariable int idVaca, @RequestBody ProducaoVaca dados) {
+    public ResponseEntity<ProducaoVaca> atualizarOuCriar(@PathVariable String cnir,
+                                                        @PathVariable Integer idVaca,
+                                                        @RequestBody ProducaoVaca dados) {
         VacaId vacaId = new VacaId(idVaca, cnir);
-        return repo.findById(vacaId).map(producao_vaca -> {
-            producao_vaca.setDataSecagem(dados.getDataSecagem());
-            producao_vaca.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
-            producao_vaca.setDataUltimaSecagem(dados.getDataUltimaSecagem());
-            producao_vaca.setQtdLactacoes(dados.getQtdLactacoes());
-            producao_vaca.setUltimaCtgLeite(producao_vaca.getUltimaCtgLeite());
-            return ResponseEntity.ok(repo.save(producao_vaca));
-        }).orElse(ResponseEntity.notFound().build());
+
+        return repo.findById(vacaId).map(producaoExistente -> {
+            producaoExistente.setDataSecagem(dados.getDataSecagem());
+            producaoExistente.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
+            producaoExistente.setDataUltimaSecagem(dados.getDataUltimaSecagem());
+            producaoExistente.setQtdLactacoes(dados.getQtdLactacoes());
+            producaoExistente.setUltimaCtgLeite(dados.getUltimaCtgLeite());
+            return ResponseEntity.ok(repo.save(producaoExistente));
+        }).orElseGet(() -> {
+            dados.setId(new VacaId(idVaca, cnir)); // necessário para criar novo
+            return ResponseEntity.ok(repo.save(dados));
+        });
     }
 
-@PutMapping("/{idVaca}/contagem-leite")
-    public ResponseEntity<ProducaoVaca> atualizarContagemLeite(@PathVariable Integer idVaca, @RequestBody ProducaoVaca dados, @RequestHeader("Authorization") String authHeader) {
+    @PutMapping("/{idVaca}/contagem-leite")
+    public ResponseEntity<ProducaoVaca> atualizarOuCriarContagemLeite(
+            @PathVariable Integer idVaca,
+            @RequestBody ProducaoVaca dados,
+            @RequestHeader("Authorization") String authHeader) {
+        
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
         VacaId id = new VacaId(idVaca, cnir);
@@ -74,11 +84,14 @@ public class ProducaoVacaController {
             producao.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
             producao.setUltimaCtgLeite(dados.getUltimaCtgLeite());
             return ResponseEntity.ok(repo.save(producao));
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElseGet(() -> {
+            dados.setId(id); // necessário para criação correta
+            return ResponseEntity.ok(repo.save(dados));
+        });
     }
     
     @DeleteMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<Void> deletar(@PathVariable String cnir, @PathVariable int idVaca) {
+    public ResponseEntity<Void> deletar(@PathVariable String cnir, @PathVariable Integer idVaca) {
         VacaId vacaId = new VacaId(idVaca, cnir);
         return repo.findById(vacaId).map(e -> {
             repo.delete(e);
