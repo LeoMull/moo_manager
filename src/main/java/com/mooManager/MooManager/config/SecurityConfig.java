@@ -39,6 +39,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/propriedades").permitAll() // POST de cadastro liberado
                     .requestMatchers("/api/reproducao/**").permitAll() // POST de cadastro liberado
                     .requestMatchers("/api/producao_vaca/**").permitAll() // POST de producao liberado (temporario)
+                    .requestMatchers("/api/ciclo/**").permitAll()
 
                     // Protegidas por autenticação
                     .requestMatchers("/api/usuarios/**").permitAll()
