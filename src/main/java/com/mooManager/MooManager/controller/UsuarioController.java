@@ -2,7 +2,11 @@ package com.mooManager.MooManager.controller;
 
 import com.mooManager.MooManager.model.Usuario;
 import com.mooManager.MooManager.model.UsuarioId;
+import com.mooManager.MooManager.security.JwtUtil;
 import com.mooManager.MooManager.service.UsuarioService;
+import com.mooManager.MooManager.repository.UsuarioRepository;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
+    private final JwtUtil jwtUtil;
 
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioController(UsuarioService usuarioService, JwtUtil jwtUtil) {
         this.usuarioService = usuarioService;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping("/form")
@@ -32,18 +38,17 @@ public class UsuarioController {
         return "sou_funcionario papae";
     }
 
-
-    @GetMapping("/{cnir}/{email}")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable String cnir, @PathVariable String email) {
-        UsuarioId usuarioId = new UsuarioId(email, cnir);
-        Usuario usuario = usuarioService.buscarPorId(usuarioId);
-        return usuario != null ? ResponseEntity.ok(usuario) : ResponseEntity.notFound().build();
+    @GetMapping("/listar")
+    public ResponseEntity<List<Usuario>> listarTodos(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
+        return ResponseEntity.ok(usuarioService.findByUsuarioIdCnir(cnir));
     }
 
     @PostMapping
     public Usuario criar(@RequestBody Usuario novo) {
         return usuarioService.salvarUsuario(novo);
-    }
+    } 
 
     // PUT com chave composta: /api/usuarios/{cnir}/{email}
     @PutMapping("/{cnir}/{email}")
