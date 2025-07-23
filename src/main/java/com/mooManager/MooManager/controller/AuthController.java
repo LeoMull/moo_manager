@@ -36,6 +36,7 @@ public class AuthController {
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
         response.put("nivelDeAcesso", usuario.getNivelDeAcesso().name());
+        response.put("cnir", usuario.getUsuarioId().getCnir());
 
         return ResponseEntity.ok(response);
     }

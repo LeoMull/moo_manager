@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addCowContent = document.getElementById('add-cow-content');
     const employeesContent = document.getElementById('employees-content');
     const lotsContent = document.getElementById('lots-content');
+    const addCowForm = document.getElementById('add-cow-form');
 
     // Botões do menu
     const homeBtn = document.getElementById('home-btn');
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (addCowBtn) addCowBtn.addEventListener('click', showAddCowForm);
     if (employeesBtn) employeesBtn.addEventListener('click', showEmployees);
     if (lotsBtn) lotsBtn.addEventListener('click', showLots);
+    if (addCowForm) addCowForm.addEventListener('submit', addCow);
     
     // Sistema de abas (reutilizado do perfil da vaca)
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -60,6 +62,7 @@ function showCowProfile(cowId) {
 function showAddCowForm() {
     hideAllContents();
     document.getElementById('add-cow-content').style.display = 'block';
+    // addCowRow();
 }
 
 function showEmployees() {
@@ -88,6 +91,70 @@ function hideAllContents() {
         const element = document.getElementById(id);
         if (element) element.style.display = 'none';
     });
+}
+
+async function addCow(event) {
+    event.preventDefault();
+
+    const cowId = document.getElementById('cow-id').value;
+    const cowSex = document.getElementById('cow-sex').value;
+    const cowBreed = document.getElementById('cow-breed').value;
+    const cowBirthdate = document.getElementById('cow-birthdate').value;
+    const cowCategory = document.getElementById('cow-category').value;
+    const cowLot = document.getElementById('cow-lot').value;
+    const cowNeedsCare = document.getElementById('cow-needs-care').checked;
+    const cowObs = document.getElementById('cow-obs').value;
+    const cowWeight = document.getElementById('cow-weight').value;
+    const cowLastWeightDate = document.getElementById('cow-last-weight-date').value;
+    const cowMotherId = document.getElementById('cow-mother-id').value;
+    const cowMotherName = document.getElementById('cow-mother-name').value;
+    const cowFatherId = document.getElementById('cow-father-id').value;
+    const cowFatherName = document.getElementById('cow-father-name').value;
+    const token = localStorage.getItem('token');
+    const cnir = localStorage.getItem('userCnir');
+
+    try {
+        const response = await fetch(`${API_URL}/api/vacas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                id: {
+                     idVaca: Number(cowId),
+                     cnir: cnir
+                },
+                propriedade: {
+                    cnir: cnir,
+                    nomePropriedade: null
+                },
+                sexo: cowSex,
+                raca: cowBreed,
+                dataNasc: cowBirthdate,
+                categoria: cowCategory,
+                lote: cowLot,
+                precisaAtendimento: cowNeedsCare,
+                observacao: cowObs,
+                peso: cowWeight,
+                dataUltimaPesagem: cowLastWeightDate,
+                idMae: cowMotherId,
+                nomeMae: cowMotherName,
+                idPai: cowFatherId,
+                nomePai: cowFatherName
+        })});
+
+            if (response.ok) {
+                document.getElementById('add-cow-message').textContent = "Vaca cadastrada com sucesso!";
+                document.getElementById('add-cow-form').reset();
+                showCowsList();
+            } else {
+                const error = await response.text();
+                document.getElementById('add-cow-message').textContent = `Erro ao adicionar a vaca: ${error}`;
+            }
+    } catch (error) {
+        document.getElementById('add-cow-message').textContent = "Erro de conexão com o servidor.";
+    }
 }
 
 // Função para voltar para a lista de vacas (usada no botão voltar do perfil)
