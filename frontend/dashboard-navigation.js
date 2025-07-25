@@ -1,5 +1,3 @@
-// dashboard-navigation.js
-
 document.addEventListener('DOMContentLoaded', function() {
     const cowsContent = document.getElementById('cows-content');
     const profileContent = document.getElementById('profile-content');
