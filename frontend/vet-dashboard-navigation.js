@@ -1,16 +1,14 @@
+// vet-dashboard-navigation.js
 document.addEventListener('DOMContentLoaded', function() {
     const homeBtn = document.getElementById('home-btn');
-    const newAppointmentBtn = document.getElementById('new-appointment-btn');
-    const newInseminationBtn = document.getElementById('new-insemination-btn');
     const newTreatmentBtn = document.getElementById('new-treatment-btn');
-    const backProfileBtn = document.getElementById('back-profile-btn');
+    const newInseminationBtn = document.getElementById('new-insemination-btn');
+    const listTreatmentsBtn = document.getElementById('list-treatments-btn');
 
     const homeContent = document.getElementById('home-content');
-    const cowsContent = document.getElementById('cows-content');
-    const profileContent = document.getElementById('profile-content');
-    const appointmentContent = document.getElementById('appointment-content');
-    const inseminationContent = document.getElementById('insemination-content');
+    const treatmentsContent = document.getElementById('treatments-content');
     const treatmentContent = document.getElementById('treatment-content');
+    const inseminationContent = document.getElementById('insemination-content');
 
     function showSection(sectionToShow) {
         document.querySelectorAll('.dashboard-section > div').forEach(section => {
@@ -27,9 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateHomeStats();
     });
 
-    newAppointmentBtn.addEventListener('click', () => {
-        showSection(appointmentContent);
-        resetAppointmentForm();
+    newTreatmentBtn.addEventListener('click', () => {
+        showSection(treatmentContent);
+        resetTreatmentForm();
     });
 
     newInseminationBtn.addEventListener('click', () => {
@@ -37,61 +35,46 @@ document.addEventListener('DOMContentLoaded', function() {
         resetInseminationForm();
     });
 
-    newTreatmentBtn.addEventListener('click', () => {
-        showSection(treatmentContent);
-        resetTreatmentForm();
+    listTreatmentsBtn.addEventListener('click', () => {
+        showSection(treatmentsContent);
+        loadTreatmentsList();
     });
 
-    backProfileBtn.addEventListener('click', () => {
-        showSection(cowsContent);
-    });
-
-    function loadCowsList() {
-        const cowsList = document.getElementById('cows-list');
-        if (!cowsList) return;
+    function loadTreatmentsList() {
+        const treatmentsList = document.getElementById('treatments-list');
+        if (!treatmentsList) return;
         
-        cowsList.innerHTML = '';
+        treatmentsList.innerHTML = '';
         
         const sampleCows = [
-            { id: '001', name: 'Mimosa', breed: 'Holandesa', age: '4 anos' },
-            { id: '002', name: 'Branquinha', breed: 'Jersey', age: '5 anos' },
-            { id: '003', name: 'Preta', breed: 'Holandesa', age: '3 anos' },
-            { id: '004', name: 'Malhada', breed: 'Girolando', age: '2 anos' }
+            { id: '001', name: 'Mimosa', breed: 'Holandesa', lastTreatment: '15/05/2024' },
+            { id: '002', name: 'Branquinha', breed: 'Jersey', lastTreatment: '10/05/2024' },
+            { id: '003', name: 'Preta', breed: 'Holandesa', lastTreatment: '05/05/2024' },
+            { id: '004', name: 'Malhada', breed: 'Girolando', lastTreatment: '01/05/2024' }
         ];
         
         sampleCows.forEach(cow => {
             const cowItem = document.createElement('div');
-            cowItem.className = 'list-item';
+            cowItem.className = 'list-row';
             cowItem.innerHTML = `
-                <div class="list-column">${cow.id}</div>
-                <div class="list-column">${cow.name}</div>
-                <div class="list-column">${cow.breed}</div>
-                <div class="list-column">${cow.age}</div>
-                <div class="list-column">
-                    <button class="action-btn view-btn" data-cow-id="${cow.id}">Ver</button>
+                <div class="list-item">${cow.id}</div>
+                <div class="list-item">${cow.name}</div>
+                <div class="list-item">${cow.breed}</div>
+                <div class="list-item">${cow.lastTreatment}</div>
+                <div class="list-item">
+                    <button class="action-btn treat-btn" data-cow-id="${cow.id}">Atender</button>
                 </div>
             `;
-            cowsList.appendChild(cowItem);
+            treatmentsList.appendChild(cowItem);
         });
         
-        document.querySelectorAll('.view-btn').forEach(btn => {
+        document.querySelectorAll('.treat-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const cowId = btn.getAttribute('data-cow-id');
-                loadCowProfile(cowId);
-                showSection(profileContent);
+                document.getElementById('treatment-cow-id').value = cowId;
+                showSection(treatmentContent);
             });
         });
-    }
-
-    function loadCowProfile(cowId) {
-        document.getElementById('cow-id-modal').textContent = `ID: #${cowId}`;
-        document.getElementById('cow-name').textContent = 'Vaca #' + cowId;
-        
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        
-        document.querySelector('.tab-btn[data-tab="general"]').classList.add('active');
-        document.getElementById('general-tab').classList.add('active');
     }
 
     function updateHomeStats() {
@@ -100,15 +83,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('today-appointments').textContent = '2';
     }
 
-    function resetAppointmentForm() {
-        const form = document.getElementById('appointment-form');
+    function resetTreatmentForm() {
+        const form = document.getElementById('treatment-form');
         if (form) {
             form.reset();
-            const dateInput = document.getElementById('appointment-date');
+            const dateInput = document.getElementById('treatment-date');
             if (dateInput) {
-                const now = new Date();
-                const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-                dateInput.value = localDateTime;
+                dateInput.valueAsDate = new Date();
             }
         }
     }
@@ -123,29 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-
-    function resetTreatmentForm() {
-        const form = document.getElementById('treatment-form');
-        if (form) {
-            form.reset();
-            const dateInput = document.getElementById('treatment-date');
-            if (dateInput) {
-                dateInput.valueAsDate = new Date();
-            }
-        }
-    }
-
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const tabId = this.getAttribute('data-tab');
-            
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            
-            this.classList.add('active');
-            document.getElementById(`${tabId}-tab`).classList.add('active');
-        });
-    });
 
     showSection(homeContent);
     updateHomeStats();
