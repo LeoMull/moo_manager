@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Gerente - MooManager</title>
+    <link rel="icon" type="image/png" href="content/images/icon/cow.png">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="search.css">
 </head>
@@ -571,9 +572,7 @@
     const cancelBtn = document.getElementById('cancel-btn');
     const deleteBtn = document.getElementById('delete-btn');
 
-    // Todos os campos que têm span e input correspondentes, IDs consistentes
     const fields = [
-        // Dados Gerais
         { span: 'cow-sexo', input: 'input-cow-sexo' },
         { span: 'cow-breed', input: 'input-cow-breed' },
         { span: 'cow-birth', input: 'input-cow-birth' },
@@ -589,7 +588,6 @@
         { span: 'cow-id-father', input: 'input-cow-id-father' },
         { span: 'cow-father', input: 'input-cow-father' },
 
-        // Reprodução
         { span: 'cow-repro-status', input: 'input-cow-repro-status' },
         { span: 'cow-birth-type', input: 'input-cow-birth-type' },
         { span: 'cow-days-last-birth', input: 'input-cow-days-last-birth' },
@@ -607,7 +605,6 @@
         { span: 'cow-last-attempt-father', input: 'input-cow-last-attempt-father' },
         { span: 'cow-last-attempt-mother', input: 'input-cow-last-attempt-mother' },
 
-        // Produção
         { span: 'cow-drying-forecast', input: 'input-cow-drying-forecast' },
         { span: 'cow-last-drying', input: 'input-cow-last-drying' },
         { span: 'cow-lactation-count', input: 'input-cow-lactation-count' },
@@ -620,7 +617,6 @@
         cancelBtn.style.display = 'inline-block';
         deleteBtn.style.display = 'inline-block';
 
-        // Mostrar todos os botões de salvar
         saveBtnVaca.style.display = 'inline-block';
         saveBtnRepro.style.display = 'inline-block';
         saveBtnProducao.style.display = 'inline-block';
@@ -653,7 +649,6 @@
     });
 
     saveBtnVaca.addEventListener('click', () => {
-        // Construir objeto com dados atualizados
         let token = localStorage.getItem('token');
         let idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
 
@@ -706,7 +701,6 @@
             return response.json();
         })
         .then(data => {
-            // Atualiza os spans com os dados retornados do backend
             fields.forEach(({ span, input }) => {
                 const spanEl = document.getElementById(span);
                 const inputEl = document.getElementById(input);
@@ -714,7 +708,6 @@
                 if (spanEl && inputEl) {
                     let val = inputEl.value.trim();
 
-                    // Ajusta booleano para "Sim"/"Não"
                     if (inputEl.tagName.toLowerCase() === 'select') {
                         val = val === 'true' ? 'Sim' : 'Não';
                     }
@@ -745,7 +738,6 @@
     const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
     const cnir = localStorage.getItem('userCnir');
 
-    // Objeto para atualização da entidade Reproducao
     const dadosReproducao = {
         situacaoRepo: document.getElementById('input-cow-repro-status').value.trim(),
         tipoUltParto: document.getElementById('input-cow-birth-type').value.trim(),
@@ -755,7 +747,6 @@
         numTentativas: parseInt(document.getElementById('input-cow-attempts').value)    
     };
 
-    // Objeto para atualização da entidade Ciclo
     const dadosCiclo = {
         diasDesdeUltimoParto: parseInt(document.getElementById('input-cow-days-last-birth').value),
         diasDesdeUltimaTentativa: parseInt(document.getElementById('input-cow-days-last-attempt').value),
@@ -768,7 +759,6 @@
         iedUltimoParto: parseInt(document.getElementById('input-cow-last-ied').value)
     };
 
-    // Requisição para atualizar reprodução
     fetch(`http://localhost:8080/api/reproducao/${cnir}/${idVaca}`, {
         method: 'PUT',
         headers: {
@@ -782,7 +772,6 @@
         return res.json();
     })
     .then(() => {
-        // Requisição para atualizar ciclo
         return fetch(`http://localhost:8080/api/ciclo/${cnir}/${idVaca}`, {
             method: 'PUT',
             headers: {
@@ -797,7 +786,6 @@
         return res.json();
     })
     .then(() => {
-        // ATUALIZA OS VALORES NOS SPANS DA ABA REPRODUÇÃO
         document.getElementById('cow-repro-status').textContent = dadosReproducao.situacaoRepo;
         document.getElementById('cow-birth-type').textContent = dadosReproducao.tipoUltParto;
         document.getElementById('cow-days-last-birth').textContent = dadosCiclo.diasDesdeUltimoParto;
@@ -815,7 +803,6 @@
         document.getElementById('cow-last-attempt-father').textContent = dadosCiclo.idPaiUltimaTentativa;
         document.getElementById('cow-last-attempt-mother').textContent = dadosCiclo.idMaeUltimaTentativa;
 
-        // SAIR DO MODO DE EDIÇÃO
         fields.forEach(({ span, input }) => {
             const spanEl = document.getElementById(span);
             const inputEl = document.getElementById(input);
@@ -826,7 +813,6 @@
             }
         });
 
-        // ESCOLHER OS BOTÕES VISÍVEIS
         saveBtnVaca.style.display = 'none';
         saveBtnRepro.style.display = 'none';
         saveBtnProducao.style.display = 'none';
@@ -866,14 +852,12 @@ saveBtnProducao.addEventListener('click', () => {
         return res.json();
     })
     .then(() => {
-        // Atualiza os spans com os novos valores
         document.getElementById('cow-drying-forecast').textContent = dadosProducao.dataSecagem;
         document.getElementById('cow-last-drying').textContent = dadosProducao.dataUltimaSecagem;
         document.getElementById('cow-lactation-count').textContent = dadosProducao.qtdLactacoes;
         document.getElementById('cow-last-milk-count').textContent = dadosProducao.ultimaCtgLeite;
         document.getElementById('cow-last-milk-date').textContent = dadosProducao.dataUltimaCtgLeite;
 
-        // Sai do modo de edição (mesma lógica do saveBtnRepro)
         fields.forEach(({ span, input }) => {
             const spanEl = document.getElementById(span);
             const inputEl = document.getElementById(input);
@@ -883,7 +867,6 @@ saveBtnProducao.addEventListener('click', () => {
             }
         });
 
-        // Ajusta os botões visíveis
         saveBtnVaca.style.display = 'none';
         saveBtnRepro.style.display = 'none';
         saveBtnProducao.style.display = 'none';
@@ -895,9 +878,6 @@ saveBtnProducao.addEventListener('click', () => {
     })
     .catch(err => alert(err.message));
 });
-
-
-
 
     deleteBtn.addEventListener('click', () => {
         const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
@@ -928,21 +908,17 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         const selectedTab = btn.dataset.tab;
         const cowId = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
 
-        // Esconde todas as abas
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.style.display = 'none';
             tab.classList.remove('active');
         });
 
-        // Remove classe ativa de todos os botões
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-        // Mostra a aba selecionada e ativa o botão correspondente
         btn.classList.add('active');
         document.getElementById(`${selectedTab}-tab`).style.display = 'block';
         document.getElementById(`${selectedTab}-tab`).classList.add('active');
 
-        // Carrega os dados se necessário
         if (selectedTab === 'general') {
             await loadCowProfile(cowId);
         } else if (selectedTab === 'reproduction') {
@@ -954,7 +930,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 function exitEditMode() {
-    // Esconde todos os inputs e mostra os spans
     fields.forEach(({ span, input }) => {
         const spanEl = document.getElementById(span);
         const inputEl = document.getElementById(input);
@@ -965,14 +940,12 @@ function exitEditMode() {
         }
     });
 
-    // Esconde botões de salvar e cancelar
     saveBtnVaca.style.display = 'none';
     saveBtnRepro.style.display = 'none';
     saveBtnProducao.style.display = 'none';
     cancelBtn.style.display = 'none';
     deleteBtn.style.display = 'none';
     
-    // Mostra botão de editar
     editBtn.style.display = 'inline-block';
 }
 
