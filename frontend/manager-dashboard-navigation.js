@@ -1,7 +1,4 @@
-// manager-dashboard-navigation.js
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Elementos de conteúdo
     const homeContent = document.getElementById('home-content');
     const cowsContent = document.getElementById('cows-content');
     const profileContent = document.getElementById('profile-content');
@@ -9,21 +6,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const employeesContent = document.getElementById('employees-content');
     const lotsContent = document.getElementById('lots-content');
 
-    // Botões do menu
     const homeBtn = document.getElementById('home-btn');
     const listCowsBtn = document.getElementById('list-cows-btn');
     const addCowBtn = document.getElementById('add-cow-btn');
     const employeesBtn = document.getElementById('employees-btn');
     const lotsBtn = document.getElementById('lots-btn');
     
-    // Event Listeners
     if (homeBtn) homeBtn.addEventListener('click', showHome);
     if (listCowsBtn) listCowsBtn.addEventListener('click', showCowsList);
     if (addCowBtn) addCowBtn.addEventListener('click', showAddCowForm);
     if (employeesBtn) employeesBtn.addEventListener('click', showEmployees);
     if (lotsBtn) lotsBtn.addEventListener('click', showLots);
     
-    // Sistema de abas (reutilizado do perfil da vaca)
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -35,11 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Inicialização
     showHome();
 });
 
-// Funções de navegação
 function showHome() {
     hideAllContents();
     document.getElementById('home-content').style.display = 'block';
@@ -48,13 +40,13 @@ function showHome() {
 function showCowsList() {
     hideAllContents();
     document.getElementById('cows-content').style.display = 'block';
-    loadCowsData(); // Função que carrega os dados das vacas
+    loadCowsData();
 }
 
 function showCowProfile(cowId) {
     hideAllContents();
     document.getElementById('profile-content').style.display = 'block';
-    loadCowProfile(cowId); // Função que carrega o perfil da vaca
+    loadCowProfile(cowId);
 }
 
 function showAddCowForm() {
@@ -65,13 +57,13 @@ function showAddCowForm() {
 function showEmployees() {
     hideAllContents();
     document.getElementById('employees-content').style.display = 'block';
-    loadEmployeesData(); // Função que carrega os dados dos funcionários
+    loadEmployeesData();
 }
 
 function showLots() {
     hideAllContents();
     document.getElementById('lots-content').style.display = 'block';
-    loadLotsData(); // Função que carrega os dados dos lotes
+    loadLotsData();
 }
 
 function hideAllContents() {
@@ -90,7 +82,6 @@ function hideAllContents() {
     });
 }
 
-// Função para voltar para a lista de vacas (usada no botão voltar do perfil)
 window.backToList = function() {
     showCowsList();
 };
