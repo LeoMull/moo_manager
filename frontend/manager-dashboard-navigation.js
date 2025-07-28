@@ -252,10 +252,9 @@ function editEmployee(cpf) {
 }
 
 async function deleteEmployee(email) {
-    const cnir = localStorage.getItem('userCnir');
     const token = localStorage.getItem('token');
     try {
-        const response = await fetch(`${API_URL}/api/usuarios/${cnir}/${email}`, {
+        const response = await fetch(`${API_URL}/api/usuarios/${email}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
