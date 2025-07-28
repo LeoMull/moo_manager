@@ -25,7 +25,7 @@ class ManagerPanel {
         return;
       }
 
-      const response = await fetch(`http://localhost:8080/api/propriedade/${this.cnir}`, {
+      const response = await fetch(`http://localhost:8080/api/propriedade/current`, {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + this.token
@@ -53,7 +53,7 @@ class ManagerPanel {
         return;
       }
 
-      const statsResponse = await fetch(`http://localhost:8080/api/propriedade/${this.cnir}/stats`, {
+      const statsResponse = await fetch(`http://localhost:8080/api/propriedade/current/stats`, {
         method: 'GET',
         headers: {
           'Authorization': 'Bearer ' + this.token

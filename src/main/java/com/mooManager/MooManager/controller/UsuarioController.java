@@ -51,8 +51,10 @@ public class UsuarioController {
     } 
 
     // PUT com chave composta: /api/usuarios/{cnir}/{email}
-    @PutMapping("/{cnir}/{email}")
-    public ResponseEntity<Usuario> atualizar(@PathVariable String cnir, @PathVariable String email, @RequestBody Usuario dados) {
+    @PutMapping("/{email}")
+    public ResponseEntity<Usuario> atualizar(@RequestHeader("Authorization") String authHeader, @PathVariable String email, @RequestBody Usuario dados) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         UsuarioId usuarioId = new UsuarioId(email, cnir);
         Usuario usuarioExistente = usuarioService.buscarPorId(usuarioId);
         if (usuarioExistente == null) {
@@ -70,8 +72,10 @@ public class UsuarioController {
     }
 
     // DELETE com chave composta: /api/usuarios/{cnir}/{email}
-    @DeleteMapping("/{cnir}/{email}")
-    public ResponseEntity<Void> deletar(@PathVariable String cnir, @PathVariable String email) {
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Void> deletar(@RequestHeader("Authorization") String authHeader, @PathVariable String email) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         UsuarioId usuarioId = new UsuarioId(email, cnir);
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
         if (usuario == null) {
