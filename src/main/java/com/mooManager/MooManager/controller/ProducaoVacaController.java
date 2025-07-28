@@ -36,25 +36,32 @@ public class ProducaoVacaController {
         return repo.findAll();
     }
 
-    @GetMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<ProducaoVaca> buscarPorChave(@PathVariable String cnir, @PathVariable Integer idVaca) {
+    @GetMapping("/{idVaca}")
+    public ResponseEntity<ProducaoVaca> buscarPorChave(@RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
         return repo.findById(vacaId).map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{cnir}/{idVaca}")
-    public ProducaoVaca criar(@RequestBody ProducaoVaca novo, @PathVariable String cnir, @PathVariable Integer idVaca) {
+    @PostMapping("/{idVaca}")
+    public ProducaoVaca criar(@RequestBody ProducaoVaca novo, @RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
         Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
         novo.setVaca(vaca);
         return repo.save(novo);
     }
 
-    @PutMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<ProducaoVaca> atualizarOuCriar(@PathVariable String cnir,
+    @PutMapping("/{idVaca}")
+    public ResponseEntity<ProducaoVaca> atualizarOuCriar(@RequestHeader("Authorization") String authHeader,
                                                         @PathVariable Integer idVaca,
                                                         @RequestBody ProducaoVaca dados) {
+
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
 
         return repo.findById(vacaId).map(producaoExistente -> {
@@ -92,8 +99,10 @@ public class ProducaoVacaController {
         });
     }
     
-    @DeleteMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<Void> deletar(@PathVariable String cnir, @PathVariable Integer idVaca) {
+    @DeleteMapping("/{idVaca}")
+    public ResponseEntity<Void> deletar(@RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
         return repo.findById(vacaId).map(e -> {
             repo.delete(e);
