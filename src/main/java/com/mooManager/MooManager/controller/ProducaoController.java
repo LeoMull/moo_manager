@@ -5,6 +5,7 @@ import com.mooManager.MooManager.model.ProducaoId;
 import com.mooManager.MooManager.repository.ProducaoRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.mooManager.MooManager.security.JwtUtil;
 
 import java.util.List;
 import java.sql.Date;
@@ -15,9 +16,12 @@ import java.time.LocalDate;
 @RequestMapping("/api/producao")
 public class ProducaoController {
     private final ProducaoRepository repo;
+    private final JwtUtil jwtUtil;
 
-    public ProducaoController(ProducaoRepository repo) {
+
+    public ProducaoController(ProducaoRepository repo, JwtUtil jwtUtil) {
         this.repo = repo;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
@@ -25,8 +29,10 @@ public class ProducaoController {
         return repo.findAll();
     }
 
-    @GetMapping("/{cnir}/{data}")
-    public ResponseEntity<Producao> buscarPorId(@PathVariable String cnir, @PathVariable Date data) {
+    @GetMapping("/{data}")
+    public ResponseEntity<Producao> buscarPorId(@RequestHeader("Authorization") String authHeader, @PathVariable Date data) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         ProducaoId producaoId = new ProducaoId(cnir, data);
         return repo.findById(producaoId).map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
@@ -37,8 +43,10 @@ public class ProducaoController {
         return repo.save(novo);
     }
 
-    @PutMapping("/{cnir}/{data}")
-    public ResponseEntity<Producao> atualizar(@PathVariable String cnir, @PathVariable LocalDate localDate, @RequestBody Producao dados) {
+    @PutMapping("/{data}")
+    public ResponseEntity<Producao> atualizar(@RequestHeader("Authorization") String authHeader, @PathVariable LocalDate localDate, @RequestBody Producao dados) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         Date data = Date.valueOf(localDate);
         ProducaoId producaoId = new ProducaoId(cnir, data);
         return repo.findById(producaoId).map(Producao -> {
@@ -47,8 +55,10 @@ public class ProducaoController {
         }).orElse(ResponseEntity.notFound().build());
     }
     
-    @DeleteMapping("{cnir}/{data}")
-    public ResponseEntity<Void> deletar(@PathVariable String cnir, @PathVariable Date data) {
+    @DeleteMapping("/{data}")
+    public ResponseEntity<Void> deletar(@RequestHeader("Authorization") String authHeader, @PathVariable Date data) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         ProducaoId producaoId = new ProducaoId(cnir, data);
         return repo.findById(producaoId).map(e -> {
             repo.delete(e);
