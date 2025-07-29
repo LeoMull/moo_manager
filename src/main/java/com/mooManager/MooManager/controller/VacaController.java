@@ -30,7 +30,8 @@ public class VacaController {
     }
 
     @GetMapping("/{idVaca}")
-    public ResponseEntity<Vaca> buscarPorId(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Vaca> buscarPorId(@PathVariable Integer idVaca,
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
 
@@ -45,7 +46,6 @@ public class VacaController {
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
 
-        System.out.println("CNIR do token: " + cnir);
         if (cnir.equals(novo.getId().getCnir())) {
             return repo.save(novo);
         } else {
@@ -54,7 +54,8 @@ public class VacaController {
     }
 
     @PutMapping("/{idVaca}")
-    public ResponseEntity<Vaca> atualizar(@PathVariable Integer idVaca, @RequestBody Vaca dados, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Vaca> atualizar(@PathVariable Integer idVaca, @RequestBody Vaca dados,
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
@@ -75,9 +76,10 @@ public class VacaController {
             return ResponseEntity.ok(repo.save(vaca));
         }).orElse(ResponseEntity.notFound().build());
     }
-    
+
     @DeleteMapping("/{idVaca}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca,
+            @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
@@ -86,7 +88,5 @@ public class VacaController {
             return ResponseEntity.noContent().<Void>build();
         }).orElse(ResponseEntity.notFound().build());
     }
-    
 
 }
-

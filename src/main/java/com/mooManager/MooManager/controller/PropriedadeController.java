@@ -2,6 +2,7 @@ package com.mooManager.MooManager.controller;
 
 import com.mooManager.MooManager.model.Propriedade;
 import com.mooManager.MooManager.repository.PropriedadeRepository;
+import com.mooManager.MooManager.security.JwtUtil;
 
 import jakarta.validation.Valid;
 
@@ -15,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/propriedades")
 public class PropriedadeController {
     private final PropriedadeRepository repo;
+    private final JwtUtil jwtUtil;
 
-    public PropriedadeController(PropriedadeRepository repo) {
+    public PropriedadeController(PropriedadeRepository repo, JwtUtil jwtUtil) {
         this.repo = repo;
+        this.jwtUtil = jwtUtil;
     }
 
     @GetMapping
@@ -25,8 +28,10 @@ public class PropriedadeController {
         return repo.findAll();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Propriedade> buscarPorId(@PathVariable String id) {
+    @GetMapping("/current")
+    public ResponseEntity<Propriedade> buscarPorId(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String id = jwtUtil.getCnirFromToken(token);
         return repo.findById(id).map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
     }
@@ -36,16 +41,20 @@ public class PropriedadeController {
         return repo.save(novo);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Propriedade> atualizar(@PathVariable String id, @RequestBody Propriedade dados) {
+    @PutMapping("/current")
+    public ResponseEntity<Propriedade> atualizar(@RequestHeader("Authorization") String authHeader, @RequestBody Propriedade dados) {
+        String token = authHeader.replace("Bearer ", "");
+        String id = jwtUtil.getCnirFromToken(token);
         return repo.findById(id).map(propriedade -> {
             propriedade.setNome(dados.getNome());
             return ResponseEntity.ok(repo.save(propriedade));
         }).orElse(ResponseEntity.notFound().build());
     }
     
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable String id) {
+    @DeleteMapping("/current")
+    public ResponseEntity<Void> deletar(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String id = jwtUtil.getCnirFromToken(token);
         return repo.findById(id).map(e -> {
             repo.delete(e);
             return ResponseEntity.noContent().<Void>build();

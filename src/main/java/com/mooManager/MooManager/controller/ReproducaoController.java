@@ -23,11 +23,12 @@ public class ReproducaoController {
     // Para usar os métodos do repository para SQL
     private final ReproducaoRepository repo; 
     private final VacaRepository vacaRepo;
-    //private final JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    public ReproducaoController(ReproducaoRepository repo, VacaRepository vacaRepo) {
+    public ReproducaoController(ReproducaoRepository repo, VacaRepository vacaRepo, JwtUtil jwtUtil) {
         this.repo = repo;
         this.vacaRepo = vacaRepo;
+        this.jwtUtil = jwtUtil;
     }
 
     // Métodos HTTP
@@ -37,15 +38,19 @@ public class ReproducaoController {
         return repo.findAll();
     }
 
-    @GetMapping("/{cnir}/{idVaca}") // Busca a reproducação de uma vaca pela chave composta de cnir + idVaca
-    public ResponseEntity<Reproducao> buscarPorId(@PathVariable String cnir, @PathVariable Integer idVaca) {
+    @GetMapping("/{idVaca}") // Busca a reproducação de uma vaca pela chave composta de cnir + idVaca
+    public ResponseEntity<Reproducao> buscarPorId(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         VacaId reproducaoId = new VacaId(idVaca, cnir);
         return repo.findById(reproducaoId).map(ResponseEntity::ok)
                    .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/{cnir}/{idVaca}/dias-apos-parto") // Usa o getDiaAposParto do model da reprodução
-    public ResponseEntity<Integer> getDiaAposParto(@PathVariable String cnir, @PathVariable Integer idVaca) {
+    @GetMapping("/{idVaca}/dias-apos-parto") // Usa o getDiaAposParto do model da reprodução
+    public ResponseEntity<Integer> getDiaAposParto(@RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);    
         VacaId reproducaoId = new VacaId(idVaca, cnir);
         return repo.findById(reproducaoId).map(reproducao -> {
             Integer dias = reproducao.getDiaAposParto();
@@ -53,8 +58,10 @@ public class ReproducaoController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{cnir}/{idVaca}")
-    public Reproducao criar(@RequestBody Reproducao novo, @PathVariable String cnir, @PathVariable Integer idVaca) {
+    @PostMapping("/{idVaca}")
+    public Reproducao criar(@RequestBody Reproducao novo, @RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
         Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
         System.out.println("Vaca encontrada: " + vaca);
@@ -62,8 +69,10 @@ public class ReproducaoController {
         return repo.save(novo);
     }
 
-    @PutMapping("/{cnir}/{idVaca}") 
-    public ResponseEntity<Reproducao> atualizarOuCriar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Reproducao dados) {
+    @PutMapping("/{idVaca}") 
+    public ResponseEntity<Reproducao> atualizarOuCriar(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader, @RequestBody Reproducao dados) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
 
         return repo.findById(vacaId).map(repro -> {
@@ -76,8 +85,7 @@ public class ReproducaoController {
             return ResponseEntity.ok(repo.save(repro));
         }).orElseGet(() -> {
             // Cria uma referência à vaca associada
-            Vaca vaca = vacaRepo.findById(vacaId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vaca não encontrada"));
+            Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vaca não encontrada"));
 
             dados.setId(vacaId);
             dados.setVaca(vaca); // IMPORTANTE: associar a vaca
@@ -88,8 +96,10 @@ public class ReproducaoController {
 
 
     
-    @DeleteMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @PathVariable String cnir) {
+    @DeleteMapping("/{idVaca}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);    
         VacaId reproducaoId = new VacaId(idVaca, cnir);
         return repo.findById(reproducaoId).map(e -> {
             repo.delete(e);
