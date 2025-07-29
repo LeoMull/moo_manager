@@ -80,26 +80,27 @@
         </aside>
 
         <section class="dashboard-section">
-            <div class="content-home" id="home-content">
-                <div class="welcome-message">
-                    <h1>Bem-vindo, <span id="user-name"></span>!</h1>
-                    
-                    <div class="quick-stats">
-                        <div class="stat-card">
-                            <h3>Total de Vacas</h3>
-                            <p class="stat-value" id="total-cows">24</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Em Lactação</h3>
-                            <p class="stat-value" id="lactating-cows">18</p>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Produção Hoje</h3>
-                            <p class="stat-value" id="today-production">320 litros</p>
-                        </div>
-                    </div>
-                </div>
+<div class="content-home" id="home-content">
+    <div class="welcome-message" id="welcome-message">
+        <h1>Propriedade: <span id="property-name">Carregando...</span></h1>
+        <p class="property-cnir">CNIR: <span id="property-cnir">Carregando...</span></p>
+        
+        <div class="quick-stats">
+            <div class="stat-card">
+            <h3>Total de Vacas</h3>
+            <p class="stat-value" id="total-cows">0</p>
             </div>
+            <div class="stat-card">
+                <h3>Em Lactação</h3>
+                <p class="stat-value" id="lactating-cows">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Produção Hoje</h3>
+                <p class="stat-value" id="today-production">0 litros</p>
+            </div>
+        </div>
+    </div>
+</div>
 
             <div class="content-cows" id="cows-content" style="display: none;">
                 <div class="production-header">
@@ -266,8 +267,6 @@
                                             <option value="NORMAL" selected>Normal</option>
                                             <option value="CESARIANA">Cesárea</option>
                                             <option value="ABORTO">Aborto</option>
-                                            <option value="SEM_PARTO">Sem Parto</option>
-
                                             <!-- Adicione mais opções se tiver -->
                                         </select>
                                     </div>
@@ -608,12 +607,12 @@
         </section>
     </main>
 
+    <script src="manager-panel.js"></script>
     <script src="script.js"></script>
     <script src="search.js"></script>
     <script src="cow-profile.js"></script>
     <script src="manager-dashboard-navigation.js"></script>
     <script src="lote-functions.js"></script>
-    <script src="gerente_functions.js"></script>
-
+    <script src="gerente-functions.js"></script>
 </body>
 </html>

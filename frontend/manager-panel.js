@@ -1,126 +1,190 @@
 class ManagerPanel {
   constructor() {
+    this.API_BASE_URL = 'http://localhost:8080/api';
     this.token = localStorage.getItem('token');
-    this.cnir = localStorage.getItem('userCnir');
+    this.vacasCache = null;
+    this.producoesCache = null;
     this.init();
   }
 
   async init() {
-    if (document.getElementById('home-content')) {
-      await this.loadPropertyData();
-      await this.loadQuickStats();
+    if (!this.token) {
+      this.redirectToLogin();
+      return;
     }
-    
-    document.getElementById('home-btn')?.addEventListener('click', async () => {
-      await this.loadPropertyData();
-      await this.loadQuickStats();
-    });
-  }
 
-  async loadPropertyData() {
     try {
-      if (!this.cnir) {
-        console.error('CNIR não encontrado no localStorage');
-        this.displayFallbackData();
-        return;
-      }
-
-      const response = await fetch(`http://localhost:8080/api/propriedades/current`, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Bearer ' + this.token
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao carregar dados da propriedade');
-      }
-
-      const propertyData = await response.json();
-      this.updateUI(propertyData);
-
+      await this.loadPropertyData();
+      await this.loadCowData();
+      await this.loadTodayProduction();
     } catch (error) {
-      console.error('Erro ao carregar dados da propriedade:', error);
+      console.error('Erro ao carregar dados:', error);
       this.displayFallbackData();
     }
   }
 
-  async loadQuickStats() {
+  async loadPropertyData() {
     try {
-      if (!this.cnir) {
-        console.error('CNIR não encontrado no localStorage');
-        this.displayFallbackStats();
-        return;
-      }
-
-      const statsResponse = await fetch(`http://localhost:8080/api/propriedades/current/stats`, {
-        method: 'GET',
+      const response = await fetch(`${this.API_BASE_URL}/propriedades/current`, {
         headers: {
-          'Authorization': 'Bearer ' + this.token
+          'Authorization': `Bearer ${this.token}`
         }
       });
 
-      if (!statsResponse.ok) {
-        throw new Error('Erro ao carregar estatísticas da propriedade');
+      if (!response.ok) {
+        throw new Error(`Erro HTTP: ${response.status}`);
       }
 
-      const statsData = await statsResponse.json();
-      this.updateStatsUI(statsData);
-
+      const propertyData = await response.json();
+      
+      // Garantir que temos pelo menos valores padrão
+      const nomePropriedade = propertyData.nome || 'Nome não disponível';
+      const cnirPropriedade = propertyData.cnir || this.getCnirFromToken() || 'CNIR não disponível';
+      
+      this.updatePropertyUI(nomePropriedade, cnirPropriedade);
     } catch (error) {
-      console.error('Erro ao carregar estatísticas:', error);
-      this.displayFallbackStats();
+      console.error('Erro ao carregar dados da propriedade:', error);
+      this.displayFallbackPropertyData();
     }
   }
 
-  updateUI(propertyData) {
-    const welcomeTitle = document.querySelector('.welcome-message h1');
-    const welcomeSubtitle = document.querySelector('.welcome-message p');
+  updatePropertyUI(nome, cnir) {
+    const propertyNameElement = document.getElementById('property-name');
+    const propertyCnirElement = document.getElementById('property-cnir');
     
-    if (welcomeTitle && welcomeSubtitle) {
-      welcomeTitle.textContent = `Propriedade: ${propertyData.nome || 'Não informado'}`;
-      welcomeSubtitle.textContent = `CNIR: ${this.cnir}`;
+    if (propertyNameElement) {
+      propertyNameElement.textContent = nome;
+    }
+    
+    if (propertyCnirElement) {
+      propertyCnirElement.textContent = cnir;
     }
   }
 
-  updateStatsUI(statsData) {
-    const totalCowsElement = document.getElementById('total-cows');
-    const lactatingCowsElement = document.getElementById('lactating-cows');
-    const todayProductionElement = document.getElementById('today-production');
+  async loadCowData() {
+    try {
+      const response = await fetch(`${this.API_BASE_URL}/vacas`, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      });
 
-    if (totalCowsElement) {
-      totalCowsElement.textContent = statsData.totalCows || '0';
+      if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+
+      const cows = await response.json();
+      this.vacasCache = cows;
+      this.updateCowCounters(cows);
+      
+    } catch (error) {
+      console.error('Erro ao carregar dados das vacas:', error);
+      document.getElementById('total-cows').textContent = 'Erro';
+      document.getElementById('lactating-cows').textContent = 'Erro';
     }
+  }
+
+  updateCowCounters(cows) {
+    const totalCows = Array.isArray(cows) ? cows.length : 0;
+    document.getElementById('total-cows').textContent = totalCows;
+
+    const lactatingCows = this.countLactatingCows(cows);
+    document.getElementById('lactating-cows').textContent = lactatingCows;
+  }
+
+  countLactatingCows(cows) {
+    if (!Array.isArray(cows)) return 0;
     
-    if (lactatingCowsElement) {
-      lactatingCowsElement.textContent = statsData.lactatingCows || '0';
+    return cows.filter(cow => {
+      return cow.categoria === 'Lactante' || 
+             (cow.producao && cow.producao.emLactacao);
+    }).length;
+  }
+
+  async loadTodayProduction() {
+    try {
+      const today = new Date();
+      const todayISO = today.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+      
+      // Primeiro, buscar todas as vacas para ver quais estão em lactação
+      const cowsResponse = await fetch(`${this.API_BASE_URL}/vacas`, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      });
+      
+      if (!cowsResponse.ok) throw new Error('Erro ao buscar vacas');
+      const cows = await cowsResponse.json();
+      
+      // Filtrar apenas vacas em lactação
+      const lactatingCows = cows.filter(cow => 
+        cow.categoria === 'Lactante' || 
+        (cow.producao && cow.producao.emLactacao)
+      );
+      
+      // Buscar produções de hoje para essas vacas
+      const productionResponse = await fetch(`${this.API_BASE_URL}/producao_vaca`, {
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      });
+      
+      if (!productionResponse.ok) throw new Error('Erro ao buscar produções');
+      const productions = await productionResponse.json();
+      
+      // Filtrar produções de hoje
+      const todayProductions = productions.filter(prod => {
+        if (!prod.dataUltimaCtgLeite) return false;
+        const prodDate = new Date(prod.dataUltimaCtgLeite).toISOString().split('T')[0];
+        return prodDate === todayISO;
+      });
+      
+      // Calcular total
+      const totalProduction = todayProductions.reduce((sum, prod) => {
+        return sum + (prod.ultimaCtgLeite || 0);
+      }, 0);
+      
+      this.updateTodayProductionUI(totalProduction);
+    } catch (error) {
+      console.error('Erro ao carregar produção de hoje:', error);
+      document.getElementById('today-production').textContent = '0 litros';
     }
-    
-    if (todayProductionElement) {
-      todayProductionElement.textContent = `${statsData.todayProduction || '0'} litros`;
+  }
+
+  updateTodayProductionUI(volume) {
+    const formattedVolume = volume.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    document.getElementById('today-production').textContent = `${formattedVolume} litros`;
+  }
+
+  getCnirFromToken() {
+    try {
+      if (!this.token) return null;
+      const payload = JSON.parse(atob(this.token.split('.')[1]));
+      return payload.cnir || payload.sub;
+    } catch (e) {
+      console.error('Erro ao decodificar token:', e);
+      return null;
     }
   }
 
   displayFallbackData() {
-    const welcomeTitle = document.querySelector('.welcome-message h1');
-    const welcomeSubtitle = document.querySelector('.welcome-message p');
-    
-    if (welcomeTitle && welcomeSubtitle) {
-      welcomeTitle.textContent = 'Propriedade: Não informado';
-      welcomeSubtitle.textContent = `CNIR: ${this.cnir || 'Não informado'}`;
-    }
+    this.displayFallbackPropertyData();
+    document.getElementById('total-cows').textContent = '0';
+    document.getElementById('lactating-cows').textContent = '0';
+    document.getElementById('today-production').textContent = '0 litros';
   }
 
-  displayFallbackStats() {
-    const totalCowsElement = document.getElementById('total-cows');
-    const lactatingCowsElement = document.getElementById('lactating-cows');
-    const todayProductionElement = document.getElementById('today-production');
+  displayFallbackPropertyData() {
+    document.getElementById('property-name').textContent = 'Dados não disponíveis';
+    document.getElementById('property-cnir').textContent = this.getCnirFromToken() || 'Não informado';
+  }
 
-    if (totalCowsElement) totalCowsElement.textContent = '0';
-    if (lactatingCowsElement) lactatingCowsElement.textContent = '0';
-    if (todayProductionElement) todayProductionElement.textContent = '0 litros';
+  redirectToLogin() {
+    window.location.href = '/login?sessionExpired=true';
   }
 }
+
 document.addEventListener('DOMContentLoaded', () => {
   new ManagerPanel();
 });
