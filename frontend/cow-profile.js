@@ -135,6 +135,9 @@ async function fetchReproductionById(cowId) {
         const idVaca = parseInt(cowId);
         const token = localStorage.getItem('token');
 
+        const cnir = localStorage.getItem('userCnir');
+
+
         const response = await fetch(`http://localhost:8080/api/reproducao/${idVaca}`, {
             headers: {
                 'Authorization': `Bearer ${token}`

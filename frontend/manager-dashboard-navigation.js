@@ -230,12 +230,13 @@ async function loadEmployeesData() {
                                     f.nivelDeAcesso === 'VETERINARIO' ? 'Veterinário' : 'Proprietário'}</span>
                         </div>
                     </div>
-                    <div class="employee-actions">
-                        <button class="action-btn" onclick="editEmployee('${f.cpf}')">
-                            <img src="content/images/icon/edit.png" alt="Editar" class="action-icon">
+                    <div class="manager-user-footer">
+                        <button class="back-btn" onclick="editEmployee('${f.cpf}')">
+                            Editar
                         </button>
-                        <button class="action-btn" onclick="deleteEmployee('${f.email}')">
-                            <img src="content/images/icon/delete.png" alt="Excluir" class="action-icon">
+                        
+                        <button class="back-btn" onclick="deleteEmployee('${f.email}')">
+                            Excluir
                         </button>
                     </div>
                 `;
