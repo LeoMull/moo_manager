@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <option value="Descarte" ${valor === "Descarte" ? 'selected' : ''}>Descarte</option>`;
           } else if (campo === "sexo") {
               input = document.createElement("select");
-              input.innerHTML = `<option value="Macho" ${valor === "Macho" ? 'selected' : ''}>Macho</option><option value="Femea" ${valor === "Femea" ? 'selected' : ''}>Fêmea</option>`;
+              input.innerHTML = `<option value="M" ${valor === "Macho" ? 'selected' : ''}>Macho</option><option value="F" ${valor === "Femea" ? 'selected' : ''}>Fêmea</option>`;
           } else if (["peso", "numPartos", "qtdLactacoes", "ultimaCtgLeite", "diaAposUltTent"].includes(campo)) {
               input = document.createElement("input");
               input.type = "number";
