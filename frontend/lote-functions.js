@@ -54,7 +54,13 @@ document.addEventListener("DOMContentLoaded", () => {
               input.innerHTML = `<option value="true" ${valor === "true" ? 'selected' : ''}>Sim</option><option value="false" ${valor === "false" ? 'selected' : ''}>Não</option>`;
           } else if (campo === "categoria") {
               input = document.createElement("select");
-              input.innerHTML = `<option value="Gestante" ${valor === "Gestante" ? 'selected' : ''}>Gestante</option><option value="Lactante" ${valor === "Lactante" ? 'selected' : ''}>Lactante</option><option value="Vazia" ${valor === "Vazia" ? 'selected' : ''}>Vazia</option>`;
+              input.innerHTML = `
+                <option value="Lactante" ${valor === "Lactante" ? 'selected' : ''}>Lactante</option>
+                <option value="Seca" ${valor === "Seca" ? 'selected' : ''}>Seca</option>
+                <option value="Novilha" ${valor === "Novilha" ? 'selected' : ''}>Novilha</option>
+                <option value="Bezerra" ${valor === "Bezerra" ? 'selected' : ''}>Bezerra</option>
+                <option value="Touro" ${valor === "Touro" ? 'selected' : ''}>Touro</option>
+                <option value="Descarte" ${valor === "Descarte" ? 'selected' : ''}>Descarte</option>`;
           } else if (campo === "sexo") {
               input = document.createElement("select");
               input.innerHTML = `<option value="Macho" ${valor === "Macho" ? 'selected' : ''}>Macho</option><option value="Femea" ${valor === "Femea" ? 'selected' : ''}>Fêmea</option>`;

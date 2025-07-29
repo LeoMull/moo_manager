@@ -76,7 +76,6 @@ function showEmployees() {
 function showLots() {
     hideAllContents();
     document.getElementById('lots-content').style.display = 'block';
-    loadLotsData(); // Função que carrega os dados dos lotes
 }
 
 function hideAllContents() {
@@ -234,7 +233,7 @@ async function loadEmployeesData() {
                         <button class="back-btn" onclick="editEmployee('${f.cpf}')">
                             Editar
                         </button>
-                        
+
                         <button class="back-btn" onclick="deleteEmployee('${f.email}')">
                             Excluir
                         </button>
