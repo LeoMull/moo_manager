@@ -652,7 +652,6 @@ h1, h2, h3 {
     flex-wrap: wrap;
 }
 
-<<<<<<< HEAD
 .tab-btn {
     flex:1;
     display: inline-block;
@@ -672,8 +671,6 @@ h1, h2, h3 {
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-=======
->>>>>>> 5fea7ab0967b75057c25460a5c2e7f54e354f521
 .tab-content {
     display: none;
     width: 100%;
@@ -821,18 +818,12 @@ h1, h2, h3 {
     min-height: 400px;
     background: transparent;
 }
-
-<<<<<<< HEAD
-#add-cow-form {
-    background: #fff;
-    
-=======
+   
 .content-home {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     padding: 30px;
->>>>>>> 5fea7ab0967b75057c25460a5c2e7f54e354f521
     width: 100%;
 }
 
@@ -965,7 +956,6 @@ h1, h2, h3 {
     padding: 5px;
 }
 
-<<<<<<< HEAD
 .action-icon {
     width: 18px;
     height: 18px;
@@ -1890,9 +1880,6 @@ margin-bottom: 5px;
 }
 
 /* ===== UTILITY STYLES ===== */
-=======
-/* ===== UTILITIES ===== */
->>>>>>> 5fea7ab0967b75057c25460a5c2e7f54e354f521
 .fade-in {
     animation: fadeIn 0.5s ease-out forwards;
 }
@@ -1916,7 +1903,6 @@ margin-bottom: 5px;
     width: 100%;
 }
 
-<<<<<<< HEAD
 .search-input-wrapper {
     position: relative;
 }
@@ -2238,8 +2224,7 @@ margin-bottom: 5px;
 .modal-btn-confirm:hover {
     background-color: #007a43;
 }
-=======
->>>>>>> 5fea7ab0967b75057c25460a5c2e7f54e354f521
+
 #daily-production-plus {
     cursor: pointer;
     pointer-events: auto;
