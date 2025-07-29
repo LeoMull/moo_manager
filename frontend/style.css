@@ -643,12 +643,33 @@ h1, h2, h3 {
 }
 
 .profile-tabs {
+    width: 100%;
     display: flex;
     gap: 5px;
     background: #f5f5f5;
     padding: 5px;
     border-radius: 8px;
     flex-wrap: wrap;
+}
+
+
+.tab-btn {
+    flex:1;
+    display: inline-block;
+    padding: 8px 15px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.tab-btn.active {
+    background: white;
+    color: #009951;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .tab-content {
@@ -798,6 +819,11 @@ h1, h2, h3 {
     min-height: 400px;
     background: transparent;
 }
+
+
+#add-cow-form {
+    background: #fff;
+    
 
 .content-home {
     background-color: white;

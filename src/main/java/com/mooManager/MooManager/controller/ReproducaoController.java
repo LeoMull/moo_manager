@@ -85,8 +85,7 @@ public class ReproducaoController {
             return ResponseEntity.ok(repo.save(repro));
         }).orElseGet(() -> {
             // Cria uma referência à vaca associada
-            Vaca vaca = vacaRepo.findById(vacaId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vaca não encontrada"));
+            Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Vaca não encontrada"));
 
             dados.setId(vacaId);
             dados.setVaca(vaca); // IMPORTANTE: associar a vaca

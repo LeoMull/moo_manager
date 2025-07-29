@@ -109,9 +109,9 @@ async function addCow(event) {
         sexo: document.getElementById("cow-sex").value,
         raca: document.getElementById("cow-breed-ipt").value,
         dataNasc: document.getElementById("cow-birthdate").value,
-        categoria: document.getElementById("cow-category").value,
+        categoria: document.getElementById("cow-category-select").value,
         lote: document.getElementById("cow-lot").value || null,
-        precisaAtendimento: document.getElementById("cow-needs-care").checked,
+        precisaAtendimento: document.getElementById("cow-needs-care").value === 'true',
         observacao: document.getElementById("cow-obs").value || null,
         peso: parseFloat(document.getElementById("cow-weight").value) || null,
         dataUltimaPesagem: document.getElementById("cow-last-weight-date").value || null,
@@ -121,7 +121,7 @@ async function addCow(event) {
         nomePai: document.getElementById("cow-father-name").value || null
     };
 
-    console.log(JSON.stringify(vaca));
+    console.log(vaca);
 
     try {
         console.log(cnir);
@@ -144,6 +144,7 @@ async function addCow(event) {
             }
     } catch (error) {
         document.getElementById('add-cow-message').textContent = "Erro de conexão com o servidor.";
+        console.log(error)
     }
 }
 
