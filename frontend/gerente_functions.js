@@ -60,67 +60,6 @@ function cancelEditMode() {
 }
 cancelBtn.addEventListener('click', cancelEditMode);
 
-/*
-saveBtnVaca.addEventListener('click', () => {
-    // Construir objeto com dados atualizados
-    let token = localStorage.getItem('token');
-    let idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
-
-    const parseOrNull = (value) => {
-        const trimmed = value.trim();
-        return trimmed === '' ? null : trimmed;
-    };
-
-    const parseFloatOrNull = (value) => {
-        const n = parseFloat(value);
-        return isNaN(n) ? null : n;
-    };
-
-    const parseIntOrNull = (value) => {
-        const n = parseInt(value);
-        return isNaN(n) ? null : n;
-    };
-
-    const dadosAtualizados = {
-        sexo: parseOrNull(document.getElementById('input-cow-sexo').value),
-        raca: parseOrNull(document.getElementById('input-cow-breed').value),
-        dataNasc: parseOrNull(document.getElementById('input-cow-birth').value), // formato "yyyy-MM-dd"
-        categoria: parseOrNull(document.getElementById('input-cow-category').value),
-        lote: parseOrNull(document.getElementById('input-cow-lot').value),
-        precisaAtendimento: document.getElementById('input-cow-needs-care').value === 'true',
-        observacao: parseOrNull(document.getElementById('input-cow-observation').value),
-        peso: parseFloatOrNull(document.getElementById('input-cow-weight').value),
-        dataUltimaPesagem: parseOrNull(document.getElementById('input-cow-last-weighing').value),
-        idMae: parseIntOrNull(document.getElementById('input-cow-id-mother').value),
-        nomeMae: parseOrNull(document.getElementById('input-cow-mother').value),
-        idPai: parseIntOrNull(document.getElementById('input-cow-id-father').value),
-        nomePai: parseOrNull(document.getElementById('input-cow-father').value)
-    };
-
-    fetch(`http://localhost:8080/api/vacas/${idVaca}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-        },
-        body: JSON.stringify(dadosAtualizados)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Erro ao salvar dados: ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
-
-        cancelEditMode();
-        alert('Dados salvos com sucesso!');
-    })
-    .catch(error => {
-        alert('Erro: ' + error.message);
-    });
-});
-*/
 saveBtnVaca.addEventListener('click', async () => {
     let token = localStorage.getItem('token');
     let idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
@@ -212,7 +151,10 @@ saveBtnVaca.addEventListener('click', async () => {
             body: JSON.stringify(dadosCiclo)
         }).then(r => { if (!r.ok) throw new Error("Erro ao salvar ciclo"); });
 
+        
         cancelEditMode();
+        await window.showCowProfile(idVaca);
+
         alert("Todos os dados foram salvos com sucesso!");
     } catch (err) {
         alert("Erro: " + err.message);
