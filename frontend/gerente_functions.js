@@ -5,16 +5,30 @@ const deleteBtn = document.getElementById('delete-btn');
 
 
 function enableEditMode() {
-    // Oculta valores e mostra inputs em todas as abas
     document.querySelectorAll('#profile-content .detail-item').forEach(item => {
         const span = item.querySelector('.detail-value');
         const input = item.querySelector('input, select');
         if (span && input) {
             input.style.display = 'inline-block';
             span.style.display = 'none';
-            // Atualiza o input com o valor atual mostrado no span
-            if (input.tagName === 'INPUT' || input.tagName === 'SELECT') {
-                input.value = span.textContent.trim() === 'Não informado' ? '' : span.textContent.trim();
+            let valorSpan = span.textContent.trim() === 'Não informado' ? '' : span.textContent.trim();
+
+            if (input.tagName === 'SELECT') {
+                // Tenta achar a opção pelo texto ou value
+                const option = Array.from(input.options).find(opt =>
+                    opt.value == valorSpan || opt.text.trim() == valorSpan
+                );
+                input.value = option ? option.value : '';
+            } 
+            else if (input.tagName === 'INPUT') {
+                if (input.type === 'date' && valorSpan) {
+                    // Converte de dd/mm/yyyy para yyyy-mm-dd
+                    const partes = valorSpan.split('/');
+                    if (partes.length === 3) {
+                        valorSpan = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+                    }
+                }
+                input.value = valorSpan;
             }
         }
     });
@@ -46,6 +60,7 @@ function cancelEditMode() {
 }
 cancelBtn.addEventListener('click', cancelEditMode);
 
+/*
 saveBtnVaca.addEventListener('click', () => {
     // Construir objeto com dados atualizados
     let token = localStorage.getItem('token');
@@ -105,6 +120,104 @@ saveBtnVaca.addEventListener('click', () => {
         alert('Erro: ' + error.message);
     });
 });
+*/
+saveBtnVaca.addEventListener('click', async () => {
+    let token = localStorage.getItem('token');
+    let idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+
+    const parseOrNull = (value) => value && value.trim() !== '' ? value.trim() : null;
+    const parseFloatOrNull = (value) => isNaN(parseFloat(value)) ? null : parseFloat(value);
+    const parseIntOrNull = (value) => isNaN(parseInt(value)) ? null : parseInt(value);
+
+    // --- Dados da vaca ---
+    const dadosAtualizados = {
+        sexo: parseOrNull(document.getElementById('input-cow-sexo').value),
+        raca: parseOrNull(document.getElementById('input-cow-breed').value),
+        dataNasc: parseOrNull(document.getElementById('input-cow-birth').value),
+        categoria: parseOrNull(document.getElementById('input-cow-category').value),
+        lote: parseOrNull(document.getElementById('input-cow-lot').value),
+        precisaAtendimento: document.getElementById('input-cow-needs-care').value === 'true',
+        observacao: parseOrNull(document.getElementById('input-cow-observation').value),
+        peso: parseFloatOrNull(document.getElementById('input-cow-weight').value),
+        dataUltimaPesagem: parseOrNull(document.getElementById('input-cow-last-weighing').value),
+        idMae: parseIntOrNull(document.getElementById('input-cow-id-mother').value),
+        nomeMae: parseOrNull(document.getElementById('input-cow-mother').value),
+        idPai: parseIntOrNull(document.getElementById('input-cow-id-father').value),
+        nomePai: parseOrNull(document.getElementById('input-cow-father').value)
+    };
+
+    // --- Dados de produção ---
+    const dadosProducao = {
+        dataSecagem: parseOrNull(document.getElementById('input-cow-drying-forecast').value),
+        dataUltimaSecagem: parseOrNull(document.getElementById('input-cow-last-drying').value),
+        qtdLactacoes: parseIntOrNull(document.getElementById('input-cow-lactation-count').value) || 0,
+        ultimaCtgLeite: parseFloatOrNull(document.getElementById('input-cow-last-milk-count').value) || 0,
+        dataUltimaCtgLeite: parseOrNull(document.getElementById('input-cow-last-milk-date').value)
+    };
+
+    // --- Dados de reprodução ---
+    const dadosReproducao = {
+        situacaoRepo: parseOrNull(document.getElementById('input-cow-repro-status').value),
+        tipoUltParto: parseOrNull(document.getElementById('input-cow-birth-type').value),
+        numPartos: parseIntOrNull(document.getElementById('input-cow-birth-count').value),
+        prevParto: parseOrNull(document.getElementById('input-cow-next-birth').value),
+        dataUltParto: parseOrNull(document.getElementById('input-cow-last-birth-date').value),
+        numTentativas: parseIntOrNull(document.getElementById('input-cow-attempts').value)    
+    };
+
+    const dadosCiclo = {
+        
+        diasDesdeUltimoParto: parseIntOrNull(document.getElementById('input-cow-days-last-birth').value),
+        diasDesdeUltimaTentativa: parseIntOrNull(document.getElementById('input-cow-days-last-attempt').value),
+        dataUltimoCio: parseOrNull(document.getElementById('input-cow-last-heat').value),
+        dataUltimaTentativa: parseOrNull(document.getElementById('input-cow-last-attempt').value),
+        dataPrimeiraTentativa: parseOrNull(document.getElementById('input-cow-first-attempt').value),
+        dataPrimeiroCio: parseOrNull(document.getElementById('input-cow-first-heat').value),
+        
+        paiUltTentativa: parseIntOrNull(document.getElementById('input-cow-last-attempt-father').value),
+        doadoraUltTentativa: parseIntOrNull(document.getElementById('input-cow-last-attempt-mother').value),
+        
+        iedUltimoParto: parseIntOrNull(document.getElementById('input-cow-last-ied').value)
+    };
+    console.log('dadosAtualizados:', dadosAtualizados);
+    console.log('dadosProducao:', dadosProducao);
+    console.log('dadosReproducao:', dadosReproducao);
+    console.log('dadosCiclo:', dadosCiclo);
+    try {
+        // Atualiza vaca
+        await fetch(`http://localhost:8080/api/vacas/${idVaca}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(dadosAtualizados)
+        }).then(r => { if (!r.ok) throw new Error("Erro ao salvar vaca"); });
+
+        // Atualiza produção
+        await fetch(`http://localhost:8080/api/producao_vaca/${idVaca}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(dadosProducao)
+        }).then(r => { if (!r.ok) throw new Error("Erro ao salvar produção"); });
+
+        // Atualiza reprodução
+        await fetch(`http://localhost:8080/api/reproducao/${idVaca}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(dadosReproducao)
+        }).then(r => { if (!r.ok) throw new Error("Erro ao salvar reprodução"); });
+
+        // Atualiza ciclo
+        await fetch(`http://localhost:8080/api/ciclo/${idVaca}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify(dadosCiclo)
+        }).then(r => { if (!r.ok) throw new Error("Erro ao salvar ciclo"); });
+
+        cancelEditMode();
+        alert("Todos os dados foram salvos com sucesso!");
+    } catch (err) {
+        alert("Erro: " + err.message);
+    }
+});
 
 deleteBtn.addEventListener('click', () => {
     const idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
@@ -143,7 +256,7 @@ function saveProducao() {
         dataUltimaCtgLeite: document.getElementById('input-cow-last-milk-date').value || null
     };
 
-    fetch(`http://localhost:8080/api/producao_vaca/${cnir}/${idVaca}`, {
+    fetch(`http://localhost:8080/api/producao_vaca/${idVaca}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -203,7 +316,7 @@ function saveReproducao(){
     };
 
     // Requisição para atualizar reprodução
-    fetch(`http://localhost:8080/api/reproducao/${cnir}/${idVaca}`, {
+    fetch(`http://localhost:8080/api/reproducao/${idVaca}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -217,7 +330,7 @@ function saveReproducao(){
     })
     .then(() => {
         // Requisição para atualizar ciclo
-        return fetch(`http://localhost:8080/api/ciclo/${cnir}/${idVaca}`, {
+        return fetch(`http://localhost:8080/api/ciclo/${idVaca}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
