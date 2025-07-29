@@ -721,7 +721,14 @@ h1, h2, h3 {
 .profile-footer {
     text-align: center;
 }
-
+.manager-user-footer {
+    display: flex;
+    justify-content: flex-end; /* Alinha os botões à direita */
+    gap: 10px; /* Espaço entre os botões */
+}
+    .filter-item { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+    .filter-item label { display: block; margin-top: 5px; }
+    .filter-item select, .filter-item input { padding: 5px; margin: 3px 0; }
 /* ===== MODAL STYLES ===== */
 .modal-overlay {
     position: fixed;
@@ -955,7 +962,6 @@ h1, h2, h3 {
     cursor: pointer;
     padding: 5px;
 }
-
 .action-icon {
     width: 18px;
     height: 18px;
@@ -1873,10 +1879,6 @@ margin-bottom: 5px;
 
 .detail-value {
     color: #333;
-}
-
-.profile-footer {
-    text-align: center;
 }
 
 /* ===== UTILITY STYLES ===== */
