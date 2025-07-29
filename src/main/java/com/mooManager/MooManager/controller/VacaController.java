@@ -54,8 +54,7 @@ public class VacaController {
     }
 
     @PutMapping("/{idVaca}")
-    public ResponseEntity<Vaca> atualizar(@PathVariable Integer idVaca, @RequestBody Vaca dados,
-            @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Vaca> atualizar(@PathVariable Integer idVaca, @RequestBody Vaca dados, @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
@@ -78,8 +77,7 @@ public class VacaController {
     }
 
     @DeleteMapping("/{idVaca}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca,
-            @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);

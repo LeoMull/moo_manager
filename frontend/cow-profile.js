@@ -107,7 +107,7 @@ async function fetchProductionById(cowId){
         const idVaca = parseInt(cowId);
         const token = localStorage.getItem('token');
         const cnir = localStorage.getItem('userCnir');
-        const response = await fetch(`http://localhost:8080/api/producao_vaca/${cnir}/${idVaca}`, {
+        const response = await fetch(`http://localhost:8080/api/producao_vaca/${idVaca}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -134,9 +134,13 @@ async function fetchReproductionById(cowId) {
     try{
         const idVaca = parseInt(cowId);
         const token = localStorage.getItem('token');
+<<<<<<< HEAD
         const cnir = localStorage.getItem('userCnir');
 
         const response = await fetch(`http://localhost:8080/api/reproducao/${cnir}/${idVaca}`, {
+=======
+        const response = await fetch(`http://localhost:8080/api/reproducao/${idVaca}`, {
+>>>>>>> 5fea7ab0967b75057c25460a5c2e7f54e354f521
             headers: {
                 'Authorization': `Bearer ${token}`
             }

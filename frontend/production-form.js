@@ -107,4 +107,5 @@ try {
 } catch (error) {
     console.error('Erro:', error);
     alert('Erro ao conectar com o servidor');
+    }
 }

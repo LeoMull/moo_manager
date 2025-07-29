@@ -22,10 +22,12 @@ import java.sql.Date;
 public class CicloController {
   private final CicloRepository repo;
   private final VacaRepository vacaRepo;
+  private final JwtUtil jwtUtil;
   
-  public CicloController(CicloRepository repo, VacaRepository vacaRepo) {
+  public CicloController(CicloRepository repo, VacaRepository vacaRepo, JwtUtil jwtUtil) {
     this.repo = repo;
     this.vacaRepo = vacaRepo;
+    this.jwtUtil = jwtUtil;
   }
 
   @GetMapping
@@ -33,14 +35,18 @@ public class CicloController {
     return repo.findAll();
   }
 
-  @GetMapping("/{cnir}/{idVaca}")
-  public ResponseEntity<Ciclo> findById(@PathVariable String cnir, @PathVariable Integer idVaca) {
+  @GetMapping("/{idVaca}")
+  public ResponseEntity<Ciclo> findById(@RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {
+    String token = authHeader.replace("Bearer ", "");
+    String cnir = jwtUtil.getCnirFromToken(token);
     VacaId vacaId = new VacaId(idVaca, cnir);
     return repo.findById(vacaId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
-  @PostMapping("/{cnir}/{idVaca}")
-  public Ciclo create(@RequestBody Ciclo novo, @PathVariable String cnir, @PathVariable Integer idVaca) {
+  @PostMapping("/{idVaca}")
+  public Ciclo create(@RequestBody Ciclo novo, @RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {
+    String token = authHeader.replace("Bearer ", "");
+    String cnir = jwtUtil.getCnirFromToken(token);
     VacaId vacaId = new VacaId(idVaca, cnir);
     Vaca vaca = vacaRepo.findById(vacaId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     novo.setVaca(vaca);
@@ -48,8 +54,10 @@ public class CicloController {
   }
 
 
-  @PutMapping("/{cnir}/{idVaca}")
-  public ResponseEntity<Ciclo> atualizar(@PathVariable Integer idVaca, @PathVariable String cnir, @RequestBody Ciclo dados) {
+  @PutMapping("/{idVaca}")
+  public ResponseEntity<Ciclo> atualizar(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader, @RequestBody Ciclo dados) {
+      String token = authHeader.replace("Bearer ", "");
+      String cnir = jwtUtil.getCnirFromToken(token);
       VacaId vacaId = new VacaId(idVaca, cnir);
 
       return repo.findById(vacaId).map(cicloExistente -> {
@@ -74,8 +82,10 @@ public class CicloController {
   }
 
 
-    @DeleteMapping("/{cnir}/{idVaca}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @PathVariable String cnir) {
+    @DeleteMapping("/{idVaca}")
+    public ResponseEntity<Void> deletar(@PathVariable Integer idVaca, @RequestHeader("Authorization") String authHeader) {
+      String token = authHeader.replace("Bearer ", "");
+      String cnir = jwtUtil.getCnirFromToken(token);  
       VacaId vacaId = new VacaId(idVaca, cnir);
       return repo.findById(vacaId).map(e -> {
         repo.delete(e);
