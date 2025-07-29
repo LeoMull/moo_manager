@@ -29,44 +29,70 @@ async function loadCowProfile(cowId) {
 
 }
 
+function daysBetween(date) {
+    const today = new Date();
+    const past = new Date(date);
+    const diffTime = today - past;
+
+    console.log('Diferença em milissegundos:', diffTime);
+    let b =  Math.max(0, Math.floor(diffTime / (1000 * 60 * 60 * 24)));
+    console.log('Diferença em dias:', b);
+    return b;
+}
+
+function valueOrNA(value, isDate = false) {
+        if (value === null || value === undefined) return 'Não informado';
+        if (isDate) return value; // assume já formatado
+        return value;
+}
 async function loadReproductionTab(cowId) {
     const reproducao = await fetchReproductionById(cowId);
     const ciclo = await fetchCicloById(cowId);
 
-    if (!reproducao && !ciclo) {
-        // Preenche todos com "Não informado"
-        [
-            'input-cow-repro-status', 'input-cow-birth-type', 'input-cow-birth-count', 'input-cow-next-birth',
-            'input-cow-last-birth-date', 'input-cow-attempts', 'input-cow-days-last-birth', 'input-cow-days-last-attempt',
-            'input-cow-first-heat', 'input-cow-last-heat', 'input-cow-first-attempt', 'input-cow-last-attempt',
-            'input-cow-last-attempt-father', 'input-cow-last-attempt-mother', 'input-cow-last-ied'
-        ].forEach(id => document.getElementById(id).textContent = 'Não informado');
-        return;
-    }
-
-    // ---- Dados gerais da reprodução ----
-    if (reproducao) {
-        document.getElementById('input-cow-repro-status').textContent = defaultText(reproducao.situacaoRepo);
-        document.getElementById('input-cow-birth-type').textContent = defaultText(reproducao.tipoUltParto);
-        document.getElementById('input-cow-birth-count').textContent = defaultText(reproducao.numPartos);
-        document.getElementById('input-cow-next-birth').textContent = defaultText(reproducao.prevParto ? formatDate(reproducao.prevParto) : null, true);
-        document.getElementById('input-cow-last-birth-date').textContent = defaultText(reproducao.dataUltParto ? formatDate(reproducao.dataUltParto) : null, true);
-        document.getElementById('input-cow-attempts').textContent = defaultText(reproducao.numTentativas);
-    }
-
-    // ---- Dados do ciclo atual ----
-    if (ciclo) {
-        document.getElementById('input-cow-days-last-birth').textContent = defaultText(ciclo.diasDesdeUltimoParto);
-        document.getElementById('input-cow-days-last-attempt').textContent = defaultText(ciclo.diasDesdeUltimaTentativa);
-        document.getElementById('input-cow-first-heat').textContent = defaultText(ciclo.dataPrimeiroCio ? formatDate(ciclo.dataPrimeiroCio) : null, true);
-        document.getElementById('input-cow-last-heat').textContent = defaultText(ciclo.dataUltimoCio ? formatDate(ciclo.dataUltimoCio) : null, true);
-        document.getElementById('input-cow-first-attempt').textContent = defaultText(ciclo.dataPrimeiraTentativa ? formatDate(ciclo.dataPrimeiraTentativa) : null, true);
-        document.getElementById('input-cow-last-attempt').textContent = defaultText(ciclo.dataUltimaTentativa ? formatDate(ciclo.dataUltimaTentativa) : null, true);
-        document.getElementById('input-cow-last-attempt-father').textContent = ciclo.idPaiUltimaTentativa ? `#${padId(ciclo.idPaiUltimaTentativa)}` : 'Não informado';
-        document.getElementById('input-cow-last-attempt-mother').textContent = ciclo.idMaeUltimaTentativa ? `#${padId(ciclo.idMaeUltimaTentativa)}` : 'Não informado';
-        document.getElementById('input-cow-last-ied').textContent = defaultText(ciclo.iedUltimoParto);
-    }
+if (!reproducao && !ciclo) {
+    console.log("Reprodução ou ciclo não encontrados ou nulos");
+    document.getElementById('cow-repro-status').textContent = 'Não informado';
+    document.getElementById('cow-birth-type').textContent = 'Não informado';
+    document.getElementById('cow-birth-count').textContent = '0';
+    document.getElementById('cow-next-birth').textContent = '00/00/0000';
+    document.getElementById('cow-last-birth-date').textContent = '00/00/0000';
+    document.getElementById('cow-attempts').textContent = '0';
+    document.getElementById('cow-days-last-birth').textContent = 'A';
+    document.getElementById('cow-days-last-attempt').textContent = '0';
+    document.getElementById('cow-first-heat').textContent = '00/00/0000';
+    document.getElementById('cow-last-heat').textContent = '00/00/0000';
+    document.getElementById('cow-first-attempt').textContent = '00/00/0000';
+    document.getElementById('cow-last-attempt').textContent = '00/00/0000';
+    document.getElementById('cow-last-attempt-father').textContent = 'Não informado';
+    document.getElementById('cow-last-attempt-mother').textContent = 'Não informado';
+    document.getElementById('cow-last-ied').textContent = '0';
+    return;
 }
+
+if (reproducao) {
+    document.getElementById('cow-repro-status').textContent = reproducao.situacaoRepo || 'Não informado';
+    document.getElementById('cow-birth-type').textContent = reproducao.tipoUltParto || 'Não informado';
+    document.getElementById('cow-birth-count').textContent = (reproducao.numPartos != null) ? reproducao.numPartos : '0';
+    document.getElementById('cow-next-birth').textContent = reproducao.prevParto ? formatDate(reproducao.prevParto) : '00/00/0000';
+    document.getElementById('cow-last-birth-date').textContent = reproducao.dataUltParto ? formatDate(reproducao.dataUltParto) : '00/00/0000';
+    document.getElementById('cow-days-last-birth').textContent = reproducao.dataUltParto ? daysBetween(reproducao.dataUltParto) : 22;
+    document.getElementById('cow-attempts').textContent = (reproducao.numTentativas != null) ? reproducao.numTentativas : '0';
+}
+
+if (ciclo) {
+    document.getElementById('cow-days-last-attempt').textContent = (ciclo.diasDesdeUltimaTentativa != null) ? ciclo.diasDesdeUltimaTentativa : '0';
+    document.getElementById('cow-first-heat').textContent = ciclo.dataPrimeiroCio ? formatDate(ciclo.dataPrimeiroCio) : '00/00/0000';
+    document.getElementById('cow-last-heat').textContent = ciclo.dataUltimoCio ? formatDate(ciclo.dataUltimoCio) : '00/00/0000';
+    document.getElementById('cow-first-attempt').textContent = ciclo.dataPrimeiraTentativa ? formatDate(ciclo.dataPrimeiraTentativa) : '00/00/0000';
+    document.getElementById('cow-last-attempt').textContent = ciclo.dataUltimaTentativa ? formatDate(ciclo.dataUltimaTentativa) : '00/00/0000';
+    document.getElementById('cow-last-attempt-father').textContent = (ciclo.idPaiUltimaTentativa != null) ? ciclo.idPaiUltimaTentativa : 'Não informado';
+    document.getElementById('cow-last-attempt-mother').textContent = (ciclo.idMaeUltimaTentativa != null) ? ciclo.idMaeUltimaTentativa : 'Não informado';
+    document.getElementById('cow-last-ied').textContent = (ciclo.iedUltimoParto != null) ? ciclo.iedUltimoParto : '0';
+}
+
+}
+
+
 
 
 function padId(id) {
@@ -76,22 +102,21 @@ function padId(id) {
 async function loadProductionTab(cowId) {
     const cow = await fetchProductionById(cowId);
 
-    if (!cow || !cow) {
-        console.log("Estou no nullo");
+    if (!cow) {
+        console.log("Produção não encontrada ou nula");
         document.getElementById('cow-drying-forecast').textContent = '00/00/0000';
         document.getElementById('cow-last-drying').textContent = '00/00/0000';
-        document.getElementById('cow-lactation-count').textContent = 'Não informado';
+        document.getElementById('cow-lactation-count').textContent = '0';
         document.getElementById('cow-last-milk-count').textContent = '0.00';
         document.getElementById('cow-last-milk-date').textContent = '00/00/0000';
         return;
     }
 
-
-    document.getElementById('cow-drying-forecast').textContent = cow.dataSecagem ? cow.dataSecagem : '00/00/0000';
-    document.getElementById('cow-last-drying').textContent =     cow.dataUltimaSecagem ? formatDate(cow.dataUltimaSecagem) : '00/00/0000';
-    document.getElementById('cow-lactation-count').textContent = cow.qtdLactacoes ? cow.qtdLactacoes : '0';
-    document.getElementById('cow-last-milk-count').textContent = cow.ultimaCtgLeite ? parseFloat(cow.ultimaCtgLeite).toFixed(2) : '0.00';
-    document.getElementById('cow-last-milk-date').textContent =  cow.dataUltimaCtgLeite ? formatDate(cow.dataUltimaCtgLeite) : '00/00/0000';
+    document.getElementById('cow-drying-forecast').textContent = cow.dataSecagem ? formatDate(cow.dataSecagem) : '00/00/0000';
+    document.getElementById('cow-last-drying').textContent = cow.dataUltimaSecagem ? formatDate(cow.dataUltimaSecagem) : '00/00/0000';
+    document.getElementById('cow-lactation-count').textContent = (cow.qtdLactacoes != null) ? cow.qtdLactacoes : '0';
+    document.getElementById('cow-last-milk-count').textContent = (cow.ultimaCtgLeite != null) ? parseFloat(cow.ultimaCtgLeite).toFixed(2) : '0.00';
+    document.getElementById('cow-last-milk-date').textContent = cow.dataUltimaCtgLeite ? formatDate(cow.dataUltimaCtgLeite) : '00/00/0000';
 }
 
 
