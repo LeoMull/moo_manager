@@ -7,15 +7,20 @@ const defaultText = (value, isDate = false, isNumber = false) => {
 
 async function loadCowProfile(cowId) {
     const cow = await fetchCowById(cowId);
-
+    let cowLot = document.getElementById('cow-lot');
     if (!cow) {
         alert('Vaca não encontrada');
         return;
     }
+    if(cowLot.textContent === 'Não informado' || cowLot.textContent === '') {
+        console.log('Lote não encontrado, buscando...');
+        cowLot.textContent = await findCowLot(cowId) || 'Não informado';
+    }
     document.getElementById('cow-name').textContent = cow.nome || `Vaca #${cowId}`;
     document.getElementById('cow-id-modal').textContent = `ID: #${cowId}`;
     document.getElementById('cow-sexo').textContent = cow.sexo === 'F' ? 'Fêmea' : 'Macho';
-    document.getElementById('cow-lot').textContent = await findCowLot(cow) || 'Não informado';
+
+    document.getElementById('cow-lot').textContent = await findCowLot(cowId) || 'Não informado';
     document.getElementById('cow-needs-care').textContent = cow.precisaAtendimento ? 'Sim' : 'Não';
     document.getElementById('cow-weight').textContent = cow.peso ? `${cow.peso} kg` : 'Não informado';
     document.getElementById('cow-last-weighing').textContent = cow.dataUltimaPesagem ? formatDate(cow.dataUltimaPesagem) : 'Nunca';
@@ -207,36 +212,46 @@ async function fetchCicloById(cowId) {
     
 }
 
-async function findCowLot(cow) {
+async function findCowLot(cowId) {
     const token = localStorage.getItem('token');
     try {
-        const response = await fetch("http://localhost:8080/api/lotes", { headers: { "Authorization": `Bearer ${token}` } });
+        const filtersResponse = await fetch("http://localhost:8080/api/lotes", { headers: { "Authorization": `Bearer ${token}` } });
+        if (!filtersResponse.ok) throw new Error("Erro ao carregar filtros");
 
-        if (!response.ok) throw new Error("Erro ao carregar filtros");
+        const filtros = await filtersResponse.json();
+        const filtrosOrdenados = Array.isArray(filtros) 
+            ? filtros.sort((a, b) => a.id.prioridade - b.id.prioridade) 
+            : [filtros];
 
-        const data = await response.json();
+        const vaca = { 
+            vaca: await fetchCowById(cowId) || {}, 
+            producao_vaca: await fetchProductionById(cowId) || {}, 
+            reproducao_vaca: await fetchReproductionById(cowId) || {}, 
+            ciclo_vaca: await fetchCicloById(cowId) || {}
+        };
 
-        const filtrosOrdenados = Array.isArray(data) 
-            ? data.sort((a, b) => a.id.prioridade - b.id.prioridade) 
-            : [data];
-
+        // Tenta comparar em cada conjunto de dados
         for (const filtro of filtrosOrdenados) {
-             if(compararFiltro(cow, filtro)) return filtro.rotulo;
-
+            for (const categoria of Object.values(vaca)) {
+                if (compararFiltro(categoria, filtro)) {
+                    return filtro.rotulo;
+                }
+            }
         }
         return null;
-      } catch (err) {
-          alert("Erro: " + err.message);
-      }
+    } catch (err) {
+        alert("Erro: " + err.message);
+    }
 }
 
 function compararFiltro(cow, filtro) {
+    if (!cow) return false;
+
     const { campo, operador, valor } = filtro;
     const cowValue = cow[campo];
+
     console.log(`Comparando campo: ${campo}, operador: ${operador}, valor: ${valor}, cowValue: ${cowValue}`);
-
-    if (cowValue == null) return false; // se o campo não existe ou é nulo, já falha
-
+    if (cowValue == null || cowValue === '') return false;
 
     let v1 = cowValue;
     let v2 = valor;
@@ -248,12 +263,12 @@ function compararFiltro(cow, filtro) {
         v1 = num1;
         v2 = num2;
     }
-    // Se não for número, tenta converter para datas
+    // Se não for número, tenta converter para datas válidas
     else if (!isNaN(Date.parse(v1)) && !isNaN(Date.parse(v2))) {
         v1 = new Date(v1);
         v2 = new Date(v2);
     }
-    // Caso contrário, mantém como string (comparação case-insensitive)
+    // Caso contrário, compara como strings
     else {
         v1 = String(v1).toLowerCase();
         v2 = String(v2).toLowerCase();
@@ -269,6 +284,7 @@ function compararFiltro(cow, filtro) {
         default:   return false;
     }
 }
+
 
 
 // Função para mostrar o perfil da vaca
