@@ -55,9 +55,7 @@ public class LoteController {
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<?> criarFiltros(
-            @RequestBody List<Lote> filtros,
-            @RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<?> criarFiltros(@RequestBody List<Lote> filtros, @RequestHeader("Authorization") String authHeader) {
         try {
             if (filtros == null || filtros.isEmpty()) {
                 return ResponseEntity.badRequest().body("A lista de filtros não pode estar vazia.");
