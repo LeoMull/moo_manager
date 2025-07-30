@@ -205,7 +205,7 @@ async function loadEmployeesData() {
             const list = document.getElementById('employee-list');
             list.innerHTML = '';
             
-            funcionarios.forEach(f => {
+            funcionarios.filter(f => !(f.nivelDeAcesso === "GERENTE")).forEach(f => {
                 const item = document.createElement('div');
                 item.className = 'employee-item';
                 
@@ -213,27 +213,28 @@ async function loadEmployeesData() {
                     <div class="employee-info">
                         <div class="employee-field">
                             <strong>Nome</strong>
-                            <span>${f.nome}</span>
+                            <input type="text" value="${f.nome}" id="nome-${f.email}">
                         </div>
                         <div class="employee-field">
                             <strong>CPF</strong>
-                            <span>${f.cpf}</span>
+                            <input type="text" value="${f.cpf}" id="cpf-${f.email}">
                         </div>
                         <div class="employee-field">
                             <strong>E-mail</strong>
-                            <span>${f.usuarioId.email}</span>
+                            <input type="text" value="${f.usuarioId.email}" id="email-${f.email}">
                         </div>
                         <div class="employee-field">
                             <strong>Função</strong>
-                            <span>${f.nivelDeAcesso === 'FUNCIONARIO' ? 'Funcionário' : 
-                                    f.nivelDeAcesso === 'VETERINARIO' ? 'Veterinário' : 'Proprietário'}</span>
+                            <select id="role-${f.email}" required>
+                                <option value="FUNCIONARIO" ${f.nivelDeAcesso === 'FUNCIONARIO' ? 'selected' : ''}>Funcionário</option>
+                                <option value="VETERINARIO" ${f.nivelDeAcesso === 'VETERINARIO' ? 'selected' : ''}>Veterinário</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="manager-user-footer">
-                        <button class="back-btn" onclick="editEmployee('${f.cpf}')">
-                            Editar
+                    <div class="employee-actions">
+                        <button class="action-btn" onclick="editEmployee('${f.email}')">
+                            <img src="content/images/icon/edit.png" alt="Salvar" class="action-icon">
                         </button>
-
                         <button class="back-btn" onclick="deleteEmployee('${f.email}')">
                             Excluir
                         </button>
@@ -248,8 +249,49 @@ async function loadEmployeesData() {
     }
 }
 
-function editEmployee(cpf) {
-    console.log("Editar funcionário com CPF:", cpf);
+async function editEmployee(email) {
+    const token = localStorage.getItem('token');
+    const cnir = localStorage.getItem('cnir');
+    const novoNome = document.getElementById(`nome-${email}`).value;
+    const novoCpf = document.getElementById(`cpf-${email}`).value;
+    const novoEmail = document.getElementById(`email-${email}`).value;
+    const novoRole = document.getElementById(`role-${email}`).value;
+
+    try {
+        const response = await fetch(`${API_URL}/api/usuarios/${email}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                usuarioId: {
+                    email: novoEmail,
+                    cnir: cnir
+                },
+                propriedade: {
+                    cnir: cnir,
+                    nomePropriedade: null
+                },
+                nome: novoNome,
+                cpf: novoCpf,
+                senha: null,
+                nivelDeAcesso: novoRole,
+            })
+        });
+
+        if (response.ok) {
+            document.getElementById('add-employee-message').textContent = "Funcionário editado com sucesso!";
+            document.getElementById('add-employee-form').reset();
+            showEmployees();
+        } else {
+            const error = await response.text();
+            document.getElementById('add-employee-message').textContent = `Erro ao editar o funcionário: ${error}`;
+        }
+    } catch (error) {
+        document.getElementById('add-employee-message').textContent = "Erro de conexão com o servidor.";
+        console.log(error)
+    }
 }
 
 async function deleteEmployee(email) {
