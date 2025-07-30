@@ -58,7 +58,9 @@ function showCowsList() {
 function showCowProfile(cowId) {
     hideAllContents();
     document.getElementById('profile-content').style.display = 'block';
-    loadCowProfile(cowId); // Função que carrega o perfil da vaca
+    loadCowProfile(cowId);
+    loadReproductionTab(cowId);
+    loadProductionTab(cowId); // Função que carrega o perfil da vaca
 }
 
 function showAddCowForm() {
@@ -231,9 +233,9 @@ async function loadEmployeesData() {
                             </select>
                         </div>
                     </div>
-                    <div class="employee-actions">
-                        <button class="action-btn" onclick="editEmployee('${f.email}')">
-                            <img src="content/images/icon/edit.png" alt="Salvar" class="action-icon">
+                    <div class="manager-user-footer">
+                        <button class="back-btn" onclick="editEmployee('${f.email}')">
+                            Salvar
                         </button>
                         <button class="back-btn" onclick="deleteEmployee('${f.email}')">
                             Excluir

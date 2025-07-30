@@ -161,86 +161,83 @@ public ResponseEntity<?> criar(
         });
     }
 
-@PutMapping("/bulk/contagem-leite")
-public ResponseEntity<?> atualizarOuCriarContagemLeiteEmLote(
-        @RequestBody List<ProducaoVaca> dadosList,
-        @RequestHeader("Authorization") String authHeader) {
-    System.out.println("[INFO] Iniciando atualização/criação em lote de contagem de leite...");
+    @PutMapping("/bulk/contagem-leite")
+    public ResponseEntity<?> atualizarOuCriarContagemLeiteEmLote(
+            @RequestBody List<ProducaoVaca> dadosList,
+            @RequestHeader("Authorization") String authHeader) {
+        System.out.println("[INFO] Iniciando atualização/criação em lote de contagem de leite...");
 
-    try {
-        if (dadosList == null || dadosList.isEmpty()) {
-            System.out.println("[ERRO] Lista de produções está vazia ou nula.");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("A lista de produções não pode estar vazia.");
-        }
-
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            System.out.println("[ERRO] Token ausente ou mal formatado.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Token de autenticação ausente ou inválido.");
-        }
-
-        String token = authHeader.replace("Bearer ", "");
-        String cnir = jwtUtil.getCnirFromToken(token);
-        System.out.println("[INFO] Token validado. CNIR: " + cnir);
-
-        List<ProducaoVaca> salvos = new ArrayList<>();
-
-        for (ProducaoVaca dados : dadosList) {
-            try {
-                if (dados.getVaca() == null || dados.getVaca().getId() == null || dados.getVaca().getId().getIdVaca() == null) {
-                    System.out.println("[ERRO] Um dos itens não contém idVaca válido: " + dados);
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body("Cada item deve conter um idVaca válido.");
-                }
-
-                Integer idVaca = dados.getVaca().getId().getIdVaca();
-                VacaId id = new VacaId(idVaca, cnir);
-
-                System.out.println("[INFO] Processando vaca ID: " + idVaca);
-
-                ProducaoVaca salvo = repo.findById(id).map(producao -> {
-                    System.out.println("[INFO] Registro encontrado. Atualizando vaca ID: " + idVaca);
-                    producao.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
-                    producao.setUltimaCtgLeite(dados.getUltimaCtgLeite());
-                    return repo.save(producao);
-                }).orElseGet(() -> {
-                    System.out.println("[INFO] Registro não encontrado. Criando novo para vaca ID: " + idVaca);
-                    Vaca vaca = vacaRepo.findById(id)
-                            .orElseThrow(() -> new ResponseStatusException(
-                                    HttpStatus.NOT_FOUND,
-                                    "Vaca com id " + id.getIdVaca() + " não encontrada para este usuário."
-                            ));
-                    dados.setId(id);
-                    dados.setVaca(vaca);
-                    return repo.save(dados);
-                });
-
-                salvos.add(salvo);
-            } catch (ResponseStatusException e) {
-                System.out.println("[ERRO] Vaca não encontrada: " + e.getReason());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getReason());
-            } catch (Exception e) {
-                System.out.println("[ERRO] Falha ao processar vaca: " + e.getMessage());
-                e.printStackTrace();
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Erro ao processar vaca: " + e.getMessage());
+        try {
+            if (dadosList == null || dadosList.isEmpty()) {
+                System.out.println("[ERRO] Lista de produções está vazia ou nula.");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("A lista de produções não pode estar vazia.");
             }
+
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                System.out.println("[ERRO] Token ausente ou mal formatado.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Token de autenticação ausente ou inválido.");
+            }
+
+            String token = authHeader.replace("Bearer ", "");
+            String cnir = jwtUtil.getCnirFromToken(token);
+            System.out.println("[INFO] Token validado. CNIR: " + cnir);
+
+            List<ProducaoVaca> salvos = new ArrayList<>();
+
+            for (ProducaoVaca dados : dadosList) {
+                try {
+                    if (dados.getVaca() == null || dados.getVaca().getId() == null || dados.getVaca().getId().getIdVaca() == null) {
+                        System.out.println("[ERRO] Um dos itens não contém idVaca válido: " + dados);
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Cada item deve conter um idVaca válido.");
+                    }
+
+                    Integer idVaca = dados.getVaca().getId().getIdVaca();
+                    VacaId id = new VacaId(idVaca, cnir);
+
+                    System.out.println("[INFO] Processando vaca ID: " + idVaca);
+
+                    ProducaoVaca salvo = repo.findById(id).map(producao -> {
+                        System.out.println("[INFO] Registro encontrado. Atualizando vaca ID: " + idVaca);
+                        producao.setDataUltimaCtgLeite(dados.getDataUltimaCtgLeite());
+                        producao.setUltimaCtgLeite(dados.getUltimaCtgLeite());
+                        return repo.save(producao);
+                    }).orElseGet(() -> {
+                        System.out.println("[INFO] Registro não encontrado. Criando novo para vaca ID: " + idVaca);
+                        Vaca vaca = vacaRepo.findById(id)
+                                .orElseThrow(() -> new ResponseStatusException(
+                                        HttpStatus.NOT_FOUND,
+                                        "Vaca com id " + id.getIdVaca() + " não encontrada para este usuário."
+                                ));
+                        dados.setId(id);
+                        dados.setVaca(vaca);
+                        return repo.save(dados);
+                    });
+
+                    salvos.add(salvo);
+                } catch (ResponseStatusException e) {
+                    System.out.println("[ERRO] Vaca não encontrada: " + e.getReason());
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getReason());
+                } catch (Exception e) {
+                    System.out.println("[ERRO] Falha ao processar vaca: " + e.getMessage());
+                    e.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("Erro ao processar vaca: " + e.getMessage());
+                }
+            }
+
+            System.out.println("[INFO] Processo concluído. Total de registros salvos: " + salvos.size());
+            return ResponseEntity.ok(salvos);
+
+        } catch (Exception e) {
+            System.out.println("[ERRO] Erro inesperado no processamento em lote: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro interno ao processar as produções: " + e.getMessage());
         }
-
-        System.out.println("[INFO] Processo concluído. Total de registros salvos: " + salvos.size());
-        return ResponseEntity.ok(salvos);
-
-    } catch (Exception e) {
-        System.out.println("[ERRO] Erro inesperado no processamento em lote: " + e.getMessage());
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro interno ao processar as produções: " + e.getMessage());
     }
-}
-
-
-
     
     @DeleteMapping("/{idVaca}")
     public ResponseEntity<Void> deletar(@RequestHeader("Authorization") String authHeader, @PathVariable Integer idVaca) {

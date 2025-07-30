@@ -101,14 +101,19 @@ class ManagerPanel {
 
 async loadTodayProduction() {
     try {
-        const today = new Date().toISOString().split('T')[0];
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
+
         const cnir = this.getCnirFromToken();
         
         if (!cnir) {
             throw new Error('CNIR não encontrado no token');
         }
 
-        const response = await fetch(`${this.API_BASE_URL}/producao?data=${today}&cnir=${cnir}`, {
+        const response = await fetch(`${this.API_BASE_URL}/producao/${formattedDate}`, {
             headers: {
                 'Authorization': `Bearer ${this.token}`
             }
@@ -119,10 +124,8 @@ async loadTodayProduction() {
         }
 
         const producoes = await response.json();
-        
-        const totalProduction = producoes.reduce((sum, prod) => {
-            return sum + (prod.volume || 0);
-        }, 0);
+
+        const totalProduction = producoes.volume;
         
         this.updateTodayProductionUI(totalProduction);
     } catch (error) {

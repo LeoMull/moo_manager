@@ -58,79 +58,52 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Função para lidar com o envio do formulário
-    async function handleProductionSubmit() {
-        const rows = document.querySelectorAll('#cows-form .form-row');
-        if (rows.length === 0) {
-            alert('Adicione pelo menos uma vaca para registrar produção');
-            return;
-        }
+async function handleProductionSubmit() {
+    const token = localStorage.getItem('token'); // ou insira seu token fixo aqui
+    const form = document.getElementById('cows-form');
+    const rows = form.querySelectorAll('.form-row');
 
-        const productions = [];
-        let isValid = true;
+    // Monta o array de vacas
+    const cowsData = Array.from(rows).map(row => {
+        const id = row.querySelector('.cow-id-input').value.trim();
+        const liters = row.querySelector('.cow-liters-input').value.trim();
+        const date = row.querySelector('.cow-date-input').value;
 
-        rows.forEach(row => {
-            const cowId = row.querySelector('.cow-id-input').value.trim();
-            const liters = row.querySelector('.cow-liters-input').value.trim();
-            const date = row.querySelector('.cow-date-input').value;
-            
-            if (!cowId || !liters) {
-                isValid = false;
-                row.style.border = '1px solid red';
-                return;
-            }
+        return {
+            vaca: { id: { idVaca: parseInt(id) } },
+            dataUltimaCtgLeite: date,
+            ultimaCtgLeite: parseFloat(liters)
+        };
+    }).filter(cow => !isNaN(cow.vaca.id.idVaca) && !isNaN(cow.ultimaCtgLeite)); // Remove inválidos
 
-            productions.push({
-                idVaca: cowId,
-                quantidade: parseFloat(liters),
-                data: date
-            });
+    if (cowsData.length === 0) {
+        alert("Preencha pelo menos uma vaca válida.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:8080/api/producao_vaca/bulk/contagem-leite", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify(cowsData)
         });
 
-        if (!isValid) {
-            alert('Preencha todos os campos corretamente');
-            return;
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erro ${response.status}: ${errorText}`);
         }
 
-        try {
-            const token = localStorage.getItem('token');
-            const results = [];
-            
-            for (const prod of productions) {
-                const response = await fetch(`${API_URL}/api/producao/${prod.idVaca}/contagem-leite`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        quantidade: prod.quantidade,
-                        dataUltimaCtgLeite: prod.data
-                    })
-                });
-
-                if (response.ok) {
-                    results.push({
-                        idVaca: prod.idVaca,
-                        success: true
-                    });
-                } else {
-                    const error = await response.json();
-                    results.push({
-                        idVaca: prod.idVaca,
-                        success: false,
-                        error: error.message || 'Erro desconhecido'
-                    });
-                }
-            }
-
-            // Mostrar resultados
-            showResults(results);
-            
-        } catch (error) {
-            console.error('Erro:', error);
-            alert('Erro ao conectar com o servidor');
-        }
+        alert("Dados enviados com sucesso!");
+    } catch (error) {
+        console.error("Erro ao enviar dados:", error);
+        alert("Erro ao enviar dados. Verifique o console.");
     }
+}
+
+
 
     // Função auxiliar para mostrar resultados
     function showResults(results) {
