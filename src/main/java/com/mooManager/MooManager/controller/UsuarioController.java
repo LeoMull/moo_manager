@@ -56,18 +56,19 @@ public class UsuarioController {
         String token = authHeader.replace("Bearer ", "");
         String cnir = jwtUtil.getCnirFromToken(token);
         UsuarioId usuarioId = new UsuarioId(email, cnir);
-        Usuario usuarioExistente = usuarioService.buscarPorId(usuarioId);
-        if (usuarioExistente == null) {
+        Usuario usuario = usuarioService.buscarPorId(usuarioId);
+        if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
 
-        usuarioExistente.setNome(dados.getNome());
-        usuarioExistente.setCpf(dados.getCpf());
-        usuarioExistente.setSenha(dados.getSenha());
-        usuarioExistente.setNivelDeAcesso(dados.getNivelDeAcesso());
-        usuarioExistente.setPropriedade(dados.getPropriedade());
+        usuario.setNome(dados.getNome());
+        usuario.setCpf(dados.getCpf());
+        usuario.setEmail(dados.getEmail());
+        usuario.setNivelDeAcesso(dados.getNivelDeAcesso());
 
-        Usuario atualizado = usuarioService.salvarUsuario(usuarioExistente);
+        System.out.println(usuario);
+
+        Usuario atualizado = usuarioService.salvarUsuario(usuario);
         return ResponseEntity.ok(atualizado);
     }
 
