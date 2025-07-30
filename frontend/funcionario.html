@@ -95,174 +95,230 @@
         <h1>Perfil da Vaca</h1>
         <p class="subtitle">Informações detalhadas do animal</p>
     </div>
-    
+
     <div class="production-container">
         <div class="profile-container">
             <div class="profile-header">
                 <div class="profile-info-left">
                     <h2 id="cow-name">Mimosa</h2>
-                    <p class="cow-id" id="cow-id">ID: #001</p>
+                    <p class="cow-id" id="cow-id-modal">ID: #</p>
                 </div>
-                
+
                 <div class="profile-tabs">
                     <button class="tab-btn active" data-tab="general">Dados Gerais</button>
                     <button class="tab-btn" data-tab="reproduction">Reprodução</button>
                     <button class="tab-btn" data-tab="production">Produção</button>
                 </div>
             </div>
-            
+
+            <!-- Aba: Dados Gerais -->
             <div class="tab-content active" id="general-tab">
                 <div class="detail-group">
                     <h3>Informações</h3>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Sexo:</span>
+                        <span class="detail-value" id="cow-sexo"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Raça:</span>
+                        <span class="detail-value" id="cow-breed"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Data de Nascimento:</span>
+                        <span class="detail-value" id="cow-birth"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Categoria:</span>
+                        <span class="detail-value" id="cow-category"></span>
+                    </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Lote:</span>
-                        <span class="detail-value" id="cow-lot">A</span>
+                        <span class="detail-value" id="cow-lot"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Precisa de atendimento:</span>
                         <span class="detail-value" id="cow-needs-care">Não</span>
                     </div>
+
                     <div class="detail-item">
-                        <span class="detail-label">Peso:</span>
-                        <span class="detail-value" id="cow-weight">550 kg</span>
+                        <span class="detail-label">Observação:</span>
+                        <span class="detail-value" id="cow-observation">Nenhuma</span>
                     </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Peso (kg):</span>
+                        <span class="detail-value" id="cow-weight">Não informado</span>
+                    </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Data da última pesagem:</span>
-                        <span class="detail-value" id="cow-last-weighing">15/05/2024</span>
+                        <span class="detail-value" id="cow-last-weighing">Não informado</span>
                     </div>
                 </div>
-                
-                <div class="detail-group">
-                    <h3>Informações Básicas</h3>
-                    <div class="detail-item">
-                        <span class="detail-label">Raça:</span>
-                        <span class="detail-value" id="cow-breed">Holandesa</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Data de Nascimento:</span>
-                        <span class="detail-value" id="cow-birth">15/03/2020</span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Categoria:</span>
-                        <span class="detail-value" id="cow-category">Vaca em lactação</span>
-                    </div>
-                </div>
-                
+
                 <div class="detail-group">
                     <h3>Dados dos Pais</h3>
+
                     <div class="detail-item">
-                        <span class="detail-label" id="id-cow-mother">Mãe:</span>
-                        <span class="detail-value" id="cow-mother">Branquinha</span>
+                        <span class="detail-label">ID da Mãe:</span>
+                        <span class="detail-value" id="cow-id-mother"></span>
                     </div>
+
                     <div class="detail-item">
-                        <span class="detail-label" id="id-cow-father">Pai:</span>
-                        <span class="detail-value" id="cow-father">Touro Forte</span>
+                        <span class="detail-label">Nome da Mãe:</span>
+                        <span class="detail-value" id="cow-mother"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">ID do Pai:</span>
+                        <span class="detail-value" id="cow-id-father"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Nome do Pai:</span>
+                        <span class="detail-value" id="cow-father"></span>
                     </div>
                 </div>
             </div>
-            
+            <!-- Fim Aba: Dados Gerais -->
+
+            <!-- Início Aba: Reprodução -->
             <div class="tab-content" id="reproduction-tab">
                 <div class="detail-group">
                     <h3>Dados Gerais</h3>
+
                     <div class="detail-item">
                         <span class="detail-label">Situação:</span>
-                        <span class="detail-value" id="cow-repro-status">Prenha</span>
+                        <span class="detail-value" id="cow-repro-status"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Tipo parto:</span>
-                        <span class="detail-value" id="cow-birth-type">Normal</span>
+                        <span class="detail-value" id="cow-birth-type"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Dias após último parto:</span>
-                        <span class="detail-value" id="cow-days-last-birth">120</span>
+                        <span class="detail-value" id="cow-days-last-birth"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Número de partos:</span>
-                        <span class="detail-value" id="cow-birth-count">3</span>
+                        <span class="detail-value" id="cow-birth-count"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Previsão de parto:</span>
-                        <span class="detail-value" id="cow-next-birth">15/08/2024</span>
+                        <span class="detail-value" id="cow-next-birth"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Último IED:</span>
-                        <span class="detail-value" id="cow-last-ied">15/11/2023</span>
+                        <span class="detail-value" id="cow-last-ied"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Data último parto:</span>
-                        <span class="detail-value" id="cow-last-birth-date">12/05/2023</span>
+                        <span class="detail-value" id="cow-last-birth-date"></span>
                     </div>
                 </div>
-                
+
                 <div class="detail-group">
                     <h3>Ciclo atual</h3>
+
                     <div class="detail-item">
                         <span class="detail-label">Número de tentativas:</span>
-                        <span class="detail-value" id="cow-attempts">1</span>
+                        <span class="detail-value" id="cow-attempts"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Dias após última tentativa:</span>
-                        <span class="detail-value" id="cow-days-last-attempt">15</span>
+                        <span class="detail-value" id="cow-days-last-attempt"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Primeiro cio do ciclo:</span>
-                        <span class="detail-value" id="cow-first-heat">01/11/2023</span>
+                        <span class="detail-value" id="cow-first-heat"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Último cio do ciclo:</span>
-                        <span class="detail-value" id="cow-last-heat">15/11/2023</span>
+                        <span class="detail-value" id="cow-last-heat"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Primeira tentativa do ciclo:</span>
-                        <span class="detail-value" id="cow-first-attempt">15/11/2023</span>
+                        <span class="detail-value" id="cow-first-attempt"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Última tentativa do ciclo:</span>
-                        <span class="detail-value" id="cow-last-attempt">15/11/2023</span>
+                        <span class="detail-value" id="cow-last-attempt"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Pai da última tentativa:</span>
-                        <span class="detail-value" id="cow-last-attempt-father">Touro Forte (#045)</span>
+                        <span class="detail-value" id="cow-last-attempt-father"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Mãe última tentativa:</span>
-                        <span class="detail-value" id="cow-last-attempt-mother">Branquinha (#012)</span>
+                        <span class="detail-value" id="cow-last-attempt-mother"></span>
                     </div>
                 </div>
             </div>
-            
+            <!-- Fim Aba: Reprodução -->
+
+            <!-- Início Aba: Produção -->
             <div class="tab-content" id="production-tab">
                 <div class="detail-group">
                     <h3>Dados Gerais</h3>
+
                     <div class="detail-item">
                         <span class="detail-label">Previsão secagem:</span>
-                        <span class="detail-value" id="cow-drying-forecast">15/07/2024</span>
+                        <span class="detail-value" id="cow-drying-forecast"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Última secagem:</span>
-                        <span class="detail-value" id="cow-last-drying">15/05/2023</span>
+                        <span class="detail-value" id="cow-last-drying"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Quantidade de lactações:</span>
-                        <span class="detail-value" id="cow-lactation-count">3</span>
+                        <span class="detail-value" id="cow-lactation-count"></span>
                     </div>
+
                     <div class="detail-item">
-                        <span class="detail-label">Última contagem de leite:</span>
-                        <span class="detail-value" id="cow-last-milk-count">22 litros</span>
+                        <span class="detail-label">Última contagem de leite (litros):</span>
+                        <span class="detail-value" id="cow-last-milk-count"></span>
                     </div>
+
                     <div class="detail-item">
                         <span class="detail-label">Data última contagem:</span>
-                        <span class="detail-value" id="cow-last-milk-date">15/06/2024</span>
+                        <span class="detail-value" id="cow-last-milk-date"></span>
                     </div>
                 </div>
             </div>
-            
+            <!-- Fim Aba: Produção -->
+
             <div class="profile-footer">
                 <button class="back-btn" id="back-profile-btn">Voltar</button>
-                        </div>
-                    </div>
-                </div>
+                <button class="back-btn" id="edit-btn" style="display:none;">Editar</button>
+                <button class="back-btn" id="save-btn-vaca" style="display:none;">Salvar</button>
+                <button class="back-btn" id="delete-btn" style="display:none;">Excluir Vaca</button>
+                <button class="back-btn" id="cancel-btn" style="display:none;">Cancelar</button>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Fim Conteúdo do Perfil da Vaca -->
             
 <!-- Conteúdo de Registrar Produção -->
 <div class="content-production" id="production-content" style="display: none;">
@@ -326,5 +382,6 @@
     <script src="production-form.js"></script>
     <script src="daily-production.js"></script>
     <script src="group-production.js"></script>
+    <script src="gerente_functions.js"></script>
 </body>
 </html>
