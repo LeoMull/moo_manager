@@ -17,6 +17,8 @@ public class Lote {
     private String operador;
     private String valor;
 
+    public Lote() {}
+
     public LoteId getId() { return id; }
     public void setId(LoteId id) { this.id = id; }
 

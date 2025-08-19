@@ -48,6 +48,8 @@ public class SecurityConfig {
                     .requestMatchers("/api/producao/**").permitAll()
                     .requestMatchers("/api/vacas/**").permitAll()
                     .requestMatchers("/api/**").permitAll()
+                    .requestMatchers("/api/atendimentos/**").permitAll()
+                    .requestMatchers("/api/inseminacoes/**").permitAll()
                     .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

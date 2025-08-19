@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     const homeBtn = document.getElementById('home-btn');
+    const listCowsBtn = document.getElementById('list-cows-btn');
     const newAppointmentBtn = document.getElementById('new-appointment-btn');
     const newInseminationBtn = document.getElementById('new-insemination-btn');
-    const newTreatmentBtn = document.getElementById('new-treatment-btn');
+    const appointmentListBtn = document.getElementById('appointment-list-btn');
     const backProfileBtn = document.getElementById('back-profile-btn');
 
     const homeContent = document.getElementById('home-content');
@@ -27,6 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateHomeStats();
     });
 
+    listCowsBtn.addEventListener('click', () => {
+        showSection(cowsContent);
+        loadCowsList();
+        addLotOptions();
+    });
+
     newAppointmentBtn.addEventListener('click', () => {
         showSection(appointmentContent);
         resetAppointmentForm();
@@ -37,51 +44,17 @@ document.addEventListener('DOMContentLoaded', function() {
         resetInseminationForm();
     });
 
-    newTreatmentBtn.addEventListener('click', () => {
-        showSection(treatmentContent);
-        resetTreatmentForm();
+    appointmentListBtn.addEventListener('click', () => {
+        showSection(cowsContent);
+        loadCowsAppointmentList();
+        addLotOptions();
     });
 
     backProfileBtn.addEventListener('click', () => {
         showSection(cowsContent);
     });
 
-    function loadCowsList() {
-        const cowsList = document.getElementById('cows-list');
-        if (!cowsList) return;
-        
-        cowsList.innerHTML = '';
-        
-        const sampleCows = [
-            { id: '001', name: 'Mimosa', breed: 'Holandesa', age: '4 anos' },
-            { id: '002', name: 'Branquinha', breed: 'Jersey', age: '5 anos' },
-            { id: '003', name: 'Preta', breed: 'Holandesa', age: '3 anos' },
-            { id: '004', name: 'Malhada', breed: 'Girolando', age: '2 anos' }
-        ];
-        
-        sampleCows.forEach(cow => {
-            const cowItem = document.createElement('div');
-            cowItem.className = 'list-item';
-            cowItem.innerHTML = `
-                <div class="list-column">${cow.id}</div>
-                <div class="list-column">${cow.name}</div>
-                <div class="list-column">${cow.breed}</div>
-                <div class="list-column">${cow.age}</div>
-                <div class="list-column">
-                    <button class="action-btn view-btn" data-cow-id="${cow.id}">Ver</button>
-                </div>
-            `;
-            cowsList.appendChild(cowItem);
-        });
-        
-        document.querySelectorAll('.view-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const cowId = btn.getAttribute('data-cow-id');
-                loadCowProfile(cowId);
-                showSection(profileContent);
-            });
-        });
-    }
+
 
     function loadCowProfile(cowId) {
         document.getElementById('cow-id-modal').textContent = `ID: #${cowId}`;

@@ -131,7 +131,7 @@ async function fetchProductionById(cowId) {
             }
         });
 
-        console.log('Status da resposta:', response.status);
+
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -140,7 +140,7 @@ async function fetchProductionById(cowId) {
         }
 
         const data = await response.json();
-        console.log('Dados recebidos:', data);
+
         return data;
     } catch (error) {
         console.error('Erro:', error);
@@ -169,7 +169,7 @@ async function fetchReproductionById(cowId) {
         }
 
         const data = await response.json();
-        console.log('Dados recebidos:', data);
+   
         return data;
 
     } catch (error) {
@@ -197,7 +197,6 @@ async function fetchCicloById(cowId) {
         }
 
         const data = await response.json();
-        console.log('Dados recebidos:', data);
         return data;
 
     } catch (error) {
@@ -245,7 +244,6 @@ function compararFiltro(cow, filtro) {
     const { campo, operador, valor } = filtro;
     const cowValue = cow[campo];
 
-    console.log(`Comparando campo: ${campo}, operador: ${operador}, valor: ${valor}, cowValue: ${cowValue}`);
     if (cowValue == null || cowValue === '') return false;
 
     let v1 = cowValue;
@@ -286,7 +284,9 @@ function compararFiltro(cow, filtro) {
 window.showCowProfile = async function (cowId) {
     document.getElementById('cows-content').style.display = 'none';
     document.getElementById('profile-content').style.display = 'block';
-    document.getElementById('production-content').style.display = 'none';
+    if (document.getElementById('production-content')) {
+        document.getElementById('production-content').style.display = 'none';
+    }
 
     await loadCowProfile(cowId);
     await loadReproductionTab(cowId);

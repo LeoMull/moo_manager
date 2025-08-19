@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('confirm-production-btn')?.addEventListener('click', async function() {
         const liters = productionInput.value.trim();
         const cnir = localStorage.getItem('userCnir');
-        const today = new Date().toISOString().split('T')[0];
-        
+        const hojeBrasil = new Date().toLocaleString('sv-SE', { timeZone: 'America/Sao_Paulo' }).replace(' ', 'T') + '-03:00';
+    
         if (!cnir) {
             alert('CNIR não encontrado no localStorage!');
             return;
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Chama a função de adicionar produção
             const success = await addDailyProduction({
                 cnir: cnir,
-                data: today,
+                data: hojeBrasil,
                 litros: parseFloat(liters)
             });
             

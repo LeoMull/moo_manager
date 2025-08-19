@@ -113,6 +113,11 @@ async function handleLogin(e) {
                 window.location.href = 'funcionario.html';
                 return;
             }
+
+            if (data.nivelDeAcesso == 'VETERINARIO') {
+                window.location.href = 'veterinario.html';
+                return;
+            }
         } else {
             const errorData = await response.json();
             alert(errorData.message || 'Credenciais inválidas');
