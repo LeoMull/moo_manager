@@ -48,6 +48,20 @@ if (homeBtn) homeBtn.addEventListener('click', showMainContent);
 if (listCowsBtn) listCowsBtn.addEventListener('click', showCowsList);
 if (backProfileBtn) backProfileBtn.addEventListener('click', showCowsList);
 
+function setupLogoRefresh() {
+    const logo = document.getElementById('dashboard-logo');
+    if (logo) {
+        logo.addEventListener('click', function() {
+            location.reload();
+        });
+    }
+}
+
+// Executar quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', function() {
+    setupLogoRefresh();
+});
+
 // Funções de Autenticação
 function prepareRegistration() {
     if (loginEmail.value) {
