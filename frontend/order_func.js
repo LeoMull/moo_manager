@@ -135,26 +135,29 @@ async function renderCowsList(vacas, containerId, sortBy = "id") {
     vacasValidas.forEach(item => {
         const { vaca, producaoVaca } = item;
         const row = document.createElement("div");
-
+        
+        row.className = "list-row";
+        row.setAttribute("data-cow-id", vaca.id.idVaca);
+        
         row.innerHTML = `
-            <div class="list-row" data-cow-id="${vaca.id.idVaca}">
-                <div class="list-item">#${vaca.id.idVaca}</div>
-                <div class="list-item">${vaca.raca}</div>
-                <div class="list-item">${vaca.categoria}</div>
-                <div class="list-item">${producaoVaca}</div>
-                <div class="list-item" onclick="showCowAppointments(${vaca.id.idVaca})"> Atendimentos</div>
-                <div class="list-item">
-                    <img src="content/images/icon/eye.png" alt="Visualizar" 
-                        class="action-icon view-cow" 
-                        onclick="showCowProfile(${vaca.id.idVaca})">
-                </div>
+            <div class="list-item">
+                <span>#${vaca.id.idVaca}</span>
+                <button class="view-btn" onclick="showCowProfile(${vaca.id.idVaca})" title="Ver perfil">
+                    <img src="content/images/icon/eye.png" alt="Ver perfil" class="action-icon">
+                </button>
+            </div>
+            <div class="list-item">${vaca.raca}</div>
+            <div class="list-item">${vaca.categoria}</div>
+            <div class="list-item">${producaoVaca}L</div>
+            <div class="list-item">
+                <button class="attendance-btn" onclick="showCowAppointments(${vaca.id.idVaca})" title="Ver atendimentos">
+                    Atendimentos
+                </button>
             </div>
         `;
         cowsList.appendChild(row);
     });
 }
-
-
 
 // Função que carrega todas as vacas
 async function loadCowsList() {
