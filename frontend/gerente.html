@@ -10,7 +10,7 @@
 <body class="dashboard-page">
     <header class="dashboard-header">
         <div class="header-content">
-            <img src="content/images/dashlogo.png" alt="MooManager Logo" class="dashboard-logo">
+        <img src="content/images/dashlogo.png" alt="MooManager Logo" class="dashboard-logo" id="dashboard-logo">
             <div class="header-actions">
                 <button class="header-btn"><img src="content/images/icon/user.png" alt="Perfil" class="header-icon"></button>
                 <button class="header-btn" id="logout-btn"><img src="content/images/icon/logout.png" alt="Sair" class="header-icon"></button>
@@ -86,10 +86,10 @@
         <p class="property-cnir">CNIR: <span id="property-cnir">Carregando...</span></p>
         
         <div class="quick-stats">
-            <div class="stat-card">
-            <h3>Total de Vacas</h3>
-            <p class="stat-value" id="total-cows">0</p>
-            </div>
+<div class="stat-card" id="total-cows-card" onclick="showCowsList()">
+    <h3>Total de Vacas</h3>
+    <p class="stat-value" id="total-cows">0</p>
+</div>
             <div class="stat-card">
                 <h3>Em Lactação</h3>
                 <p class="stat-value" id="lactating-cows">0</p>
