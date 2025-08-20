@@ -44,11 +44,19 @@
                         <div class="menu-sublabel">Visão geral do sistema</div>
                     </div>
                 </button>
+
+                <button class="menu-btn" id="list-cows-btn">
+                    <img src="content/images/icon/list.png" alt="Listar" class="menu-icon">
+                    <div class="menu-text">
+                        <div class="menu-label">Listar Vacas</div>
+                        <div class="menu-sublabel">Mostrar animais da propriedade</div>
+                    </div>
+                </button>
                 
                 <button class="menu-btn" id="new-appointment-btn">
                     <img src="content/images/icon/plus.png" alt="Agendamento" class="menu-icon">
                     <div class="menu-text">
-                        <div class="menu-label">Novo Agendamento</div>
+                        <div class="menu-label">Novo Atendimento</div>
                         <div class="menu-sublabel">Agendar visita ou procedimento</div>
                     </div>
                 </button>
@@ -61,11 +69,11 @@
                     </div>
                 </button>
                 
-                <button class="menu-btn" id="new-treatment-btn">
+                <button class="menu-btn" id="appointment-list-btn">
                     <img src="content/images/icon/plus.png" alt="Atendimento" class="menu-icon">
                     <div class="menu-text">
-                        <div class="menu-label">Novo Atendimento</div>
-                        <div class="menu-sublabel">Registrar tratamento ou consulta</div>
+                        <div class="menu-label">Atendimento</div>
+                        <div class="menu-sublabel">Listar todas vacas para atendimento</div>
                     </div>
                 </button>
             </div>
@@ -105,11 +113,50 @@
                 <div class="production-container">
                     <div class="cows-list-container">
                         <div class="list-header">
-                            <div class="list-column-title">ID Vaca</div>
-                            <div class="list-column-title">Nome</div>
-                            <div class="list-column-title">Raça</div>
-                            <div class="list-column-title">Idade</div>
-                            <div class="list-column-title">Ações</div>
+                            <div class="list-column-title">Filtros:</div>
+                            <div class="list-column-title">
+                                <div class="detail-item">
+                                    <span class="detail-label">Raça:</span>
+                                    <select id="filter-cow-breed">
+                                        <option value="NENHUMA" selected>Nenhuma</option>
+                                        <option value="HOLSTEIN" >Holstein</option>
+                                        <option value="Jersey">Jersey</option>
+                                        <option value="GUERNSEY">Guernsey</option>
+                                        <!-- Adicione mais opções se tiver -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="list-column-title">
+                                <div class="detail-item">
+                                    <span class="detail-label">Categoria:</span>
+                                    <select id="filter-cow-category">
+                                        <option value="NENHUMA" selected>Nenhuma</option>
+                                        <option value="Lactante">Lactante</option>
+                                        <option value="Seca">Seca</option>
+                                        <option value="Novilha">Novilha</option>
+                                        <option value="Bezerra">Bezerra</option>
+                                        <option value="Touro">Touro</option>
+                                        <option value="Descarte">Descarte</option>
+                                        <!-- Adicione mais opções se tiver -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="list-column-title">
+                                <div class="detail-item">
+                                    <span class="detail-label">Lote:</span>
+                                    <select id="filter-cow-lot">
+                                        <option value="NENHUMA" selected>Nenhuma</option>
+
+                                        <!-- Adicione mais opções se tiver -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-header">
+                            <div class="list-column-title" id = "title_id">ID Vaca</div>
+                            <div class="list-column-title" id = "title_breed">Raça</div>
+                            <div class="list-column-title" id = "title_category">Categoria</div>
+                            <div class="list-column-title" id = "title_production">Produção</div>
                         </div>
                         <div class="cows-list" id="cows-list">
                             <!-- Lista será preenchida dinamicamente -->
@@ -118,293 +165,367 @@
                 </div>
             </div>
 
-            <!-- Conteúdo do Perfil da Vaca -->
-            <div class="content-profile" id="profile-content" style="display: none;">
+            <!--Lista de Atendimento/Inseminacao Vacas -->
+            <div class="content-appointments" id="appointments-content" style="display: none;">
                 <div class="production-header">
-                    <h1>Perfil da Vaca</h1>
-                    <p class="subtitle">Informações detalhadas do animal</p>
+                    <h1>Atendimentos</h1>
+                    <p class="subtitle">Consultas da vaca selecionada</p>
                 </div>
 
-                <div class="production-container">
-                    <div class="profile-container">
-                        <div class="profile-header">
-                            <div class="profile-info-left">
-                                <h2 id="cow-name">Mimosa</h2>
-                                <p class="cow-id" id="cow-id-modal">ID: #001</p>
-                            </div>
-
-                            <div class="profile-tabs">
-                                <button class="tab-btn active" data-tab="general">Dados Gerais</button>
-                                <button class="tab-btn" data-tab="reproduction">Reprodução</button>
-                                <button class="tab-btn" data-tab="health">Saúde</button>
-                            </div>
-                        </div>
-
-                        <!-- Aba: Dados Gerais -->
-                        <div class="tab-content active" id="general-tab">
-                            <div class="detail-group">
-                                <h3>Informações</h3>
-                                <div class="detail-item">
-                                    <span class="detail-label">Lote:</span>
-                                    <span class="detail-value" id="cow-lot">A</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Precisa de atendimento:</span>
-                                    <span class="detail-value" id="cow-needs-care">Não</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Peso:</span>
-                                    <span class="detail-value" id="cow-weight">550 kg</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Data da última pesagem:</span>
-                                    <span class="detail-value" id="cow-last-weighing">15/05/2024</span>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <h3>Informações Básicas</h3>
-                                <div class="detail-item">
-                                    <span class="detail-label">Raça:</span>
-                                    <span class="detail-value" id="cow-breed">Holandesa</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Data de Nascimento:</span>
-                                    <span class="detail-value" id="cow-birth">15/03/2020</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Categoria:</span>
-                                    <span class="detail-value" id="cow-category">Vaca em lactação</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Aba: Reprodução -->
-                        <div class="tab-content" id="reproduction-tab">
-                            <div class="detail-group">
-                                <h3>Dados Gerais</h3>
-                                <div class="detail-item">
-                                    <span class="detail-label">Situação:</span>
-                                    <span class="detail-value" id="cow-repro-status">Prenha</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Tipo parto:</span>
-                                    <span class="detail-value" id="cow-birth-type">Normal</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Número de partos:</span>
-                                    <span class="detail-value" id="cow-birth-count">3</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Previsão de parto:</span>
-                                    <span class="detail-value" id="cow-next-birth">15/08/2024</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Último IED:</span>
-                                    <span class="detail-value" id="cow-last-ied">15/11/2023</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Data último parto:</span>
-                                    <span class="detail-value" id="cow-last-birth-date">12/05/2023</span>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <h3>Ciclo atual</h3>
-                                <div class="detail-item">
-                                    <span class="detail-label">Número de tentativas:</span>
-                                    <span class="detail-value" id="cow-attempts">1</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">Última tentativa:</span>
-                                    <span class="detail-value" id="cow-last-attempt">15/11/2023</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Aba: Saúde -->
-                        <div class="tab-content" id="health-tab">
-                            <div class="detail-group">
-                                <h3>Histórico de Saúde</h3>
-                                <div class="health-history" id="health-history">
-                                    <!-- Histórico será preenchido dinamicamente -->
-                                </div>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <h3>Registrar Atendimento</h3>
-                                <form id="health-record-form">
-                                    <div class="form-row">
-                                        <label for="health-date">Data:</label>
-                                        <input type="date" id="health-date" required>
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="health-type">Tipo:</label>
-                                        <select id="health-type" required>
-                                            <option value="CONSULTA">Consulta</option>
-                                            <option value="VACINA">Vacinação</option>
-                                            <option value="TRATAMENTO">Tratamento</option>
-                                            <option value="CIRURGIA">Cirurgia</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="health-description">Descrição:</label>
-                                        <textarea id="health-description" rows="3" required></textarea>
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="health-medication">Medicação:</label>
-                                        <input type="text" id="health-medication">
-                                    </div>
-                                    <div class="form-row">
-                                        <label for="health-next-date">Próxima data:</label>
-                                        <input type="date" id="health-next-date">
-                                    </div>
-                                    <div class="form-footer">
-                                        <button type="submit" class="submit-btn">Registrar</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <div class="profile-footer">
-                            <button class="back-btn" id="back-profile-btn">Voltar</button>
-                        </div>
+                <div class="appointment-list-container">
+                    <div class="appointment-list-header" id="cow-id-appointment-header">
                     </div>
+                    <div class="appointment-list-header">
+                        <h2>Lista de atendimentos</h2>
+                    </div>
+
+                    <div class="simple-appointment-list" id="cow-appointments-list">
+                        <!-- Preenchido dinamicamente -->
+                    </div>
+
+                    <div class="appointment-list-header">
+                        <h2>Lista de Inseminações</h2>
+                    </div>
+
+                    <div class="simple-appointment-list" id="cow-inseminations-list">
+                        <!-- Preenchido dinamicamente -->
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Conteúdo de Novo Agendamento -->
+            <!--Fim Lista de Atendimento/Inseminacao Vacas -->
+
+<!-- Conteúdo do Perfil da Vaca -->
+<div class="content-profile" id="profile-content" style="display: none;">
+    <div class="production-header">
+        <h1>Perfil da Vaca</h1>
+        <p class="subtitle">Informações detalhadas do animal</p>
+    </div>
+
+    <div class="production-container">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-info-left">
+                    <h2 id="cow-name">Mimosa</h2>
+                    <p class="cow-id" id="cow-id-modal">ID: #</p>
+                </div>
+
+                <div class="profile-tabs">
+                    <button class="tab-btn active" data-tab="general">Dados Gerais</button>
+                    <button class="tab-btn" data-tab="reproduction">Reprodução</button>
+                    <button class="tab-btn" data-tab="production">Produção</button>
+                </div>
+            </div>
+
+            <!-- Aba: Dados Gerais -->
+            <div class="tab-content active" id="general-tab">
+                <div class="detail-group">
+                    <h3>Informações</h3>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Sexo:</span>
+                        <span class="detail-value" id="cow-sexo"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Raça:</span>
+                        <span class="detail-value" id="cow-breed"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Data de Nascimento:</span>
+                        <span class="detail-value" id="cow-birth"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Categoria:</span>
+                        <span class="detail-value" id="cow-category"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Lote:</span>
+                        <span class="detail-value" id="cow-lot"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Precisa de atendimento:</span>
+                        <span class="detail-value" id="cow-needs-care">Não</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Observação:</span>
+                        <span class="detail-value" id="cow-observation">Nenhuma</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Peso (kg):</span>
+                        <span class="detail-value" id="cow-weight">Não informado</span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Data da última pesagem:</span>
+                        <span class="detail-value" id="cow-last-weighing">Não informado</span>
+                    </div>
+                </div>
+
+                <div class="detail-group">
+                    <h3>Dados dos Pais</h3>
+
+                    <div class="detail-item">
+                        <span class="detail-label">ID da Mãe:</span>
+                        <span class="detail-value" id="cow-id-mother"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Nome da Mãe:</span>
+                        <span class="detail-value" id="cow-mother"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">ID do Pai:</span>
+                        <span class="detail-value" id="cow-id-father"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Nome do Pai:</span>
+                        <span class="detail-value" id="cow-father"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Fim Aba: Dados Gerais -->
+
+            <!-- Início Aba: Reprodução -->
+            <div class="tab-content" id="reproduction-tab">
+                <div class="detail-group">
+                    <h3>Dados Gerais</h3>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Situação:</span>
+                        <span class="detail-value" id="cow-repro-status"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Tipo parto:</span>
+                        <span class="detail-value" id="cow-birth-type"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Dias após último parto:</span>
+                        <span class="detail-value" id="cow-days-last-birth"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Número de partos:</span>
+                        <span class="detail-value" id="cow-birth-count"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Previsão de parto:</span>
+                        <span class="detail-value" id="cow-next-birth"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Último IED:</span>
+                        <span class="detail-value" id="cow-last-ied"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Data último parto:</span>
+                        <span class="detail-value" id="cow-last-birth-date"></span>
+                    </div>
+                </div>
+
+                <div class="detail-group">
+                    <h3>Ciclo atual</h3>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Número de tentativas:</span>
+                        <span class="detail-value" id="cow-attempts"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Dias após última tentativa:</span>
+                        <span class="detail-value" id="cow-days-last-attempt"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Primeiro cio do ciclo:</span>
+                        <span class="detail-value" id="cow-first-heat"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Último cio do ciclo:</span>
+                        <span class="detail-value" id="cow-last-heat"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Primeira tentativa do ciclo:</span>
+                        <span class="detail-value" id="cow-first-attempt"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Última tentativa do ciclo:</span>
+                        <span class="detail-value" id="cow-last-attempt"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Pai da última tentativa:</span>
+                        <span class="detail-value" id="cow-last-attempt-father"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Mãe última tentativa:</span>
+                        <span class="detail-value" id="cow-last-attempt-mother"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Fim Aba: Reprodução -->
+
+            <!-- Início Aba: Produção -->
+            <div class="tab-content" id="production-tab">
+                <div class="detail-group">
+                    <h3>Dados Gerais</h3>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Previsão secagem:</span>
+                        <span class="detail-value" id="cow-drying-forecast"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Última secagem:</span>
+                        <span class="detail-value" id="cow-last-drying"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Quantidade de lactações:</span>
+                        <span class="detail-value" id="cow-lactation-count"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Última contagem de leite (litros):</span>
+                        <span class="detail-value" id="cow-last-milk-count"></span>
+                    </div>
+
+                    <div class="detail-item">
+                        <span class="detail-label">Data última contagem:</span>
+                        <span class="detail-value" id="cow-last-milk-date"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- Fim Aba: Produção -->
+
+            <div class="profile-footer">
+                <button class="back-btn" id="back-profile-btn">Voltar</button>
+                <button class="back-btn" id="edit-btn" style="display:none;">Editar</button>
+                <button class="back-btn" id="save-btn-vaca" style="display:none;">Salvar</button>
+                <button class="back-btn" id="delete-btn" style="display:none;">Excluir Vaca</button>
+                <button class="back-btn" id="cancel-btn" style="display:none;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fim Conteúdo do Perfil da Vaca -->
+
+            <!-- Conteúdo de Novo Atendimento -->
             <div class="content-appointment" id="appointment-content" style="display: none;">
                 <div class="production-header">
-                    <h1>Novo Agendamento</h1>
-                    <p class="subtitle">Agendar visita ou procedimento veterinário</p>
+                    <h1>Novo Atendimento</h1>
+                    <p class="subtitle">Registrar atendimento veterinário</p>
                 </div>
                 
                 <div class="production-container">
                     <form id="appointment-form">
-                        <div class="form-row">
-                            <label for="appointment-cow-id">ID da Vaca:</label>
-                            <input type="text" id="appointment-cow-id" placeholder="Opcional - deixe em branco para geral">
+                        <div class="detail-group">
+                            <h3>Dados do Atendimento</h3>
+
+                            <div class="detail-item">
+                                <span class="detail-label">ID da Vaca:</span>
+                                <input type="number" id="appointment-cow-id" name="id_vaca" placeholder="Opcional - deixe em branco para geral">
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Data e Hora:</span>
+                                <input type="datetime-local" id="appointment-date" name="dataAtendimento" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Medicamento:</span>
+                                <input type="text" id="appointment-medicamento" name="medicamento">
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Diagnóstico:</span>
+                                <textarea id="appointment-diagnostico" name="diagnostico" rows="5" style="width: 100%;" required></textarea>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Procedimento:</span>
+                                <textarea id="appointment-procedimento" name="procedimento" rows="5" style="width: 100%;" required></textarea>
+                            </div>
                         </div>
-                        <div class="form-row">
-                            <label for="appointment-date">Data e Hora:</label>
-                            <input type="datetime-local" id="appointment-date" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="appointment-type">Tipo:</label>
-                            <select id="appointment-type" required>
-                                <option value="CONSULTA">Consulta</option>
-                                <option value="VACINA">Vacinação</option>
-                                <option value="PARTO">Acompanhamento de Parto</option>
-                                <option value="OUTRO">Outro</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label for="appointment-description">Descrição:</label>
-                            <textarea id="appointment-description" rows="3" required></textarea>
-                        </div>
-                        <div class="form-footer">
-                            <button type="submit" class="submit-btn">Agendar</button>
-                        </div>
+
+                        <button type="submit" class="submit-btn">Registrar Atendimento</button>
                     </form>
                 </div>
             </div>
+
 
             <!-- Conteúdo de Nova Inseminação -->
             <div class="content-insemination" id="insemination-content" style="display: none;">
                 <div class="production-header">
-                    <h1>Nova Inseminação</h1>
-                    <p class="subtitle">Registrar inseminação artificial</p>
+                    <h1>Novo Atendimento (Inseminação)</h1>
+                    <p class="subtitle">Registrar inseminação ou procedimento relacionado</p>
                 </div>
                 
                 <div class="production-container">
                     <form id="insemination-form">
-                        <div class="form-row">
-                            <label for="insemination-cow-id">ID da Vaca:</label>
-                            <input type="text" id="insemination-cow-id" required>
+                        <div class="detail-group">
+                            <h3>Dados da Inseminação</h3>
+
+                            <div class="detail-item">
+                                <span class="detail-label">ID da Vaca:</span>
+                                <input type="number" id="insemination-cow-id" name="id_vaca" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Pai:</span>
+                                <input type="text" id="insemination-sire" name="pai" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Doadora:</span>
+                                <input type="text" id="insemination-donor" name="doadora" >
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Data da Inseminação:</span>
+                                <input type="date" id="insemination-date" name="dataInseminacao" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Procedimento:</span>
+                                <textarea id="insemination-procedure" name="procedimento" rows="5" style="width: 100%;" ></textarea>
+                            </div>
                         </div>
-                        <div class="form-row">
-                            <label for="insemination-date">Data:</label>
-                            <input type="date" id="insemination-date" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="insemination-bull-id">ID do Touro:</label>
-                            <input type="text" id="insemination-bull-id" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="insemination-bull-name">Nome do Touro:</label>
-                            <input type="text" id="insemination-bull-name" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="insemination-technician">Técnico Responsável:</label>
-                            <input type="text" id="insemination-technician" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="insemination-notes">Observações:</label>
-                            <textarea id="insemination-notes" rows="3"></textarea>
-                        </div>
-                        <div class="form-footer">
-                            <button type="submit" class="submit-btn">Registrar</button>
-                        </div>
+
+                        <button type="submit" class="submit-btn">Registrar Inseminação</button>
                     </form>
                 </div>
             </div>
 
-            <!-- Conteúdo de Novo Atendimento -->
-            <div class="content-treatment" id="treatment-content" style="display: none;">
-                <div class="production-header">
-                    <h1>Novo Atendimento</h1>
-                    <p class="subtitle">Registrar tratamento ou consulta veterinária</p>
-                </div>
-                
-                <div class="production-container">
-                    <form id="treatment-form">
-                        <div class="form-row">
-                            <label for="treatment-cow-id">ID da Vaca:</label>
-                            <input type="text" id="treatment-cow-id" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="treatment-date">Data:</label>
-                            <input type="date" id="treatment-date" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="treatment-type">Tipo:</label>
-                            <select id="treatment-type" required>
-                                <option value="CONSULTA">Consulta</option>
-                                <option value="VACINA">Vacinação</option>
-                                <option value="MEDICACAO">Medicação</option>
-                                <option value="CIRURGIA">Cirurgia</option>
-                                <option value="EXAME">Exame</option>
-                            </select>
-                        </div>
-                        <div class="form-row">
-                            <label for="treatment-diagnosis">Diagnóstico:</label>
-                            <textarea id="treatment-diagnosis" rows="3" required></textarea>
-                        </div>
-                        <div class="form-row">
-                            <label for="treatment-medication">Medicação:</label>
-                            <input type="text" id="treatment-medication">
-                        </div>
-                        <div class="form-row">
-                            <label for="treatment-dosage">Dosagem:</label>
-                            <input type="text" id="treatment-dosage">
-                        </div>
-                        <div class="form-row">
-                            <label for="treatment-next-date">Próxima data:</label>
-                            <input type="date" id="treatment-next-date">
-                        </div>
-                        <div class="form-footer">
-                            <button type="submit" class="submit-btn">Registrar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
+        
         </section>
     </main>
 
     <script src="script.js"></script>
     <script src="search.js"></script>
     <script src="cow-profile.js"></script>
+    <script src="vet-dashboard-navigation.js"></script>
+    <script src="gerente_functions.js"></script>
+    <script src="order_func.js"></script>
+    <script src="veterinario_function.js"></script>
     <script src="vet-dashboard-navigation.js"></script>
 </body>
 </html>

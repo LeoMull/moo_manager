@@ -106,17 +106,14 @@ saveBtnVaca.addEventListener('click', async () => {
 
     const dadosCiclo = {
         
-        diasDesdeUltimoParto: parseIntOrNull(document.getElementById('input-cow-days-last-birth').value),
-        diasDesdeUltimaTentativa: parseIntOrNull(document.getElementById('input-cow-days-last-attempt').value),
-        dataUltimoCio: parseOrNull(document.getElementById('input-cow-last-heat').value),
-        dataUltimaTentativa: parseOrNull(document.getElementById('input-cow-last-attempt').value),
-        dataPrimeiraTentativa: parseOrNull(document.getElementById('input-cow-first-attempt').value),
-        dataPrimeiroCio: parseOrNull(document.getElementById('input-cow-first-heat').value),
+        diaAposUltTent: parseInt(document.getElementById('input-cow-days-last-attempt').value) || null,
+        primeiroCioCiclo: document.getElementById('input-cow-first-heat').value || null,
+        ultCioCiclo: document.getElementById('input-cow-last-heat').value || null,
+        primeiraTentaCiclo: document.getElementById('input-cow-first-attempt').value || null,
+        ultTentativa: document.getElementById('input-cow-last-attempt').value || null,
+        paiUltTentativa: parseInt(document.getElementById('input-cow-last-attempt-father').value) || null,
+        doadoraUltTentativa: parseInt(document.getElementById('input-cow-last-attempt-mother').value) || null
         
-        paiUltTentativa: parseIntOrNull(document.getElementById('input-cow-last-attempt-father').value),
-        doadoraUltTentativa: parseIntOrNull(document.getElementById('input-cow-last-attempt-mother').value),
-        
-        iedUltimoParto: parseIntOrNull(document.getElementById('input-cow-last-ied').value)
     };
     console.log('dadosAtualizados:', dadosAtualizados);
     console.log('dadosProducao:', dadosProducao);
@@ -246,16 +243,15 @@ function saveReproducao(){
 
     // Objeto para atualização da entidade Ciclo
     const dadosCiclo = {
-        diasDesdeUltimoParto: parseInt(document.getElementById('input-cow-days-last-birth').value),
-        diasDesdeUltimaTentativa: parseInt(document.getElementById('input-cow-days-last-attempt').value),
-        dataUltimoCio: document.getElementById('input-cow-last-heat').value,
-        dataUltimaTentativa: document.getElementById('input-cow-last-attempt').value,
-        dataPrimeiraTentativa: document.getElementById('input-cow-first-attempt').value,
-        dataPrimeiroCio: document.getElementById('input-cow-first-heat').value,
-        idPaiUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-father').value),
-        idMaeUltimaTentativa: parseInt(document.getElementById('input-cow-last-attempt-mother').value),
-        iedUltimoParto: parseInt(document.getElementById('input-cow-last-ied').value)
+        diaAposUltTent: parseInt(document.getElementById('input-cow-days-last-attempt').value) || null,
+        primeiroCioCiclo: document.getElementById('input-cow-first-heat').value || null,
+        ultCioCiclo: document.getElementById('input-cow-last-heat').value || null,
+        primeiraTentaCiclo: document.getElementById('input-cow-first-attempt').value || null,
+        ultTentativa: document.getElementById('input-cow-last-attempt').value || null,
+        paiUltTentativa: parseInt(document.getElementById('input-cow-last-attempt-father').value) || null,
+        doadoraUltTentativa: parseInt(document.getElementById('input-cow-last-attempt-mother').value) || null
     };
+
 
     // Requisição para atualizar reprodução
     fetch(`http://localhost:8080/api/reproducao/${idVaca}`, {

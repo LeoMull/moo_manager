@@ -20,6 +20,8 @@ public class Producao {
     
     private double volume;
 
+    public Producao() {}
+
     public double getVolume() {
         return volume;
     }

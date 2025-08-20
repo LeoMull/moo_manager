@@ -2313,6 +2313,21 @@ margin-bottom: 5px;
     display: block;
 }
 
+.appointment-item {
+    background-color: white;
+    border-radius: 20px;
+    padding: 12px 16px;
+    border: 1px solid gray;
+    margin-bottom: 12px;
+
+}
+
+.appointment-list-container{
+    padding: 20px;
+    background-color: white;;
+    border-radius: 20px;
+}
+
 /* ===== RESPONSIVE ADJUSTMENTS ===== */
 @media (max-width: 768px) {
     .dashboard-main, .employee-form .form-row,
