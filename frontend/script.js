@@ -323,39 +323,29 @@ function showCowsList() {
     loadCowsData();
 }
 
-async function loadCowsData() {
+async function loadCowsData(sortBy = "id") {
     const cowsList = document.getElementById('cows-list');
     if (!cowsList) return;
-    
+
     cowsList.innerHTML = '<p>Carregando vacas...</p>';
-    
+
     try {
         const vacas = await fetchAllCows();
-        
+
         if (vacas.length === 0) {
             cowsList.innerHTML = '<p>Nenhuma vaca cadastrada</p>';
             return;
         }
-        
-        cowsList.innerHTML = vacas.map(vaca => `
-            <div class="list-row" data-cow-id="${vaca.id.idVaca}">
-                <div class="list-item">#${vaca.id.idVaca}</div>
-                <div class="list-item">${vaca.raca}</div>
-                <div class="list-item">${vaca.categoria}</div>
-                <div class="list-item">${formatDate(vaca.dataNasc)}</div>
-                <div class="list-item">
-                    <img src="content/images/icon/eye.png" alt="Visualizar" 
-                         class="action-icon view-cow" 
-                         onclick="showCowProfile(${vaca.id.idVaca})">
-                </div>
-            </div>
-        `).join('');
-        
+
+        // Chama a função renderCowsList que já aplica filtros, produção e ordenação
+        await renderCowsList(vacas, "cows-list", sortBy);
+
     } catch (error) {
         cowsList.innerHTML = '<p>Erro ao carregar vacas</p>';
         console.error(error);
     }
 }
+
 
 // Funções de API para Vacas
 async function fetchAllCows() {

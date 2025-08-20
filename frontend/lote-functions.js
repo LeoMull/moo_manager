@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const lotsContent = document.getElementById("lots-content");
+
+    const lotsContent = document.getElementById("lots-content");
+  
 
   const container = lotsContent.querySelector("#filters-container");
   const addFilterBtn = lotsContent.querySelector("#add-filter");
@@ -172,4 +174,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   carregarFiltros();
+  
 });

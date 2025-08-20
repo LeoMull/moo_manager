@@ -13,16 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const inseminationContent = document.getElementById('insemination-content');
     const treatmentContent = document.getElementById('treatment-content');
 
-    function showSection(sectionToShow) {
-        document.querySelectorAll('.dashboard-section > div').forEach(section => {
-            section.style.display = 'none';
-        });
-        
-        if (sectionToShow) {
-            sectionToShow.style.display = 'block';
-        }
-    }
-
     homeBtn.addEventListener('click', () => {
         showSection(homeContent);
         updateHomeStats();
@@ -123,3 +113,13 @@ document.addEventListener('DOMContentLoaded', function() {
     showSection(homeContent);
     updateHomeStats();
 });
+
+function showSection(sectionToShow) {
+    document.querySelectorAll('.dashboard-section > div').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    if (sectionToShow) {
+        sectionToShow.style.display = 'block';
+    }
+}

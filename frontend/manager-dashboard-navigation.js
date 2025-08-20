@@ -50,6 +50,7 @@ function showHome() {
 }
 
 function showCowsList() {
+    addLotOptions();
     hideAllContents();
     document.getElementById('cows-content').style.display = 'block';
     loadCowsData(); // Função que carrega os dados das vacas

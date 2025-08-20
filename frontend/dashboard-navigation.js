@@ -39,6 +39,7 @@ function showCowsList() {
     
     // Carrega os dados das vacas
     loadCowsData();
+    addLotOptions();
 }
 
 function showProductionForm() {

@@ -120,7 +120,7 @@
                                     <select id="filter-cow-breed">
                                         <option value="NENHUMA" selected>Nenhuma</option>
                                         <option value="HOLSTEIN" >Holstein</option>
-                                        <option value="JERSEY">Jersey</option>
+                                        <option value="Jersey">Jersey</option>
                                         <option value="GUERNSEY">Guernsey</option>
                                         <!-- Adicione mais opções se tiver -->
                                     </select>
@@ -164,6 +164,38 @@
                     </div>
                 </div>
             </div>
+
+            <!--Lista de Atendimento/Inseminacao Vacas -->
+            <div class="content-appointments" id="appointments-content" style="display: none;">
+                <div class="production-header">
+                    <h1>Atendimentos</h1>
+                    <p class="subtitle">Consultas da vaca selecionada</p>
+                </div>
+
+                <div class="appointment-list-container">
+                    <div class="appointment-list-header" id="cow-id-appointment-header">
+                    </div>
+                    <div class="appointment-list-header">
+                        <h2>Lista de atendimentos</h2>
+                    </div>
+
+                    <div class="simple-appointment-list" id="cow-appointments-list">
+                        <!-- Preenchido dinamicamente -->
+                    </div>
+
+                    <div class="appointment-list-header">
+                        <h2>Lista de Inseminações</h2>
+                    </div>
+
+                    <div class="simple-appointment-list" id="cow-inseminations-list">
+                        <!-- Preenchido dinamicamente -->
+                    </div>
+
+                </div>
+            </div>
+
+            <!--Fim Lista de Atendimento/Inseminacao Vacas -->
+
 <!-- Conteúdo do Perfil da Vaca -->
 <div class="content-profile" id="profile-content" style="display: none;">
     <div class="production-header">
@@ -404,35 +436,36 @@
                 
                 <div class="production-container">
                     <form id="appointment-form">
-                        <!-- ID da vaca é parte do AtendimentoId -->
-                        <div class="form-row">
-                            <label for="appointment-cow-id">ID da Vaca:</label>
-                            <input type="number" id="appointment-cow-id" name="id_vaca" placeholder="Opcional - deixe em branco para geral">
+                        <div class="detail-group">
+                            <h3>Dados do Atendimento</h3>
+
+                            <div class="detail-item">
+                                <span class="detail-label">ID da Vaca:</span>
+                                <input type="number" id="appointment-cow-id" name="id_vaca" placeholder="Opcional - deixe em branco para geral">
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Data e Hora:</span>
+                                <input type="datetime-local" id="appointment-date" name="dataAtendimento" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Medicamento:</span>
+                                <input type="text" id="appointment-medicamento" name="medicamento">
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Diagnóstico:</span>
+                                <textarea id="appointment-diagnostico" name="diagnostico" rows="5" style="width: 100%;" required></textarea>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Procedimento:</span>
+                                <textarea id="appointment-procedimento" name="procedimento" rows="5" style="width: 100%;" required></textarea>
+                            </div>
                         </div>
 
-                        <div class="form-row">
-                            <label for="appointment-date">Data e Hora do Atendimento:</label>
-                            <input type="datetime-local" id="appointment-date" name="dataAtendimento" required>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="appointment-medicamento">Medicamento:</label>
-                            <input type="text" id="appointment-medicamento" name="medicamento">
-                        </div>
-
-                        <div class="form-row">
-                            <label for="appointment-diagnostico">Diagnóstico:</label>
-                            <textarea id="appointment-diagnostico" name="diagnostico" rows="3" required></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <label for="appointment-procedimento">Procedimento:</label>
-                            <textarea id="appointment-procedimento" name="procedimento" rows="3" required></textarea>
-                        </div>
-
-                        <div class="form-footer">
-                            <button type="submit" class="submit-btn">Registrar Atendimento</button>
-                        </div>
+                        <button type="submit" class="submit-btn">Registrar Atendimento</button>
                     </form>
                 </div>
             </div>
@@ -447,32 +480,36 @@
                 
                 <div class="production-container">
                     <form id="insemination-form">
-                        <div class="form-row">
-                            <label for="id-vaca">ID da Vaca:</label>
-                            <input type="number" id="id-vaca" name="id_vaca" required>
+                        <div class="detail-group">
+                            <h3>Dados da Inseminação</h3>
+
+                            <div class="detail-item">
+                                <span class="detail-label">ID da Vaca:</span>
+                                <input type="number" id="insemination-cow-id" name="id_vaca" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Pai:</span>
+                                <input type="text" id="insemination-sire" name="pai" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Doadora:</span>
+                                <input type="text" id="insemination-donor" name="doadora" >
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Data da Inseminação:</span>
+                                <input type="date" id="insemination-date" name="dataInseminacao" required>
+                            </div>
+
+                            <div class="detail-item">
+                                <span class="detail-label">Procedimento:</span>
+                                <textarea id="insemination-procedure" name="procedimento" rows="5" style="width: 100%;" ></textarea>
+                            </div>
                         </div>
 
-                        <!-- Campos da classe -->
-                        <div class="form-row">
-                            <label for="pai">Pai:</label>
-                            <input type="text" id="pai" name="pai" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="doadora">Doadora:</label>
-                            <input type="text" id="doadora" name="doadora" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="data-inseminacao">Data da Inseminação:</label>
-                            <input type="date" id="data-inseminacao" name="dataInseminacao" required>
-                        </div>
-                        <div class="form-row">
-                            <label for="procedimento">Procedimento:</label>
-                            <textarea id="procedimento" name="procedimento" rows="3" required></textarea>
-                        </div>
-
-                        <div class="form-footer">
-                            <button type="submit" class="submit-btn">Registrar</button>
-                        </div>
+                        <button type="submit" class="submit-btn">Registrar Inseminação</button>
                     </form>
                 </div>
             </div>
@@ -488,6 +525,7 @@
     <script src="vet-dashboard-navigation.js"></script>
     <script src="gerente_functions.js"></script>
     <script src="order_func.js"></script>
-
+    <script src="veterinario_function.js"></script>
+    <script src="vet-dashboard-navigation.js"></script>
 </body>
 </html>

@@ -83,13 +83,14 @@ async function loadReproductionTab(cowId) {
     }
 
     if (ciclo) {
-        document.getElementById('cow-days-last-attempt').textContent = (ciclo.diasDesdeUltimaTentativa != null) ? ciclo.diasDesdeUltimaTentativa : '0';
-        document.getElementById('cow-first-heat').textContent = ciclo.dataPrimeiroCio ? formatDate(ciclo.dataPrimeiroCio) : '00/00/0000';
-        document.getElementById('cow-last-heat').textContent = ciclo.dataUltimoCio ? formatDate(ciclo.dataUltimoCio) : '00/00/0000';
-        document.getElementById('cow-first-attempt').textContent = ciclo.dataPrimeiraTentativa ? formatDate(ciclo.dataPrimeiraTentativa) : '00/00/0000';
-        document.getElementById('cow-last-attempt').textContent = ciclo.dataUltimaTentativa ? formatDate(ciclo.dataUltimaTentativa) : '00/00/0000';
-        document.getElementById('cow-last-attempt-father').textContent = (ciclo.idPaiUltimaTentativa != null) ? ciclo.idPaiUltimaTentativa : 'Não informado';
-        document.getElementById('cow-last-attempt-mother').textContent = (ciclo.idMaeUltimaTentativa != null) ? ciclo.idMaeUltimaTentativa : 'Não informado';
+        document.getElementById('cow-days-last-attempt').textContent = (ciclo.diaAposUltTent != null) ? ciclo.diaAposUltTent : '0';
+        document.getElementById('cow-first-heat').textContent = ciclo.primeiroCioCiclo ? formatDate(ciclo.primeiroCioCiclo) : '00/00/0000';
+        document.getElementById('cow-last-heat').textContent = ciclo.ultCioCiclo ? formatDate(ciclo.ultCioCiclo) : '00/00/0000';
+        document.getElementById('cow-first-attempt').textContent = ciclo.primeiraTentaCiclo ? formatDate(ciclo.primeiraTentaCiclo) : '00/00/0000';
+        document.getElementById('cow-last-attempt').textContent = ciclo.ultTentativa ? formatDate(ciclo.ultTentativa) : '00/00/0000';
+        document.getElementById('cow-last-attempt-father').textContent = (ciclo.paiUltTentativa != null) ? ciclo.paiUltTentativa : 'Não informado';
+        document.getElementById('cow-last-attempt-mother').textContent = (ciclo.doadoraUltTentativa != null) ? ciclo.doadoraUltTentativa : 'Não informado';
+
         document.getElementById('cow-last-ied').textContent = (ciclo.iedUltimoParto != null) ? ciclo.iedUltimoParto : '0';
     }
 
