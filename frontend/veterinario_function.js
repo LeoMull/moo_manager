@@ -348,3 +348,119 @@ async function showCowAppointments(cowId) {
         console.error("Erro ao carregar atendimentos/inseminaçōes:", error);
     }
 }
+
+// Funções específicas para edição pelo veterinário
+const vetEditBtn = document.getElementById('vet-edit-btn');
+const vetSaveBtn = document.getElementById('vet-save-btn');
+const vetCancelBtn = document.getElementById('vet-cancel-btn');
+
+function enableVetEditMode() {
+    // Habilita apenas os campos que o veterinário pode editar
+    const editableFields = ['cow-needs-care', 'cow-observation'];
+    
+    editableFields.forEach(fieldId => {
+        const span = document.getElementById(fieldId);
+        const input = document.getElementById(`input-${fieldId}`);
+        
+        if (span && input) {
+            input.style.display = 'inline-block';
+            span.style.display = 'none';
+            
+            let valorSpan = span.textContent.trim() === 'Nenhuma' || span.textContent.trim() === 'Não informado' ? '' : span.textContent.trim();
+            
+            if (input.tagName === 'SELECT') {
+                // Para o campo "precisa de atendimento"
+                if (fieldId === 'cow-needs-care') {
+                    input.value = (valorSpan === 'Sim') ? 'true' : 'false';
+                }
+            } else if (input.tagName === 'INPUT') {
+                input.value = valorSpan;
+            }
+        }
+    });
+
+    // Alterna botões
+    document.getElementById('vet-edit-btn').style.display = 'none';
+    document.getElementById('vet-save-btn').style.display = 'inline-block';
+    document.getElementById('vet-cancel-btn').style.display = 'inline-block';
+}
+
+function cancelVetEditMode() {
+    // Oculta inputs e mostra novamente os spans apenas dos campos editáveis
+    const editableFields = ['cow-needs-care', 'cow-observation'];
+    
+    editableFields.forEach(fieldId => {
+        const span = document.getElementById(fieldId);
+        const input = document.getElementById(`input-${fieldId}`);
+        
+        if (span && input) {
+            input.style.display = 'none';
+            span.style.display = 'inline-block';
+        }
+    });
+
+    // Alterna botões
+    document.getElementById('vet-edit-btn').style.display = 'inline-block';
+    document.getElementById('vet-save-btn').style.display = 'none';
+    document.getElementById('vet-cancel-btn').style.display = 'none';
+}
+
+async function saveVetChanges() {
+    const token = localStorage.getItem('token');
+    const cnir = localStorage.getItem('userCnir');
+    let idVaca = document.getElementById('cow-id-modal').textContent.replace('ID: #', '').trim();
+
+    if (!token || !cnir) {
+        alert("Erro: token ou CNIR não encontrados no localStorage.");
+        return;
+    }
+
+    const parseOrNull = (value) => value && value.trim() !== '' ? value.trim() : null;
+
+    // Apenas os dados que o veterinário pode editar
+    const dadosAtualizados = {
+        precisaAtendimento: document.getElementById('input-cow-needs-care').value === 'true',
+        observacao: parseOrNull(document.getElementById('input-cow-observation').value) || "Nenhuma"
+    };
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/vacas/${idVaca}/veterinario`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(dadosAtualizados)
+        });
+
+        if (response.ok) {
+            alert('Dados atualizados com sucesso!');
+            
+            // Atualiza os valores exibidos
+            document.getElementById('cow-needs-care').textContent = dadosAtualizados.precisaAtendimento ? 'Sim' : 'Não';
+            document.getElementById('cow-observation').textContent = dadosAtualizados.observacao;
+            
+            // Volta para o modo de visualização
+            cancelVetEditMode();
+        } else {
+            const errorText = await response.text();
+            alert(`Erro ao atualizar: ${errorText}`);
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        alert('Falha ao enviar os dados para o servidor.');
+    }
+}
+
+// Event listeners para os botões do veterinário
+if (vetEditBtn) {
+    vetEditBtn.addEventListener('click', enableVetEditMode);
+}
+
+if (vetSaveBtn) {
+    vetSaveBtn.addEventListener('click', saveVetChanges);
+}
+
+if (vetCancelBtn) {
+    vetCancelBtn.addEventListener('click', cancelVetEditMode);
+}

@@ -87,4 +87,32 @@ public class VacaController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @PatchMapping("/{idVaca}/funcionario")
+    public ResponseEntity<Vaca> atualizarPorFuncionario(@PathVariable Integer idVaca, @RequestBody Vaca dados, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
+        VacaId vacaId = new VacaId(idVaca, cnir);
+        return repo.findById(vacaId).map(vaca -> {
+            if (dados.getObservacao() != null) {
+                vaca.setObservacao(dados.getObservacao());
+            }
+            return ResponseEntity.ok(repo.save(vaca));
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{idVaca}/veterinario")
+    public ResponseEntity<Vaca> atualizarPorVeterinario(@PathVariable Integer idVaca, @RequestBody Vaca dados, @RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String cnir = jwtUtil.getCnirFromToken(token);
+        VacaId vacaId = new VacaId(idVaca, cnir);
+        return repo.findById(vacaId).map(vaca -> {
+            if (dados.getPrecisaAtendimento() != null) {
+                vaca.setPrecisaAtendimento(dados.getPrecisaAtendimento());
+            }
+            if (dados.getObservacao() != null) {
+                vaca.setObservacao(dados.getObservacao());
+            }
+            return ResponseEntity.ok(repo.save(vaca));
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }

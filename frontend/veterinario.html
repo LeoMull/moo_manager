@@ -251,11 +251,16 @@
                     <div class="detail-item">
                         <span class="detail-label">Precisa de atendimento:</span>
                         <span class="detail-value" id="cow-needs-care">Não</span>
+                        <select id="input-cow-needs-care" style="display:none;">
+                            <option value="true">Sim</option>
+                            <option value="false" selected>Não</option>
+                        </select>
                     </div>
 
                     <div class="detail-item">
                         <span class="detail-label">Observação:</span>
                         <span class="detail-value" id="cow-observation">Nenhuma</span>
+                        <input id="input-cow-observation" type="text" value="Nenhuma" style="display:none;">
                     </div>
 
                     <div class="detail-item">
@@ -417,10 +422,9 @@
 
             <div class="profile-footer">
                 <button class="back-btn" id="back-profile-btn">Voltar</button>
-                <button class="back-btn" id="edit-btn" style="display:none;">Editar</button>
-                <button class="back-btn" id="save-btn-vaca" style="display:none;">Salvar</button>
-                <button class="back-btn" id="delete-btn" style="display:none;">Excluir Vaca</button>
-                <button class="back-btn" id="cancel-btn" style="display:none;">Cancelar</button>
+                <button class="back-btn" id="vet-edit-btn">Editar</button>
+                <button class="back-btn" id="vet-save-btn" style="display:none;">Salvar</button>
+                <button class="back-btn" id="vet-cancel-btn" style="display:none;">Cancelar</button>
             </div>
         </div>
     </div>

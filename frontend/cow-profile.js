@@ -22,6 +22,7 @@ async function loadCowProfile(cowId) {
 
     document.getElementById('cow-lot').textContent = await findCowLot(cowId) || 'Não informado';
     document.getElementById('cow-needs-care').textContent = cow.precisaAtendimento ? 'Sim' : 'Não';
+    document.getElementById('cow-observation').textContent = cow.observacao || 'Nenhuma';
     document.getElementById('cow-weight').textContent = cow.peso ? `${cow.peso} kg` : 'Não informado';
     document.getElementById('cow-last-weighing').textContent = cow.dataUltimaPesagem ? formatDate(cow.dataUltimaPesagem) : 'Nunca';
     document.getElementById('cow-breed').textContent = cow.raca || 'Não informada';
@@ -29,8 +30,8 @@ async function loadCowProfile(cowId) {
     document.getElementById('cow-category').textContent = cow.categoria || 'Não categorizada';
     document.getElementById('cow-mother').textContent = cow.nomeMae ? `${cow.nomeMae}` : 'Não informada';
     document.getElementById('cow-father').textContent = cow.nomePai ? `${cow.nomePai}` : 'Não informado';
-    document.getElementById('id-cow-mother').textContent = cow.idMae ? `#${padId(cow.idMae)}` : 'Não informado';
-    document.getElementById('id-cow-father').textContent = cow.idPai ? `#${padId(cow.idPai)}` : 'Não informado';
+    document.getElementById('cow-id-mother').textContent = cow.idMae ? `#${padId(cow.idMae)}` : 'Não informado';
+    document.getElementById('cow-id-father').textContent = cow.idPai ? `#${padId(cow.idPai)}` : 'Não informado';
 
 }
 
@@ -296,5 +297,3 @@ window.showCowProfile = async function (cowId) {
     document.querySelector('.tab-btn[data-tab="general"]').classList.add('active');
     document.getElementById('general-tab').classList.add('active');
 };
-
-
