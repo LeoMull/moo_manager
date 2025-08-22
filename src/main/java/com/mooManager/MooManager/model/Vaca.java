@@ -37,6 +37,7 @@ public class Vaca {
     private String lote;
 
     @NotNull
+    @Column(name = "precisa_atendimento")
     private Boolean precisaAtendimento;
 
     private String observacao;

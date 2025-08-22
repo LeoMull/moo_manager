@@ -93,10 +93,6 @@ public class VacaController {
         String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
         return repo.findById(vacaId).map(vaca -> {
-            // Apenas campos que o veterinário pode editar
-            if (dados.getPrecisaAtendimento() != null) {
-                vaca.setPrecisaAtendimento(dados.getPrecisaAtendimento());
-            }
             if (dados.getObservacao() != null) {
                 vaca.setObservacao(dados.getObservacao());
             }
@@ -110,7 +106,9 @@ public class VacaController {
         String cnir = jwtUtil.getCnirFromToken(token);
         VacaId vacaId = new VacaId(idVaca, cnir);
         return repo.findById(vacaId).map(vaca -> {
-            // Apenas campos que o funcionario pode editar
+            if (dados.getPrecisaAtendimento() != null) {
+                vaca.setPrecisaAtendimento(dados.getPrecisaAtendimento());
+            }
             if (dados.getObservacao() != null) {
                 vaca.setObservacao(dados.getObservacao());
             }
